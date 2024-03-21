@@ -38,6 +38,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/users").authenticated() //endpoint me i testu tokens
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();
