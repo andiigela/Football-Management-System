@@ -3,7 +3,6 @@ import {HttpClient} from "@angular/common/http";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {LoginDto} from "../../common/login-dto";
 import {Router} from "@angular/router";
-import {AuthInterceptor} from "../../services/auth.interceptor";
 import {CookieService} from "ngx-cookie-service";
 
 @Component({
@@ -17,7 +16,6 @@ export class LoginComponent implements OnInit {
     "password": ""
   }
   loginFormGroup: FormGroup = new FormGroup<any>('');
-
   constructor(private formBuilder: FormBuilder,private http: HttpClient,private router: Router,private cookieService: CookieService) {
 
   }
@@ -35,9 +33,9 @@ export class LoginComponent implements OnInit {
       let password:string = this.loginFormGroup.controls['login'].get('password')?.value;
       let loginDto = new LoginDto(username,password);
        this.http.post("http://localhost:8080/api/auth/login",loginDto,{withCredentials: true}).subscribe((res:any) =>{
-             AuthInterceptor.accessToken = res.accessToken;
+             document.cookie = `accessToken=${res.accessToken}`
              document.cookie = `refreshToken=${res.refreshToken}`
-             this.router.navigateByUrl("/dashboard");
+             this.router.navigateByUrl("/dashboard")
        })
     }
 }

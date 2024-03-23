@@ -8,6 +8,7 @@ import {HttpClient} from "@angular/common/http";
 })
 export class DashboardComponent implements OnInit{
   users: any[] = [];
+  static refreshToken = "";
   constructor(private http: HttpClient) {
   }
 
