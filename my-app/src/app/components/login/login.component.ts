@@ -12,10 +12,6 @@ import {AuthService} from "../../services/auth.service";
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  loginObj: any = {
-    "username": "",
-    "password": ""
-  }
   loginFormGroup: FormGroup = new FormGroup<any>('');
   constructor(private formBuilder: FormBuilder,private http: HttpClient,private router: Router,
               private cookieService: CookieService,private authService: AuthService) {
@@ -38,6 +34,7 @@ export class LoginComponent implements OnInit {
         document.cookie = `accessToken=${res.accessToken}`
         document.cookie = `refreshToken=${res.refreshToken}`
         this.router.navigateByUrl("/dashboard")
+        this.authService.checkIsAuthenticated();
       })
     }
 }
