@@ -4,6 +4,7 @@ import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {LoginDto} from "../../common/login-dto";
 import {Router} from "@angular/router";
 import {CookieService} from "ngx-cookie-service";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,8 @@ export class LoginComponent implements OnInit {
     "password": ""
   }
   loginFormGroup: FormGroup = new FormGroup<any>('');
-  constructor(private formBuilder: FormBuilder,private http: HttpClient,private router: Router,private cookieService: CookieService) {
+  constructor(private formBuilder: FormBuilder,private http: HttpClient,private router: Router,
+              private cookieService: CookieService,private authService: AuthService) {
 
   }
 
@@ -32,10 +34,10 @@ export class LoginComponent implements OnInit {
       let username:string = this.loginFormGroup.controls['login'].get('username')?.value;
       let password:string = this.loginFormGroup.controls['login'].get('password')?.value;
       let loginDto = new LoginDto(username,password);
-       this.http.post("http://localhost:8080/api/auth/login",loginDto,{withCredentials: true}).subscribe((res:any) =>{
-             document.cookie = `accessToken=${res.accessToken}`
-             document.cookie = `refreshToken=${res.refreshToken}`
-             this.router.navigateByUrl("/dashboard")
-       })
+      this.authService.loginUser(loginDto).subscribe((res:any) => {
+        document.cookie = `accessToken=${res.accessToken}`
+        document.cookie = `refreshToken=${res.refreshToken}`
+        this.router.navigateByUrl("/dashboard")
+      })
     }
 }

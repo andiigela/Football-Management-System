@@ -8,6 +8,7 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {ReactiveFormsModule} from "@angular/forms";
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import {AuthInterceptor} from "./services/auth.interceptor";
+import { LoginstatusComponent } from './components/loginstatus/loginstatus.component';
 const routes : Routes = [
   {path: 'login',component:LoginComponent},
   {path: 'dashboard',component:DashboardComponent}
@@ -18,7 +19,8 @@ const routes : Routes = [
   declarations: [
     AppComponent,
     LoginComponent,
-    DashboardComponent
+    DashboardComponent,
+    LoginstatusComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
