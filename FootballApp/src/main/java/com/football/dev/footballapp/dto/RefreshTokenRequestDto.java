@@ -1,13 +1,12 @@
-package com.football.dev.footballapp.security;
+package com.football.dev.footballapp.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class TokenPair {
-    private String accessToken;
+@NoArgsConstructor
+public class RefreshTokenRequestDto {
     private String refreshToken;
 }

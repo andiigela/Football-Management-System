@@ -26,7 +26,9 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        if (request.getRequestURI().equals("/api/auth/register") || request.getRequestURI().equals("/api/auth/login")) {
+        if (request.getRequestURI().equals("/api/auth/register") || request.getRequestURI().equals("/api/auth/login")
+            || request.getRequestURI().equals("/api/auth/refreshToken")
+        ) {
             // Skip authentication for registration or login requests
             filterChain.doFilter(request, response);
         } else {

@@ -1,5 +1,7 @@
 package com.football.dev.footballapp.security;
 
+import com.football.dev.footballapp.dto.JwtResponseDto;
+import com.football.dev.footballapp.services.RefreshTokenService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -14,9 +16,12 @@ import java.util.Date;
 @Component
 public class JWTGenerator {
     private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+    private final RefreshTokenService refreshTokenService;
+    public JWTGenerator(RefreshTokenService refreshTokenService){
+        this.refreshTokenService=refreshTokenService;
+    }
 
-    public TokenPair generateTokens(Authentication authentication) {
-        String username = authentication.getName();
+    public JwtResponseDto generateTokens(String username) {
         Date currentDate = new Date();
 
         // Generate access token
@@ -36,8 +41,8 @@ public class JWTGenerator {
                 .setExpiration(refreshTokenExpiry)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
-
-        return new TokenPair(accessToken, refreshToken);
+        refreshTokenService.createRefreshToken(username,refreshToken, refreshTokenExpiry.toInstant());
+        return new JwtResponseDto(accessToken, refreshToken);
     }
     public String getUsernameFromJWT(String token){
         Claims claims = Jwts.parserBuilder()
