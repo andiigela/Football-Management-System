@@ -52,6 +52,14 @@ public class JWTGenerator {
                 .getBody();
         return claims.getSubject();
     }
+    public String generateAccessToken(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.JWT_EXPIRATION * 1000)) // Expiration time in milliseconds
+                .signWith(key, SignatureAlgorithm.HS512)
+                .compact();
+    }
 
     public boolean validateToken(String token) {
         try {

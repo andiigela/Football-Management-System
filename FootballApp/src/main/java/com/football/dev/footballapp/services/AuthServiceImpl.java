@@ -77,10 +77,17 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public JwtResponseDto refreshToken(RefreshTokenRequestDto refreshTokenRequestDto) {
         RefreshToken refreshToken = this.refreshTokenService.findByToken(refreshTokenRequestDto.getRefreshToken());
+
+        // Check if refresh token exists and is not expired
+        if (refreshToken == null || refreshToken.isExpired()) {
+            throw new IllegalArgumentException("Refresh token is expired or invalid");
+        }
+
         UserEntity user = refreshToken.getUserInfo();
-        JwtResponseDto jwtResponseDto = jwtGenerator.generateTokens(user.getUsername());
-        return jwtResponseDto;
+        String newAccessToken = jwtGenerator.generateAccessToken(user.getUsername());
+        return new JwtResponseDto(newAccessToken, null);
     }
+
 
 
 }

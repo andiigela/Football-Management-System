@@ -29,6 +29,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService{
             return newRefreshToken;
         }
         existingRefreshDb.setToken(token);
+        existingRefreshDb.setExpiryDate(expiryDate);
 
         refreshTokenRepository.save(existingRefreshDb);
         return existingRefreshDb;
@@ -42,5 +43,11 @@ public class RefreshTokenServiceImpl implements RefreshTokenService{
             throw new RuntimeException(refreshToken.getToken() + " Refresh token is expired. Please make a new login..!");
         }
         return refreshToken;
+    }
+    public String getRefreshTokenByUsername(String username) {
+        UserEntity user = userRepository.findByUsername(username).orElse(null);
+        if (user == null) return null;
+        RefreshToken refreshToken = refreshTokenRepository.findByUserInfo(user);
+        return (refreshToken != null) ? refreshToken.getToken() : null;
     }
 }

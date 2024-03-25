@@ -23,4 +23,7 @@ public class RefreshToken {
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserEntity userInfo;
+    public boolean isExpired() {
+        return Instant.now().isAfter(expiryDate);
+    }
 }
