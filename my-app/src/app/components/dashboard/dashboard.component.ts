@@ -18,7 +18,6 @@ export class DashboardComponent implements OnInit{
   loadUsers(): void{
     this.http.get("http://localhost:8080/api/users").subscribe((res:any)=>{
       this.users = res;
-      console.log(res)
     })
   }
 }

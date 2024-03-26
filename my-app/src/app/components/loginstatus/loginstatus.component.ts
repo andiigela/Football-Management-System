@@ -20,7 +20,6 @@ export class LoginstatusComponent implements OnInit {
     this.authService.isAuthenticated.subscribe((res:boolean) => {
       this.isAuthenticated=res;
       this.authService.checkIsAuthenticated();
-      console.log(res);
     });
   }
   logOut(){
