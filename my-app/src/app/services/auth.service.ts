@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { LoginDto } from "../common/login-dto";
 import { BehaviorSubject, Observable, throwError } from "rxjs";
 import { Router } from "@angular/router";
-import { CookieService } from "ngx-cookie-service";
+
 
 @Injectable({
     providedIn: 'root'
@@ -14,7 +14,7 @@ export class AuthService {
     private readonly refreshTokenKey = 'refreshToken';
     private readonly accessTokenKey = 'accessToken';
 
-    constructor(private httpClient: HttpClient, private router: Router, private cookieService: CookieService) {
+    constructor(private httpClient: HttpClient, private router: Router) {
         // Check authentication status on application startup
         this.checkIsAuthenticated();
     }
@@ -57,7 +57,6 @@ export class AuthService {
     }
 
     private clearAccessToken(): void {
-        this.cookieService.delete('accessToken');
         localStorage.removeItem(this.accessTokenKey);
     }
 

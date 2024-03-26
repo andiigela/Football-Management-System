@@ -7,8 +7,7 @@ import {
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
-import { CookieService } from 'ngx-cookie-service';
-import { AuthService } from '../services/auth.service'; // Import AuthService for managing tokens
+import { AuthService } from './auth.service';
 import { RefreshTokenRequestDto } from '../common/refresh-token-request-dto';
 import { Router } from '@angular/router';
 
@@ -17,7 +16,6 @@ export class AuthInterceptor implements HttpInterceptor {
 
     constructor(
         private http: HttpClient,
-        private cookieService: CookieService,
         private authService: AuthService,
         private router: Router
     ) {}
@@ -35,7 +33,7 @@ export class AuthInterceptor implements HttpInterceptor {
     }
 
     private addTokenToRequest(request: HttpRequest<any>): HttpRequest<any> {
-        const accessToken = this.authService.getAccessToken() || this.cookieService.get('accessToken'); // Check both local storage and cookies for access token
+        const accessToken = this.authService.getAccessToken(); // Check local storage for access token
         if (accessToken) {
             return request.clone({
                 setHeaders: {
@@ -63,9 +61,8 @@ export class AuthInterceptor implements HttpInterceptor {
                     this.router.navigateByUrl('/login');
                     return throwError('Access token is null');
                 }
-                // Set the new access token in both local storage and cookies
+                // Set the new access token in local storage
                 this.authService.setAccessToken(response.accessToken);
-                this.cookieService.set('accessToken', response.accessToken);
                 const clonedRequest = this.addTokenToRequest(request);
                 return next.handle(clonedRequest);
             }),

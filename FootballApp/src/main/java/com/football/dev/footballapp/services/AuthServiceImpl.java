@@ -7,7 +7,6 @@ import com.football.dev.footballapp.dto.RegisterDto;
 import com.football.dev.footballapp.models.RefreshToken;
 import com.football.dev.footballapp.models.Role;
 import com.football.dev.footballapp.models.UserEntity;
-import com.football.dev.footballapp.repository.RefreshTokenRepository;
 import com.football.dev.footballapp.repository.RoleRepository;
 import com.football.dev.footballapp.repository.UserRepository;
 import com.football.dev.footballapp.security.JWTGenerator;
@@ -18,17 +17,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.time.Instant;
 import java.util.Collections;
-import java.util.Date;
 
 @Service
 public class AuthServiceImpl implements AuthService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private JWTGenerator jwtGenerator;
-
     private AuthenticationManager authenticationManager;
     private RefreshTokenService refreshTokenService;
 

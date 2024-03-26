@@ -5,12 +5,9 @@ import com.football.dev.footballapp.dto.LoginDto;
 import com.football.dev.footballapp.dto.RefreshTokenRequestDto;
 import com.football.dev.footballapp.dto.RegisterDto;
 import com.football.dev.footballapp.services.AuthService;
-import com.football.dev.footballapp.services.RefreshTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,12 +15,10 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin("http://localhost:4200")
 public class AuthController {
     private final AuthService authService;
-    private final RefreshTokenService refreshTokenService;
 
     @Autowired
-    public AuthController(AuthService authService, RefreshTokenService refreshTokenService) {
+    public AuthController(AuthService authService) {
         this.authService = authService;
-        this.refreshTokenService = refreshTokenService;
     }
 
     @PostMapping("login")

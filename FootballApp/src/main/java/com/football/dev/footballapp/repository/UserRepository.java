@@ -1,7 +1,6 @@
 package com.football.dev.footballapp.repository;
 
 import com.football.dev.footballapp.models.UserEntity;
-import org.apache.catalina.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

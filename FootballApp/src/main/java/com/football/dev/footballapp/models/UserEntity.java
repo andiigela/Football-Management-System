@@ -1,6 +1,4 @@
 package com.football.dev.footballapp.models;
-
-
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
