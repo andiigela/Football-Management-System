@@ -80,7 +80,7 @@ public class AuthServiceImpl implements AuthService {
 
         // Check if refresh token exists and is not expired
         if (refreshToken == null || refreshToken.isExpired()) {
-            throw new IllegalArgumentException("Refresh token is expired or invalid");
+            return new JwtResponseDto(null, null);
         }
 
         UserEntity user = refreshToken.getUserInfo();

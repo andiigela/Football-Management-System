@@ -1,56 +1,70 @@
 import { Injectable } from '@angular/core';
 import {
-    HttpRequest,
-    HttpHandler,
-    HttpEvent,
-    HttpInterceptor, HttpErrorResponse, HttpClient, HttpContext
+  HttpRequest,
+  HttpHandler,
+  HttpEvent,
+  HttpInterceptor, HttpErrorResponse, HttpClient
 } from '@angular/common/http';
-import {catchError, Observable, switchMap, throwError} from 'rxjs';
-import {CookieService} from "ngx-cookie-service";
-import {RefreshTokenRequestDto} from "../common/refresh-token-request-dto";
-import {jwtDecode} from "jwt-decode";
-import {Router} from "@angular/router"; // Import jwt_decode library
+import { Observable, throwError } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
+import { CookieService } from 'ngx-cookie-service';
+import { RefreshTokenRequestDto } from '../common/refresh-token-request-dto';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
+  constructor(private http: HttpClient, private cookieService: CookieService, private router: Router) {}
 
-    constructor(private http: HttpClient,private cookieService: CookieService,private router: Router) {}
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    return next.handle(this.addTokenToRequest(request)).pipe(
+      catchError((error: any) => {
+        if (error instanceof HttpErrorResponse && error.status === 401 && this.cookieService.get('refreshToken')) {
+          return this.handle401Error(request, next);
+        } else {
+          return throwError(error);
+        }
+      })
+    );
+  }
 
-    intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-        const clonedReq = request.clone({
-            setHeaders: {
-                Authorization: `Bearer ${this.cookieService.get("accessToken")}`
-            }
-        });
-        return next.handle(clonedReq).pipe(catchError((err: HttpErrorResponse ) => {
-            if(err.status == 401 && this.cookieService.get("refreshToken")){
-                let refreshTokenRequestDto = new RefreshTokenRequestDto(this.cookieService.get("refreshToken"));
-
-                return this.http.post("http://localhost:8080/api/auth/refreshToken",refreshTokenRequestDto).pipe(
-                    switchMap((response: any)=>{
-                        this.cookieService.set("accessToken", response.accessToken);
-                        this.cookieService.delete("refreshToken");
-                        const clonedRequest = request.clone({
-                            setHeaders: {
-                                Authorization: `Bearer ${response.accessToken}`
-                            }
-                        });
-                        return next.handle(clonedRequest)
-                    })
-                );
-
-
-            }
-            else if(!this.cookieService.get("refreshToken")){
-                this.cookieService.delete("accessToken");
-                this.router.navigateByUrl("/login");
-            }
-            return throwError(()=>err)
-        }));
+  private addTokenToRequest(request: HttpRequest<any>): HttpRequest<any> {
+    const accessToken = this.cookieService.get('accessToken');
+    if (accessToken) {
+      return request.clone({
+        setHeaders: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
     }
+    return request;
+  }
 
-
-
+  private handle401Error(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const refreshTokenRequestDto = new RefreshTokenRequestDto(this.cookieService.get('refreshToken'));
+    return this.http.post('http://localhost:8080/api/auth/refreshToken', refreshTokenRequestDto).pipe(
+      switchMap((response: any) => {
+        if (!response.accessToken) {
+          // If access token is null, redirect to login
+          this.cookieService.delete('accessToken');
+          this.cookieService.delete('refreshToken');
+          this.router.navigateByUrl('/login');
+          return throwError('Access token is null');
+        }
+        // Set the new access token
+        this.cookieService.set('accessToken', response.accessToken);
+        const clonedRequest = this.addTokenToRequest(request);
+        return next.handle(clonedRequest);
+      }),
+      catchError((error: any) => {
+        if (error instanceof HttpErrorResponse && error.status === 401) {
+          // If refresh token is expired or invalid, delete both tokens and redirect to login
+          this.cookieService.delete('accessToken');
+          this.cookieService.delete('refreshToken');
+          this.router.navigateByUrl('/login');
+        }
+        return throwError(error);
+      })
+    );
+  }
 }
-
