@@ -16,7 +16,8 @@ export class LoginComponent implements OnInit {
     constructor(private formBuilder: FormBuilder, private http: HttpClient, private router: Router, private authService: AuthService) {}
 
     ngOnInit(): void {
-        this.loginFormGroup = this.formBuilder.group({
+      this.authService.checkIsAuthenticated();
+      this.loginFormGroup = this.formBuilder.group({
             login: this.formBuilder.group({
                 username: new FormControl(''),
                 password: new FormControl('')
@@ -31,7 +32,6 @@ export class LoginComponent implements OnInit {
 
         this.authService.loginUser(loginDto).subscribe((res: any) => {
             this.authService.setTokens(res.accessToken, res.refreshToken);
-          this.authService.checkIsAuthenticated();
             this.router.navigateByUrl("/dashboard");
         });
     }

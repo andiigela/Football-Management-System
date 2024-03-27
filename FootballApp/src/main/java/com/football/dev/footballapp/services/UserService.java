@@ -7,5 +7,5 @@ import java.util.List;
 
 
 public interface UserService {
-    public List<UserEntity> users = new ArrayList<>();
+    List<UserEntity> getAllUsers();
 }

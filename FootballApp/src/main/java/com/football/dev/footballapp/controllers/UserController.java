@@ -1,6 +1,7 @@
 package com.football.dev.footballapp.controllers;
 
 import com.football.dev.footballapp.models.UserEntity;
+import com.football.dev.footballapp.services.UserService;
 import com.football.dev.footballapp.services.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,9 +16,10 @@ import java.util.List;
 @RequestMapping("/api/")
 @CrossOrigin("http://localhost:4200")
 public class UserController {
-    @Autowired
-    private UserServiceImpl userService;
-
+    private UserService userService;
+    public UserController(UserService userService){
+        this.userService=userService;
+    }
     @GetMapping("users")
     @PreAuthorize("isAuthenticated()")
     public List<UserEntity> getAllUsers() {
