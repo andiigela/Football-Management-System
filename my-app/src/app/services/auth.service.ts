@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { LoginDto } from "../common/login-dto";
 import { BehaviorSubject, Observable, throwError } from "rxjs";
 import { Router } from "@angular/router";
+import {RegisterDto} from "../common/register-dto";
 
 
 @Injectable({
@@ -22,6 +23,11 @@ export class AuthService {
     loginUser(user: LoginDto): Observable<any> {
         if (user == null) return throwError("User object is null");
         return this.httpClient.post<any>("http://localhost:8080/api/auth/login", user, { withCredentials: true });
+    }
+
+    register(user: RegisterDto): Observable<any> {
+        if (user == null) return throwError("User object is null");
+        return this.httpClient.post<any>("http://localhost:8080/api/auth/register", user, { withCredentials: true });
     }
 
     checkIsAuthenticated(): void {
