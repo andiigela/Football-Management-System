@@ -16,6 +16,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Collections;
 
@@ -26,15 +28,18 @@ public class AuthServiceImpl implements AuthService {
     private JWTGenerator jwtGenerator;
     private AuthenticationManager authenticationManager;
     private RefreshTokenService refreshTokenService;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     public AuthServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
-                           JWTGenerator jwtGenerator,AuthenticationManager authenticationManager, RefreshTokenService refreshTokenService) {
+                           JWTGenerator jwtGenerator, AuthenticationManager authenticationManager,
+                           RefreshTokenService refreshTokenService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.jwtGenerator = jwtGenerator;
         this.authenticationManager = authenticationManager;
         this.refreshTokenService = refreshTokenService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -60,7 +65,11 @@ public class AuthServiceImpl implements AuthService {
 
         UserEntity user = new UserEntity();
         user.setUsername(registerDto.getUsername());
-        user.setPassword(registerDto.getPassword());
+
+        String hashedPassword = passwordEncoder.encode(registerDto.getPassword());
+        user.setPassword(hashedPassword);
+        user.setEmail(registerDto.getEmail());
+        user.setClubName(registerDto.getClubName());
 
         Role role = roleRepository.findByName("USER")
                 .orElseThrow(() -> new IllegalStateException("Default role not found"));
@@ -69,6 +78,7 @@ public class AuthServiceImpl implements AuthService {
 
         userRepository.save(user);
     }
+
     @Override
     public JwtResponseDto refreshToken(RefreshTokenRequestDto refreshTokenRequestDto) {
         RefreshToken refreshToken = this.refreshTokenService.findByToken(refreshTokenRequestDto.getRefreshToken());

@@ -19,6 +19,8 @@ public class UserEntity {
     private String username;
 
     private String password;
+    private String clubName;
+    private String email;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
