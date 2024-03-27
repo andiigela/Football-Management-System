@@ -10,11 +10,13 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import {AuthInterceptor} from "./services/auth.interceptor";
 import { LoginstatusComponent } from './components/loginstatus/loginstatus.component';
 import {AuthGuard} from "./services/auth.guard";
+import {AuthGuard2} from "./services/auth2.guard";
 const routes : Routes = [
   {path: 'login',component:LoginComponent,canActivate: [AuthGuard]},
-  {path: 'dashboard',component:DashboardComponent}
+  {path: 'dashboard',component:DashboardComponent,canActivate: [AuthGuard2]}
 ]
-
+// AuthGuard e kom shtu sepse qajo po du mu apliku ne login, pra spo du mem lon mem qu ne login nese jom authenticated.
+// AuthGuard2 e kom shtu sepse qajo po du mu apliku ne dashboard, pra spo du mem lon mem qu ne dashboard nese sjom authenticated.
 
 @NgModule({
   declarations: [
@@ -35,7 +37,8 @@ const routes : Routes = [
       useClass: AuthInterceptor,
       multi: true
     },
-    AuthGuard
+    AuthGuard,
+    AuthGuard2
   ],
   bootstrap: [AppComponent]
 })

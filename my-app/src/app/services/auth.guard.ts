@@ -15,6 +15,7 @@ export class AuthGuard implements CanActivate {
   constructor(private authService: AuthService,private router: Router) {
   }
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
+   // THIS AUTHGUARD DOES NOT LET AUTHENTICATED USERS BACK TO /LOGIN
     if(localStorage.getItem("refreshToken") != null){
       return this.router.navigateByUrl('/dashboard');
     } else {
