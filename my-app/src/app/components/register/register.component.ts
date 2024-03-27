@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { RegisterDto } from '../../common/register-dto';
-import { Router } from "@angular/router";
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { RegisterDto } from '../../common/register-dto';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -14,15 +14,13 @@ export class RegisterComponent {
   registerDto: RegisterDto = {
     username: '',
     password: '',
-    clubName: '',
-    email: ''
+    clubName: ''
   };
 
   confirmPassword: string = '';
 
-  constructor(private authService: AuthService, private router: Router, private formBuilder: FormBuilder) {
+  constructor(private authService: AuthService, private formBuilder: FormBuilder, private router: Router) {
     this.registerForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
       clubName: ['', Validators.required],
       username: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -30,7 +28,6 @@ export class RegisterComponent {
     }, { validator: this.passwordMatchValidator });
   }
 
-  // Custom validator function to check if passwords match
   passwordMatchValidator(formGroup: FormGroup) {
     const password = formGroup.get('password')?.value;
     const confirmPassword = formGroup.get('confirmPassword')?.value;
@@ -46,20 +43,20 @@ export class RegisterComponent {
     if (this.registerForm.invalid) {
       return;
     }
-    this.registerDto.email = this.registerForm.get('email')?.value;
-    this.registerDto.clubName = this.registerForm.get('clubName')?.value;
+
     this.registerDto.username = this.registerForm.get('username')?.value;
     this.registerDto.password = this.registerForm.get('password')?.value;
+    this.registerDto.clubName = this.registerForm.get('clubName')?.value;
 
-    // Proceed with registration
     this.authService.register(this.registerDto).subscribe(
-        response => {
-          console.log('Registration successful');
-          this.router.navigateByUrl('/login');
-        },
-        error => {
-          console.error('Registration failed:', error);
-        }
+      response => {
+        console.log('Registration successful');
+        this.router.navigateByUrl('/login');
+      },
+      error => {
+        console.error('Registration failed:', error); // Log the error response
+      }
     );
   }
+
 }

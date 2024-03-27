@@ -4,9 +4,11 @@ import com.football.dev.footballapp.dto.JwtResponseDto;
 import com.football.dev.footballapp.dto.LoginDto;
 import com.football.dev.footballapp.dto.RefreshTokenRequestDto;
 import com.football.dev.footballapp.dto.RegisterDto;
+import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.RefreshToken;
 import com.football.dev.footballapp.models.Role;
 import com.football.dev.footballapp.models.UserEntity;
+import com.football.dev.footballapp.repository.ClubRepository;
 import com.football.dev.footballapp.repository.RoleRepository;
 import com.football.dev.footballapp.repository.UserRepository;
 import com.football.dev.footballapp.security.JWTGenerator;
@@ -16,7 +18,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Collections;
@@ -25,6 +26,7 @@ import java.util.Collections;
 public class AuthServiceImpl implements AuthService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
+    private ClubRepository clubRepository;
     private JWTGenerator jwtGenerator;
     private AuthenticationManager authenticationManager;
     private RefreshTokenService refreshTokenService;
@@ -32,10 +34,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     public AuthServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
+                           ClubRepository clubRepository,
                            JWTGenerator jwtGenerator, AuthenticationManager authenticationManager,
                            RefreshTokenService refreshTokenService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.clubRepository = clubRepository;
         this.jwtGenerator = jwtGenerator;
         this.authenticationManager = authenticationManager;
         this.refreshTokenService = refreshTokenService;
@@ -68,8 +72,6 @@ public class AuthServiceImpl implements AuthService {
 
         String hashedPassword = passwordEncoder.encode(registerDto.getPassword());
         user.setPassword(hashedPassword);
-        user.setEmail(registerDto.getEmail());
-        user.setClubName(registerDto.getClubName());
 
         Role role = roleRepository.findByName("USER")
                 .orElseThrow(() -> new IllegalStateException("Default role not found"));
@@ -77,6 +79,12 @@ public class AuthServiceImpl implements AuthService {
         user.setRoles(Collections.singletonList(role));
 
         userRepository.save(user);
+
+
+        Club club = new Club();
+        club.setName(registerDto.getClubName());
+        club.setUser(user);
+        clubRepository.save(club);
     }
 
     @Override
@@ -92,7 +100,4 @@ public class AuthServiceImpl implements AuthService {
         String newAccessToken = jwtGenerator.generateAccessToken(user.getUsername());
         return new JwtResponseDto(newAccessToken, null);
     }
-
-
-
 }
