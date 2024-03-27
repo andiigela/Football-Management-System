@@ -27,12 +27,15 @@ export class AuthService {
     checkIsAuthenticated(): void {
         const refreshToken: string | null = localStorage.getItem(this.refreshTokenKey);
         const isAuthenticated: boolean = !!refreshToken;
+        console.log('Authentication Status:', isAuthenticated);
         this.isAuthenticated.next(isAuthenticated);
     }
+
 
     logout(): void {
         localStorage.removeItem(this.refreshTokenKey);
         localStorage.removeItem(this.accessTokenKey);
+        console.log('Logged out');
         this.isAuthenticated.next(false);
         this.router.navigateByUrl("/login");
     }
@@ -40,8 +43,10 @@ export class AuthService {
     setTokens(accessToken: string, refreshToken: string): void {
         localStorage.setItem(this.accessTokenKey, accessToken);
         localStorage.setItem(this.refreshTokenKey, refreshToken);
+        console.log('Tokens set');
         this.isAuthenticated.next(true);
     }
+
 
     getAccessToken(): string | null {
         return localStorage.getItem(this.accessTokenKey);

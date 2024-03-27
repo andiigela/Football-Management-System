@@ -31,6 +31,7 @@ export class LoginComponent implements OnInit {
 
         this.authService.loginUser(loginDto).subscribe((res: any) => {
             this.authService.setTokens(res.accessToken, res.refreshToken);
+          this.authService.checkIsAuthenticated();
             this.router.navigateByUrl("/dashboard");
         });
     }

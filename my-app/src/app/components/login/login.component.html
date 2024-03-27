@@ -1,16 +1,19 @@
-<div class="container">
-  <form [formGroup]="loginFormGroup" (ngSubmit)="loginButton()">
-    <div formGroupName="login">
-      <div formControlName="username" class="form-group">
-        <label for="exampleInputEmail1">Email address</label>
-        <input type="text" class="form-control"formControlName="username" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-      </div>
-      <div formControlName="password" class="form-group">
-        <label for="exampleInputPassword1">Password</label>
-        <input type="password" formControlName="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-      </div>
-      <button type="submit" class="btn btn-primary">Sign in</button>
+<div class="container" style="margin-top: 100px;">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <form [formGroup]="loginFormGroup" (ngSubmit)="loginButton()" class="mt-5">
+        <div formGroupName="login">
+          <div formControlName="username" class="form-group">
+            <label for="exampleInputEmail1">Username</label>
+            <input type="text" class="form-control" formControlName="username" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username"><br>
+          </div>
+          <div formControlName="password" class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input type="password" formControlName="password" class="form-control" id="exampleInputPassword1" placeholder="Password"><br>
+          </div>
+          <button type="submit" class="btn btn-primary">Sign in</button>
+        </div>
+      </form>
     </div>
-  </form>
+  </div>
 </div>
-
