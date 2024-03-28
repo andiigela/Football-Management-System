@@ -5,7 +5,7 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
 import {RouterModule, Routes} from "@angular/router";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import {AuthInterceptor} from "./services/auth.interceptor";
 import { LoginstatusComponent } from './components/loginstatus/loginstatus.component';
@@ -31,7 +31,8 @@ const routes : Routes = [
     RouterModule.forRoot(routes),
     BrowserModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ],
   providers: [
     {

@@ -36,7 +36,7 @@ public class AuthController {
         return authService.refreshToken(refreshTokenRequestDto);
     }
 
-    @PostMapping("register")
+    @PostMapping("/register")
     public ResponseEntity<Map<String, String>> register(@RequestBody RegisterDto registerDto) {
         authService.register(registerDto);
         Map<String, String> response = new HashMap<>();
