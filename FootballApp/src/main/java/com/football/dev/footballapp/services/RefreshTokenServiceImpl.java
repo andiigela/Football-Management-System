@@ -17,7 +17,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService{
         this.userRepository=userRepository;
     }
     public RefreshToken createRefreshToken(String username,String token, Instant expiryDate){
-        UserEntity user = userRepository.findByUsername(username).get();
+        UserEntity user = userRepository.findByEmail(username).get();
         if(user == null) return null;
         RefreshToken existingRefreshDb = this.refreshTokenRepository.findByUserInfo(user);
         if(existingRefreshDb == null){
@@ -45,7 +45,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService{
         return refreshToken;
     }
     public String getRefreshTokenByUsername(String username) {
-        UserEntity user = userRepository.findByUsername(username).orElse(null);
+        UserEntity user = userRepository.findByEmail(username).orElse(null);
         if (user == null) return null;
         RefreshToken refreshToken = refreshTokenRepository.findByUserInfo(user);
         return (refreshToken != null) ? refreshToken.getToken() : null;

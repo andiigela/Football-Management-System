@@ -1,30 +1,40 @@
 package com.football.dev.footballapp.models;
+import com.football.dev.footballapp.models.enums.Gender;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 @Entity
 @Table(name = "users")
 @Data
 @NoArgsConstructor
-public class UserEntity {
+@Where(clause = "is_deleted=false")
+public class UserEntity extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
 
-    private String username;
-
+    private String firstName;
+    private String lastName;
+    @Column(unique = true,nullable = false)
+    private String email;
     private String password;
+    private boolean enabled;
+    private String phone;
+    private String country;
+    private Date birthDate;
+    private String profile_picture;
+    private String address;
+    private String city;
+    private String postal_code;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-    inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private List<Role> roles = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
 
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
 
 
