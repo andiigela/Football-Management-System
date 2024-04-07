@@ -27,6 +27,7 @@
           <a class="nav-link disabled" href="#">Disabled</a>
         </li>
       </ul>
+      <a class="btn btn-danger" routerLink="/create-player" style="margin-left: 20px;margin-right: 20px">Create Player</a>
       <app-loginstatus></app-loginstatus>
       <a *ngIf="!(authService.isAuthenticated | async)" class="btn btn-outline-primary" routerLink="/register" style="margin-left: 20px;">Register</a>
     </div>

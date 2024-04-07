@@ -28,6 +28,7 @@ public class Player extends BaseEntity {
     private Integer shirtNumber;
     private Double height;
     private Double weight;
+    public String name;
     @Enumerated(value = EnumType.STRING)
     private Foot preferred_foot;
 
