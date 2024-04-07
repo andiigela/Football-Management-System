@@ -16,5 +16,10 @@ public class UserServiceImpl implements UserService{
     public List<UserEntity> getAllUsers() {
         return userRepository.findAll();
     }
-
+    @Override
+    public void updateUserStatus(Long userId, boolean enabled) {
+        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        user.setEnabled(enabled);
+        userRepository.save(user);
+    }
 }

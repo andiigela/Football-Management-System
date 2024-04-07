@@ -5,10 +5,7 @@ import com.football.dev.footballapp.services.UserService;
 import com.football.dev.footballapp.services.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,8 +18,12 @@ public class UserController {
         this.userService=userService;
     }
     @GetMapping("users")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<UserEntity> getAllUsers() {
         return userService.getAllUsers();
+    }
+    @PutMapping("users/{userId}/status")
+    public void updateUserStatus(@PathVariable Long userId, @RequestParam boolean enabled) {
+        userService.updateUserStatus(userId, enabled);
     }
 }

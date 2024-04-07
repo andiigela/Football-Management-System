@@ -48,9 +48,13 @@ public class AuthServiceImpl implements AuthService {
                         loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        if(authentication.isAuthenticated()){
-            JwtResponseDto tokenPair =this.jwtGenerator.generateTokens(loginDto.getEmail());
-            return tokenPair;
+        if (authentication.isAuthenticated()) {
+            String userEmail = loginDto.getEmail();
+            UserEntity user = userRepository.findByEmail(userEmail)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + userEmail));
+            Role role = user.getRole();
+            boolean enabled = user.isEnabled();
+            return jwtGenerator.generateTokens(userEmail, role.getDescription(), enabled);
         }
         throw new UsernameNotFoundException("Invalid user request");
     }
@@ -86,13 +90,13 @@ public class AuthServiceImpl implements AuthService {
     public JwtResponseDto refreshToken(RefreshTokenRequestDto refreshTokenRequestDto) {
         RefreshToken refreshToken = this.refreshTokenService.findByToken(refreshTokenRequestDto.getRefreshToken());
 
-        // Check if refresh token exists and is not expired
+
         if (refreshToken == null || refreshToken.isExpired()) {
             return new JwtResponseDto(null, null);
         }
 
         UserEntity user = refreshToken.getUserInfo();
-        String newAccessToken = jwtGenerator.generateAccessToken(user.getEmail());
+        String newAccessToken = jwtGenerator.generateAccessToken(user.getEmail(), user.getRole().getDescription(), user.isEnabled());
         return new JwtResponseDto(newAccessToken, null);
     }
 }

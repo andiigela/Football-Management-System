@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { LoginDto } from "../../common/login-dto";
 import { Router } from "@angular/router";
 import { AuthService } from "../../services/auth.service";
@@ -12,15 +12,17 @@ import { AuthService } from "../../services/auth.service";
 })
 export class LoginComponent implements OnInit {
     loginFormGroup: FormGroup = new FormGroup<any>({});
-    loginError: boolean = false; // Flag to indicate login error
-  constructor(private formBuilder: FormBuilder, private http: HttpClient, private router: Router, private authService: AuthService) {}
+    loginError: boolean = false;
+    enableError: boolean = false;
+
+    constructor(private formBuilder: FormBuilder, private http: HttpClient, private router: Router, private authService: AuthService) { }
 
     ngOnInit(): void {
-      this.authService.checkIsAuthenticated();
-      this.loginFormGroup = this.formBuilder.group({
+        this.authService.checkIsAuthenticated();
+        this.loginFormGroup = this.formBuilder.group({
             login: this.formBuilder.group({
-              email: ['', [Validators.required, Validators.email]],
-              password: new FormControl('',[Validators.required])
+                email: ['', [Validators.required, Validators.email]],
+                password: new FormControl('', [Validators.required])
             })
         });
     }
@@ -32,18 +34,33 @@ export class LoginComponent implements OnInit {
 
         const loginDto = new LoginDto(email, password);
 
-        if(email != '' && password != ''){
+        if (email != '' && password != '') {
             this.authService.loginUser(loginDto).subscribe((res: any) => {
-                    this.authService.setTokens(res.accessToken, res.refreshToken);
-                    this.router.navigateByUrl("/dashboard");
-                },(error => {
-                  if(error.status == 401){
-                      this.loginError = true;
-                  }
+                if (res.accessToken) {
+                    const payload = this.authService.parseJwtPayload(res.accessToken);
+                    const isEnabled = payload.enabled;
 
-                })
-            );
+                    if (isEnabled) {
+                        const role = payload.role;
+
+                        if (role === 'ADMIN') {
+                            this.authService.setTokens(res.accessToken, res.refreshToken);
+                            this.router.navigateByUrl("/dashboard");
+                        } else {
+                            console.log("User is not an admin.");
+                        }
+                    } else {
+                        this.enableError = true;
+                    }
+                } else {
+                    this.loginError = true;
+                }
+            }, (error => {
+                if (error.status == 401) {
+                    this.loginError = true;
+                }
+            }));
         }
-
     }
 }
+

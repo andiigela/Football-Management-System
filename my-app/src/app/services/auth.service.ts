@@ -78,5 +78,18 @@ export class AuthService {
     setAccessToken(accessToken: string): void {
         localStorage.setItem(this.accessTokenKey, accessToken);
     }
+    getRoleFromToken(): string | null {
+        const accessToken: string | null = this.getAccessToken();
+        if (!accessToken) return null;
 
+        const payload = this.parseJwtPayload(accessToken);
+        return payload?.role || null;
+    }
+
+
+     parseJwtPayload(token: string): any {
+        const payloadBase64 = token.split('.')[1];
+        const decodedPayload = atob(payloadBase64);
+        return JSON.parse(decodedPayload);
+    }
 }
