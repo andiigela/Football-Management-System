@@ -14,7 +14,6 @@ import java.util.Date;
 @Where(clause = "is_deleted=false")
 public class UserEntity extends BaseEntity {
 
-
     private String firstName;
     private String lastName;
     @Column(unique = true,nullable = false)
@@ -35,7 +34,5 @@ public class UserEntity extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
-
-
 
 }
