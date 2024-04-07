@@ -26,4 +26,8 @@ public class UserController {
     public void updateUserStatus(@PathVariable Long userId, @RequestParam boolean enabled) {
         userService.updateUserStatus(userId, enabled);
     }
+    @DeleteMapping("users/delete/{userId}")
+    public void deleteUser(@PathVariable Long userId) {
+        userService.deleteUser(userId);
+    }
 }

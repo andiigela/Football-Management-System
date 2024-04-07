@@ -1,4 +1,5 @@
 package com.football.dev.footballapp.models;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.football.dev.footballapp.models.enums.Gender;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -34,5 +35,13 @@ public class UserEntity extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Club club;
+
+    @OneToOne(mappedBy = "userInfo", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private RefreshToken refreshToken;
 
 }

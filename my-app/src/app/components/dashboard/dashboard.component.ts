@@ -8,6 +8,7 @@ import { HttpClient } from "@angular/common/http";
 })
 export class DashboardComponent implements OnInit {
   users: any[] = [];
+
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
@@ -16,7 +17,7 @@ export class DashboardComponent implements OnInit {
 
   loadUsers(): void {
     this.http.get("http://localhost:8080/api/users").subscribe((res: any) => {
-      this.users = res;
+      this.users = JSON.parse(JSON.stringify(res));
     })
   }
 
@@ -26,6 +27,12 @@ export class DashboardComponent implements OnInit {
       if (userToUpdate) {
         userToUpdate.enabled = enabled;
       }
+    });
+  }
+
+  deleteUser(userId: number): void {
+    this.http.delete(`http://localhost:8080/api/users/delete/${userId}`).subscribe(() => {
+      this.users = this.users.filter(user => user.id !== userId);
     });
   }
 }

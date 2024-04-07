@@ -9,4 +9,5 @@ import java.util.List;
 public interface UserService {
     List<UserEntity> getAllUsers();
     void updateUserStatus(Long userId, boolean enabled);
+    void deleteUser(Long userId);
 }
