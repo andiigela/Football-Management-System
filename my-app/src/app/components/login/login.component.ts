@@ -19,20 +19,20 @@ export class LoginComponent implements OnInit {
       this.authService.checkIsAuthenticated();
       this.loginFormGroup = this.formBuilder.group({
             login: this.formBuilder.group({
-                username: new FormControl('',[Validators.required]),
-                password: new FormControl('',[Validators.required])
+              email: ['', [Validators.required, Validators.email]],
+              password: new FormControl('',[Validators.required])
             })
         });
     }
 
     loginButton(): void {
         this.loginFormGroup.markAllAsTouched();
-        const username: string = this.loginFormGroup.controls['login'].get('username')?.value;
+        const email: string = this.loginFormGroup.controls['login'].get('email')?.value;
         const password: string = this.loginFormGroup.controls['login'].get('password')?.value;
 
-        const loginDto = new LoginDto(username, password);
+        const loginDto = new LoginDto(email, password);
 
-        if(username != '' && password != ''){
+        if(email != '' && password != ''){
             this.authService.loginUser(loginDto).subscribe((res: any) => {
                     this.authService.setTokens(res.accessToken, res.refreshToken);
                     this.router.navigateByUrl("/dashboard");

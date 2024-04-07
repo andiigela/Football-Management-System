@@ -44,12 +44,12 @@ public class AuthServiceImpl implements AuthService {
     public JwtResponseDto login(LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginDto.getUsername(),
+                        loginDto.getEmail(),
                         loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         if(authentication.isAuthenticated()){
-            JwtResponseDto tokenPair =this.jwtGenerator.generateTokens(loginDto.getUsername());
+            JwtResponseDto tokenPair =this.jwtGenerator.generateTokens(loginDto.getEmail());
             return tokenPair;
         }
         throw new UsernameNotFoundException("Invalid user request");
@@ -58,12 +58,12 @@ public class AuthServiceImpl implements AuthService {
     @Override
 
     public void register(RegisterDto registerDto) {
-        if (userRepository.existsByEmail(registerDto.getUsername())) {
+        if (userRepository.existsByEmail(registerDto.getEmail())) {
             throw new IllegalArgumentException("Username is taken!");
         }
 
         UserEntity user = new UserEntity();
-        user.setEmail(registerDto.getUsername());
+        user.setEmail(registerDto.getEmail());
 
         String hashedPassword = passwordEncoder.encode(registerDto.getPassword());
         user.setPassword(hashedPassword);

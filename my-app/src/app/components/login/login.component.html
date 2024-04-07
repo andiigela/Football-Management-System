@@ -4,11 +4,11 @@
       <h2>Log in</h2>
       <form [formGroup]="loginFormGroup" (ngSubmit)="loginButton()" class="mt-2">
         <div formGroupName="login">
-          <div formControlName="username" class="form-group">
-            <label for="exampleInputEmail1">Username</label>
-            <input type="text" class="form-control" formControlName="username" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username"><br>
-            <p style="margin-top: -25px" *ngIf="loginFormGroup.get('login.username')?.invalid && (loginFormGroup.get('login.username')?.dirty || loginFormGroup.get('login.username')?.touched)" class="text-danger">
-              Username is required
+          <div formControlName="email" class="form-group">
+            <label for="exampleInputEmail1">Email</label>
+            <input type="text" class="form-control" formControlName="email" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"><br>
+            <p style="margin-top: -25px" *ngIf="loginFormGroup.get('login.email')?.invalid && (loginFormGroup.get('login.email')?.dirty || loginFormGroup.get('login.email')?.touched)" class="text-danger">
+              Email is required
             </p>
           </div>
           <div formControlName="password" class="form-group">
