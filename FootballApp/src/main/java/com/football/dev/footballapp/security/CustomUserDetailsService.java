@@ -2,6 +2,7 @@ package com.football.dev.footballapp.security;
 
 import com.football.dev.footballapp.models.Role;
 import com.football.dev.footballapp.models.UserEntity;
+import com.football.dev.footballapp.models.principal.UserPrincipal;
 import com.football.dev.footballapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,11 +29,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username not found"));
-        return new User(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
+        UserEntity user = userRepository.findByEmail(username).get();
+        if (user ==null){
+            throw new UsernameNotFoundException("This user does not exists");
+        }
+        UserPrincipal userPrincipal=new UserPrincipal(user);
+        return userPrincipal;
     }
 
-    private Collection<GrantedAuthority> mapRolesToAuthorities(List<Role> roles) {
-        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
-    }
 }
