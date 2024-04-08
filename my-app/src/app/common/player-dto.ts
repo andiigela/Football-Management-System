@@ -1,4 +1,4 @@
 export class PlayerDto {
-  constructor(private name: string, private height: number,weight: number, shirtNumber:number,preferredFoot: string, position: string) {
+  constructor(public name: string, public height: number,public weight: number,public shirtNumber:number,public preferredFoot: string,public position: string) {
   }
 }

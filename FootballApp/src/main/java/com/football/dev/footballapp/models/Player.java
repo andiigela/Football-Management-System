@@ -18,11 +18,13 @@ import java.util.List;
 @Setter
 @Where(clause = "is_deleted=false")
 public class Player extends BaseEntity {
-    public Player(String name, Double height, Double weight, Integer shirtNumber){
+    public Player(String name, Double height, Double weight, Integer shirtNumber,String preferredFoot,String position){
         this.name = name;
         this.height=height;
         this.weight=weight;
         this.shirtNumber=shirtNumber;
+        this.preferred_foot=getFootFromString(preferredFoot);
+        this.position.add(getPositionFromString(position));
     }
     @ManyToOne
     private Club club;
@@ -36,5 +38,21 @@ public class Player extends BaseEntity {
     public String name;
     @Enumerated(value = EnumType.STRING)
     private Foot preferred_foot;
+    public static Foot getFootFromString(String footString) {
+        try {
+            return Foot.valueOf(footString.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            // Handle invalid string gracefully (e.g., return default value or log an error)
+            return null; // Or throw an exception, depending on your error handling strategy
+        }
+    }
+    public static FootballPosition getPositionFromString(String position) {
+        try {
+            return FootballPosition.valueOf(position.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            // Handle invalid string gracefully (e.g., return default value or log an error)
+            return null; // Or throw an exception, depending on your error handling strategy
+        }
+    }
 
 }

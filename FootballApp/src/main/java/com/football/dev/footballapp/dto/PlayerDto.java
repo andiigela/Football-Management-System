@@ -12,5 +12,4 @@ public class PlayerDto {
     private Integer shirtNumber;
     private String preferredFoot;
     private String position;
-
 }

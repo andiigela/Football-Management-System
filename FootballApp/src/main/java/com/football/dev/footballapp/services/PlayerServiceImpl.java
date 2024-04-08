@@ -5,16 +5,19 @@ import com.football.dev.footballapp.mapper.UserEntityDTOMapper;
 import com.football.dev.footballapp.models.Player;
 import com.football.dev.footballapp.repository.PlayerRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.function.Function;
+
 @Service
 public class PlayerServiceImpl implements PlayerService {
     private final PlayerRepository playerRepository;
-    private final PlayerDtoMapper playerDtoMapper;
-    public PlayerServiceImpl(PlayerRepository playerRepository,PlayerDtoMapper playerDtoMapper){
+    private final Function<PlayerDto, Player> playerDtoToPlayer;
+    public PlayerServiceImpl(PlayerRepository playerRepository,Function<PlayerDto, Player> playerDtoToPlayer){
         this.playerRepository=playerRepository;
-        this.playerDtoMapper=playerDtoMapper;
+        this.playerDtoToPlayer=playerDtoToPlayer;
     }
     public void savePlayer(PlayerDto playerDto){
-        Player player = playerDtoMapper.apply(playerDto);
+        Player player = playerDtoToPlayer.apply(playerDto);
         if(player == null) return;
         playerRepository.save(player);
     }

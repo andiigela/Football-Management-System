@@ -4,6 +4,8 @@ import {FootballPosition} from "../../enums/football-position";
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {PlayerDto} from "../../common/player-dto";
 import {PlayerService} from "../../services/player.service";
+import {Route, Router} from "@angular/router";
+import {RegisterDto} from "../../common/register-dto";
 
 @Component({
   selector: 'app-create-player',
@@ -14,30 +16,33 @@ export class CreatePlayerComponent implements OnInit {
   playerForm:FormGroup;
   footOptions = Object.values(Foot);
   positionOptions = Object.values(FootballPosition);
-  constructor(private formBuilder: FormBuilder,private playerService: PlayerService) {
+  constructor(private formBuilder: FormBuilder,private playerService: PlayerService,private router: Router) {
     this.playerForm = this.formBuilder.group({
       name: [''],
       height: [''],
       weight: [''],
       shirtNumber: [''],
-      preferredFoot: [''],
-      position: [''],
+      preferredFoot: ['LEFT'],
+      position: ['GOALKEEPER'],
     })
   }
   ngOnInit(): void {
   }
 
   public createPlayer(): void {
-    let name = this.playerForm.get("name")?.value
-    let height = this.playerForm.get("height")?.value
-    let weight = this.playerForm.get("weight")?.value
-    let shirtNumber = this.playerForm.get("shirtNumber")?.value
-    let preferredFoot = this.playerForm.get("preferredFoot")?.value
-    let position = this.playerForm.get("position")?.value;
-    let playerDto = new PlayerDto(name,height,weight,shirtNumber,preferredFoot,position);
+    const formData = this.playerForm.value;
+    const playerDto = new PlayerDto(
+      formData.name,
+      formData.height,
+      formData.weight,
+      formData.shirtNumber,
+      formData.preferredFoot,
+      formData.position
+    );
+    console.log(playerDto)
+    this.playerService.createPlayer(playerDto).subscribe(res=>{
+           console.log(res)});
+    this.router.navigateByUrl("/dashboard")
 
-    this.playerService.createPlayer(playerDto).subscribe(res => {
-       console.log(res)
-    })
   }
 }
