@@ -4,9 +4,11 @@ import com.football.dev.footballapp.mapper.PlayerDtoMapper;
 import com.football.dev.footballapp.mapper.UserEntityDTOMapper;
 import com.football.dev.footballapp.models.Player;
 import com.football.dev.footballapp.repository.PlayerRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 @Service
@@ -25,6 +27,13 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public List<Player> retrievePlayers() {
         return playerRepository.findAll();
+    }
+    @Override
+    public Player getPlayer(Long id) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("Player id must be a positive non-zero value");
+        }
+        return playerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + id));
     }
 
 
