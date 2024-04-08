@@ -10,6 +10,6 @@ public class PlayerDto {
     private Double height;
     private Double weight;
     private Integer shirtNumber;
-    private String preferredFoot;
+    private String preferred_foot;
     private String position;
 }

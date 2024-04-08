@@ -26,7 +26,7 @@ export class PlayerService {
   }
   public retrievePlayer(id: number): Observable<PlayerDto>{
     let headers = this.getHeaders();
-    return this.http.get<PlayerDto>(`${this.playerUrl}/edit/${id}`,{headers})
+    return this.http.get<PlayerDto>(`${this.playerUrl}/${id}`,{headers})
   }
 
 }

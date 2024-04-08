@@ -19,9 +19,9 @@
             <td>{{val.height}}</td>
             <td>{{val.weight}}</td>
             <td>{{val.shirtNumber}}</td>
-            <td>{{val.preferredFoot}}</td>
+            <td>{{val.preferred_foot}}</td>
             <td>
-                <button>Edit</button>
+                <button (click)="this.editPlayer(val.id)">Edit</button>
             </td>
         </tr>
         </tbody>

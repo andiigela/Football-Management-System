@@ -22,7 +22,7 @@ export class CreatePlayerComponent implements OnInit {
       height: [''],
       weight: [''],
       shirtNumber: [''],
-      preferredFoot: ['LEFT'],
+      preferred_foot: ['LEFT'],
       position: ['GOALKEEPER'],
     })
   }
@@ -36,12 +36,11 @@ export class CreatePlayerComponent implements OnInit {
       formData.height,
       formData.weight,
       formData.shirtNumber,
-      formData.preferredFoot,
+      formData.preferred_foot,
       formData.position
     );
-    console.log(playerDto)
-    this.playerService.createPlayer(playerDto).subscribe(res=>{
-           console.log(res)});
+    console.log(playerDto.preferred_foot)
+    this.playerService.createPlayer(playerDto).subscribe(res=>console.log(res))
     this.router.navigateByUrl("/dashboard")
 
   }

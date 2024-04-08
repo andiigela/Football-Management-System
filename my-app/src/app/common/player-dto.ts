@@ -1,4 +1,5 @@
 export class PlayerDto {
-  constructor(public name: string, public height: number,public weight: number,public shirtNumber:number,public preferredFoot: string,public position: string) {
+  public id =0;
+  constructor(public name: string, public height: number,public weight: number,public shirtNumber:number,public preferred_foot: string,public position: string) {
   }
 }

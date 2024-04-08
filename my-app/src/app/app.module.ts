@@ -16,6 +16,7 @@ import { CreatePlayerComponent } from './components/create-player/create-player.
 import { PlayersListComponent } from './components/players-list/players-list.component';
 import { PlayerEditComponent } from './components/player-edit/player-edit.component';
 const routes : Routes = [
+  {path: 'players/edit/:id',component:PlayerEditComponent},
   {path: 'players',component:PlayersListComponent},
   {path: 'create-player',component:CreatePlayerComponent},
   {path: 'login',component:LoginComponent,canActivate: [AuthGuard]},

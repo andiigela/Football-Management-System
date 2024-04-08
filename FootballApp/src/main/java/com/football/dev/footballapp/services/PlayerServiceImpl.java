@@ -19,6 +19,7 @@ public class PlayerServiceImpl implements PlayerService {
         this.playerRepository=playerRepository;
         this.playerDtoToPlayer=playerDtoToPlayer;
     }
+    @Override
     public void savePlayer(PlayerDto playerDto){
         Player player = playerDtoToPlayer.apply(playerDto);
         if(player == null) return;

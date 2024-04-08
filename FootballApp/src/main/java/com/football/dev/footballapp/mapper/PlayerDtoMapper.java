@@ -10,7 +10,7 @@ import java.util.function.Function;
 public class PlayerDtoMapper implements Function<PlayerDto, Player> {
     @Override
     public Player apply(PlayerDto playerDto) {
-        Player player = new Player(playerDto.getName(),playerDto.getHeight(),playerDto.getWeight(),playerDto.getShirtNumber(), playerDto.getPreferredFoot(),playerDto.getPosition());
+        Player player = new Player(playerDto.getName(),playerDto.getHeight(),playerDto.getWeight(),playerDto.getShirtNumber(), playerDto.getPreferred_foot(),playerDto.getPosition());
         return player;
     }
 }

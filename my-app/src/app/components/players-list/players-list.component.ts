@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {PlayerService} from "../../services/player.service";
 import {PlayerDto} from "../../common/player-dto";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-players-list',
@@ -9,7 +10,7 @@ import {PlayerDto} from "../../common/player-dto";
 })
 export class PlayersListComponent implements OnInit{
   playersList: PlayerDto[] = [];
-  constructor(private playerService: PlayerService) {
+  constructor(private playerService: PlayerService,private router: Router) {
   }
 
   ngOnInit(): void {
@@ -18,7 +19,10 @@ export class PlayersListComponent implements OnInit{
   public getPlayers(){
     this.playerService.retrievePlayers().subscribe((response)=>{
        this.playersList = response;
+       console.log(response);
     })
   }
-
+  editPlayer(id: number){
+    this.router.navigate(['/players/edit/',id])
+  }
 }
