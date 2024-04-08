@@ -78,13 +78,13 @@ export class AuthService {
     setAccessToken(accessToken: string): void {
         localStorage.setItem(this.accessTokenKey, accessToken);
     }
-    getRoleFromToken(): string | null {
+   /* getRoleFromToken(): string | null {
         const accessToken: string | null = this.getAccessToken();
         if (!accessToken) return null;
 
         const payload = this.parseJwtPayload(accessToken);
         return payload?.role || null;
-    }
+    }*/
 
   getUserIdFromToken(): number | null {
     const accessToken: string | null = this.getAccessToken();

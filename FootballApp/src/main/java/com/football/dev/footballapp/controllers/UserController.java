@@ -25,7 +25,6 @@ public class UserController {
                 .filter(user -> !user.getId().equals(currentUserId))
                 .collect(Collectors.toList());
     }
-
     @PutMapping("users/{userId}/status")
     public void updateUserStatus(@PathVariable Long userId, @RequestParam boolean enabled) {
         userService.updateUserStatus(userId, enabled);

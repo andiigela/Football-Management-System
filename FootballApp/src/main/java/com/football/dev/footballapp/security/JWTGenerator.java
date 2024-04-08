@@ -27,9 +27,9 @@
             Date accessTokenExpiry = new Date(currentDate.getTime() + SecurityConstants.JWT_EXPIRATION * 1000);
             String accessToken = Jwts.builder()
                     .setSubject(username)
-                    .claim("userId", userId)
-                    .claim("role", role)
-                    .claim("enabled", enabled)
+                    .claim("userId", userId) //per me check cili user eshte logged in
+                    .claim("role", role) //per me dit ne cfare dashboard me redirect
+                    .claim("enabled", enabled) //a eshte i aprovum prej adminit per me pas casje ne dashboard
                     .setIssuedAt(currentDate)
                     .setExpiration(accessTokenExpiry)
                     .signWith(key, SignatureAlgorithm.HS512)
@@ -67,8 +67,6 @@
                     .signWith(key, SignatureAlgorithm.HS512)
                     .compact();
         }
-
-
         public boolean validateToken(String token) {
             try {
                 Jwts.parserBuilder()
