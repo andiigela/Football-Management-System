@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {map, Observable} from "rxjs";
 import {PlayerDto} from "../common/player-dto";
 
 @Injectable({
@@ -20,14 +20,9 @@ export class PlayerService {
     let headers = this.getHeaders();
     return this.http.post(`${this.playerUrl}/create`,playerDto,{headers});
   }
-  public retrievePlayers(): Observable<GetPlayersResponse>{
+  public retrievePlayers(): Observable<PlayerDto[]>{
     let headers = this.getHeaders();
-    return this.http.get<GetPlayersResponse>(`${this.playerUrl}/`,{headers});
+    return this.http.get<PlayerDto[]>(`${this.playerUrl}/`,{headers});
   }
 
-}
-interface GetPlayersResponse {
-  _embedded: {
-    players: PlayerDto[]
-  }
 }

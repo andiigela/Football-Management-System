@@ -12,11 +12,13 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
+        <tr *ngFor="let val of playersList">
             <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
+            <td>{{val.name}}</td>
+            <td>{{val.height}}</td>
+            <td>{{val.weight}}</td>
+            <td>{{val.shirtNumber}}</td>
+            <td>{{val.preferredFoot}}</td>
         </tr>
         </tbody>
     </table>
