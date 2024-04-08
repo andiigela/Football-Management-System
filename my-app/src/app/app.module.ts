@@ -13,7 +13,9 @@ import {AuthGuard} from "./services/auth.guard";
 import {AuthGuard2} from "./services/auth2.guard";
 import {RegisterComponent} from "./components/register/register.component";
 import { CreatePlayerComponent } from './components/create-player/create-player.component';
+import { PlayersListComponent } from './components/players-list/players-list.component';
 const routes : Routes = [
+  {path: 'players',component:PlayersListComponent},
   {path: 'create-player',component:CreatePlayerComponent},
   {path: 'login',component:LoginComponent,canActivate: [AuthGuard]},
   {path: 'dashboard',component:DashboardComponent,canActivate: [AuthGuard2]},
@@ -28,7 +30,8 @@ const routes : Routes = [
     DashboardComponent,
     LoginstatusComponent,
     RegisterComponent,
-    CreatePlayerComponent
+    CreatePlayerComponent,
+    PlayersListComponent
   ],
   imports: [
     RouterModule.forRoot(routes),

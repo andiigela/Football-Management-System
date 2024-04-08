@@ -6,6 +6,7 @@ import com.football.dev.footballapp.models.Player;
 import com.football.dev.footballapp.repository.PlayerRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.function.Function;
 
 @Service
@@ -21,7 +22,10 @@ public class PlayerServiceImpl implements PlayerService {
         if(player == null) return;
         playerRepository.save(player);
     }
-
+    @Override
+    public List<Player> retrievePlayers() {
+        return playerRepository.findAll();
+    }
 
 
 }
