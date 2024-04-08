@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
+import { AuthService } from '../../services/auth.service'; // Update the path
 
 @Component({
   selector: 'app-dashboard',
@@ -8,17 +9,28 @@ import { HttpClient } from "@angular/common/http";
 })
 export class DashboardComponent implements OnInit {
   users: any[] = [];
+  currentUserId: number | null = null; // Variable to store the current user's ID
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private authService: AuthService) { } // Inject AuthService
 
   ngOnInit(): void {
+    this.getCurrentUserId();
     this.loadUsers();
   }
 
+  getCurrentUserId(): void {
+    this.currentUserId = this.authService.getUserIdFromToken();
+  }
+
   loadUsers(): void {
-    this.http.get("http://localhost:8080/api/users").subscribe((res: any) => {
-      this.users = JSON.parse(JSON.stringify(res));
-    })
+    if (this.currentUserId !== null) {
+
+      this.http.get(`http://localhost:8080/api/users?currentUserId=${this.currentUserId}`).subscribe((res: any) => {
+        this.users = JSON.parse(JSON.stringify(res));
+      });
+    } else {
+      console.log("User ID not available in token.");
+    }
   }
 
   updateUserStatus(userId: number, enabled: boolean): void {

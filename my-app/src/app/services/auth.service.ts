@@ -86,7 +86,13 @@ export class AuthService {
         return payload?.role || null;
     }
 
+  getUserIdFromToken(): number | null {
+    const accessToken: string | null = this.getAccessToken();
+    if (!accessToken) return null;
 
+    const payload = this.parseJwtPayload(accessToken);
+    return payload?.userId || null;
+  }
      parseJwtPayload(token: string): any {
         const payloadBase64 = token.split('.')[1];
         const decodedPayload = atob(payloadBase64);

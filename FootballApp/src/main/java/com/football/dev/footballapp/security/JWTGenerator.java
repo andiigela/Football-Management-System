@@ -20,13 +20,14 @@
             this.refreshTokenService=refreshTokenService;
         }
 
-        public JwtResponseDto generateTokens(String username, String role, boolean enabled) {
+        public JwtResponseDto generateTokens(Long userId, String username, String role, boolean enabled) {
             Date currentDate = new Date();
 
             // Generate access token
             Date accessTokenExpiry = new Date(currentDate.getTime() + SecurityConstants.JWT_EXPIRATION * 1000);
             String accessToken = Jwts.builder()
                     .setSubject(username)
+                    .claim("userId", userId)
                     .claim("role", role)
                     .claim("enabled", enabled)
                     .setIssuedAt(currentDate)
@@ -38,8 +39,9 @@
             Date refreshTokenExpiry = new Date(currentDate.getTime() + SecurityConstants.REFRESH_TOKEN_EXPIRATION * 1000);
             String refreshToken = Jwts.builder()
                     .setSubject(username)
-                    .claim("role", role)  // Include role in refresh token as well
-                    .claim("enabled", enabled)  // Include enabled status in refresh token as well
+                    .claim("userId", userId)
+                    .claim("role", role)
+                    .claim("enabled", enabled)
                     .setIssuedAt(currentDate)
                     .setExpiration(refreshTokenExpiry)
                     .signWith(key, SignatureAlgorithm.HS512)

@@ -15,6 +15,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -50,14 +51,16 @@ public class AuthServiceImpl implements AuthService {
 
         if (authentication.isAuthenticated()) {
             String userEmail = loginDto.getEmail();
+
             UserEntity user = userRepository.findByEmail(userEmail)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + userEmail));
             Role role = user.getRole();
             boolean enabled = user.isEnabled();
-            return jwtGenerator.generateTokens(userEmail, role.getDescription(), enabled);
+            return jwtGenerator.generateTokens(user.getId(), userEmail, role.getDescription(), enabled);
         }
         throw new UsernameNotFoundException("Invalid user request");
     }
+
 
     @Override
 

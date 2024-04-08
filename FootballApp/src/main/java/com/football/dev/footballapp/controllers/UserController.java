@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/")
@@ -19,9 +20,12 @@ public class UserController {
     }
     @GetMapping("users")
     @PreAuthorize("hasRole('ADMIN')")
-    public List<UserEntity> getAllUsers() {
-        return userService.getAllUsers();
+    public List<UserEntity> getAllUsers(@RequestParam Long currentUserId) {
+        return userService.getAllUsers().stream()
+                .filter(user -> !user.getId().equals(currentUserId))
+                .collect(Collectors.toList());
     }
+
     @PutMapping("users/{userId}/status")
     public void updateUserStatus(@PathVariable Long userId, @RequestParam boolean enabled) {
         userService.updateUserStatus(userId, enabled);
