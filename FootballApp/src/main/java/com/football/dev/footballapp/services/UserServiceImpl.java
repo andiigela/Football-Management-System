@@ -33,4 +33,8 @@ public class UserServiceImpl implements UserService{
             throw new RuntimeException("Failed to delete user with ID: " + userId, e);
         }
     }
+    @Override
+    public List<UserEntity> getUsersByRole(String role) {
+        return userRepository.findByRoleDescription(role);
+    }
 }

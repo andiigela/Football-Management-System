@@ -10,4 +10,5 @@ public interface UserService {
     List<UserEntity> getAllUsers();
     void updateUserStatus(Long userId, boolean enabled);
     void deleteUser(Long userId);
+    List<UserEntity> getUsersByRole(String role);
 }
