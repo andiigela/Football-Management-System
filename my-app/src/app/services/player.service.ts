@@ -32,5 +32,9 @@ export class PlayerService {
     let headers= this.getHeaders();
     return this.http.post(`${this.playerUrl}/edit/${id}`,playerDto,{headers});
   }
+  public deletePlayer(id: number): Observable<any>{
+    let headers = this.getHeaders();
+    return this.http.delete(`${this.playerUrl}/delete/${id}`,{headers})
+  }
 
 }

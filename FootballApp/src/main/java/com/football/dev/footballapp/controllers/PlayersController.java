@@ -56,6 +56,7 @@ public class PlayersController {
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deletePlayer(@PathVariable("id") Long id){
+        playerService.deletePlayer(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

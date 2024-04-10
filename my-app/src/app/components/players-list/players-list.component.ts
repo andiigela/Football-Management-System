@@ -25,4 +25,10 @@ export class PlayersListComponent implements OnInit{
   editPlayer(id: number){
     this.router.navigate(['/players/edit/',id])
   }
+  deletePlayer(id: number){
+    this.playerService.deletePlayer(id)
+        .subscribe(()=> {
+          this.playersList = this.playersList.filter(player => player.id != id)
+        })
+  }
 }

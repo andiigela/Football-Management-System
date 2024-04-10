@@ -21,7 +21,8 @@
             <td>{{val.shirtNumber}}</td>
             <td>{{val.preferred_foot}}</td>
             <td>
-                <button (click)="this.editPlayer(val.id)">Edit</button>
+                <button class="btn btn-warning" style="margin-right: 10px" (click)="this.editPlayer(val.id)">Edit</button>
+                <button class="btn btn-danger" (click)="this.deletePlayer(val.id)">Delete</button>
             </td>
         </tr>
         </tbody>

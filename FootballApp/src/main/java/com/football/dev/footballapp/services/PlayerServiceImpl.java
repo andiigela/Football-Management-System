@@ -32,9 +32,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
     @Override
     public Player getPlayer(Long id) {
-        if (id == null || id <= 0) {
-            throw new IllegalArgumentException("Player id must be a positive non-zero value");
-        }
+        if (id == null || id <= 0) throw new IllegalArgumentException("Player id must be a positive non-zero value");
         return playerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + id));
     }
 
@@ -49,6 +47,11 @@ public class PlayerServiceImpl implements PlayerService {
         playerDb.setPreferred_foot(Foot.valueOf(playerDto.getPreferred_foot()));
         playerRepository.save(playerDb);
     }
+    @Override
+    public void deletePlayer(Long id) {
+        if (id == null || id <= 0) throw new IllegalArgumentException("Player id must be a positive non-zero value");
+        playerRepository.deleteById(id);
 
+    }
 
 }
