@@ -26,7 +26,11 @@ export class PlayerService {
   }
   public retrievePlayer(id: number): Observable<PlayerDto>{
     let headers = this.getHeaders();
-    return this.http.get<PlayerDto>(`${this.playerUrl}/edit/${id}`,{headers})
+    return this.http.get<PlayerDto>(`${this.playerUrl}/${id}`,{headers})
+  }
+  public updatePlayer(playerDto: PlayerDto,id: number): Observable<any>{
+    let headers= this.getHeaders();
+    return this.http.post(`${this.playerUrl}/edit/${id}`,playerDto,{headers});
   }
 
 }

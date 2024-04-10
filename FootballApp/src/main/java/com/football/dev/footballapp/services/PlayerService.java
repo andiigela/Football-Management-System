@@ -10,4 +10,5 @@ public interface PlayerService {
     List<Player> retrievePlayers();
     Player getPlayer(Long id);
     void updatePlayer(PlayerDto playerDto, Long id);
+    void deletePlayer(Long id);
 }

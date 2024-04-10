@@ -49,4 +49,6 @@ public class PlayerServiceImpl implements PlayerService {
         playerDb.setPreferred_foot(Foot.valueOf(playerDto.getPreferred_foot()));
         playerRepository.save(playerDb);
     }
+
+
 }

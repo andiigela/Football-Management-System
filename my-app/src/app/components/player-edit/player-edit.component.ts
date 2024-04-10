@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {PlayerService} from "../../services/player.service";
 import {PlayerDto} from "../../common/player-dto";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {Foot} from "../../enums/foot";
 import {FootballPosition} from "../../enums/football-position";
@@ -16,13 +16,14 @@ export class PlayerEditComponent implements OnInit{
   editForm: FormGroup;
   footOptions = Object.values(Foot);
   positionOptions = Object.values(FootballPosition);
-  constructor(private playerService: PlayerService,private route: ActivatedRoute,private formBuilder: FormBuilder) {
-    this.editForm = formBuilder.group({
+  constructor(private playerService: PlayerService,private route: ActivatedRoute,private formBuilder: FormBuilder,
+              private router: Router) {
+    this.editForm = this.formBuilder.group({
       name: [''],
       height: [''],
       weight: [''],
       shirtNumber: [''],
-      preferredFoot: ['LEFT'],
+      preferred_foot: ['LEFT'],
       position: ['GOALKEEPER'],
     })
   }
@@ -32,16 +33,25 @@ export class PlayerEditComponent implements OnInit{
       this.getPlayer(playerId);
     })
   }
+  updatePlayer(){
+    const formValue = this.editForm.value
+    let playerEditInfo = new PlayerDto(formValue.name, formValue.height, formValue.weight,
+        formValue.shirtNumber, formValue.preferred_foot, "");
+    this.playerService.updatePlayer(playerEditInfo,this.playerEdit.id)
+        .subscribe(()=>{
+          this.router.navigate(["/players"])
+        });
+  }
   getPlayer(playerId: number){
     this.playerService.retrievePlayer(playerId).subscribe((player)=>{
-      this.playerEdit = player;
-      console.log(this.playerEdit.preferred_foot)
+      this.playerEdit = new PlayerDto(player.name,player.height,player.weight,player.shirtNumber,player.preferred_foot,"");
+      this.playerEdit.id=player.id
       this.editForm.patchValue({
         name: player.name,
         height: player.height,
         weight: player.weight,
         shirtNumber: player.shirtNumber,
-        preferredFoot: player.preferred_foot,
+        preferred_foot: player.preferred_foot,
         position: 'GOALKEEPER'
       })
     })

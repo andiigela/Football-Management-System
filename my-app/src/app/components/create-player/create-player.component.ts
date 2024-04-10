@@ -39,7 +39,6 @@ export class CreatePlayerComponent implements OnInit {
       formData.preferred_foot,
       formData.position
     );
-    console.log(playerDto.preferred_foot)
     this.playerService.createPlayer(playerDto).subscribe(res=>console.log(res))
     this.router.navigateByUrl("/dashboard")
 

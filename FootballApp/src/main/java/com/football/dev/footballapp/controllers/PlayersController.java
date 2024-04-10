@@ -16,12 +16,14 @@ import java.util.List;
 public class PlayersController {
     private final PlayerService playerService;
     private final JWTGenerator jwtGenerator;
-    public PlayersController(PlayerService playerService,JWTGenerator jwtGenerator){
-        this.playerService=playerService;
-        this.jwtGenerator=jwtGenerator;
+
+    public PlayersController(PlayerService playerService, JWTGenerator jwtGenerator) {
+        this.playerService = playerService;
+        this.jwtGenerator = jwtGenerator;
     }
+
     @PostMapping("/create")
-    public ResponseEntity<String> createPlayer(@RequestBody PlayerDto playerDto, HttpServletRequest request){
+    public ResponseEntity<String> createPlayer(@RequestBody PlayerDto playerDto, HttpServletRequest request) {
         String authorizationHeader = request.getHeader("Authorization");
 
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
@@ -37,16 +39,24 @@ public class PlayersController {
         playerService.savePlayer(playerDto);
         return ResponseEntity.status(HttpStatus.CREATED).body("Player created successfully");
     }
+
     @GetMapping("/")
-    public ResponseEntity<List<Player>> getPlayers(){
+    public ResponseEntity<List<Player>> getPlayers() {
         return ResponseEntity.status(HttpStatus.OK).body(playerService.retrievePlayers());
     }
-    @GetMapping("/edit/{id}")
-    public ResponseEntity<Player> getPlayer(@PathVariable("id") Long id){
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Player> getPlayer(@PathVariable("id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(playerService.getPlayer(id));
     }
     @PostMapping("/edit/{id}")
-    public ResponseEntity<Player> editPlayer(@RequestBody PlayerDto playerDto,@PathVariable("id") Long id){
-        return ResponseEntity.status(HttpStatus.OK).body(playerService.getPlayer(id));
+    public ResponseEntity<String> editPlayer(@RequestBody PlayerDto playerDto, @PathVariable("id") Long id) {
+        playerService.updatePlayer(playerDto,id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deletePlayer(@PathVariable("id") Long id){
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
 }
