@@ -9,4 +9,5 @@ public interface PlayerService {
     void savePlayer(PlayerDto playerDto);
     List<Player> retrievePlayers();
     Player getPlayer(Long id);
+    void updatePlayer(PlayerDto playerDto, Long id);
 }

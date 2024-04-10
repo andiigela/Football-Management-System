@@ -41,8 +41,12 @@ public class PlayersController {
     public ResponseEntity<List<Player>> getPlayers(){
         return ResponseEntity.status(HttpStatus.OK).body(playerService.retrievePlayers());
     }
-    @GetMapping("/{id}")
+    @GetMapping("/edit/{id}")
     public ResponseEntity<Player> getPlayer(@PathVariable("id") Long id){
+        return ResponseEntity.status(HttpStatus.OK).body(playerService.getPlayer(id));
+    }
+    @PostMapping("/edit/{id}")
+    public ResponseEntity<Player> editPlayer(@RequestBody PlayerDto playerDto,@PathVariable("id") Long id){
         return ResponseEntity.status(HttpStatus.OK).body(playerService.getPlayer(id));
     }
 }

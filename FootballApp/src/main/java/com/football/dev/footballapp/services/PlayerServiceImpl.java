@@ -3,6 +3,7 @@ import com.football.dev.footballapp.dto.PlayerDto;
 import com.football.dev.footballapp.mapper.PlayerDtoMapper;
 import com.football.dev.footballapp.mapper.UserEntityDTOMapper;
 import com.football.dev.footballapp.models.Player;
+import com.football.dev.footballapp.models.enums.Foot;
 import com.football.dev.footballapp.repository.PlayerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -37,5 +38,15 @@ public class PlayerServiceImpl implements PlayerService {
         return playerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + id));
     }
 
-
+    @Override
+    public void updatePlayer(PlayerDto playerDto,Long id) {
+        if(playerDto == null) return;
+        Player playerDb = playerRepository.findById(id).orElseThrow(()->new EntityNotFoundException("Player not found with id: " + id));
+        playerDb.setName(playerDto.getName());
+        playerDb.setHeight(playerDto.getHeight());
+        playerDb.setWeight(playerDto.getWeight());
+        playerDb.setShirtNumber(playerDto.getShirtNumber());
+        playerDb.setPreferred_foot(Foot.valueOf(playerDto.getPreferred_foot()));
+        playerRepository.save(playerDb);
+    }
 }
