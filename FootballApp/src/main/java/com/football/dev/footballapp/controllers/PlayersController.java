@@ -25,13 +25,11 @@ public class PlayersController {
     @PostMapping("/create")
     public ResponseEntity<String> createPlayer(@RequestBody PlayerDto playerDto, HttpServletRequest request) {
         String authorizationHeader = request.getHeader("Authorization");
-
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
         }
         // Extract token (excluding 'Bearer ')
         String token = authorizationHeader.substring(7);
-
         // Validate token (e.g., using JWT library)
         if (!jwtGenerator.validateToken(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
@@ -39,12 +37,10 @@ public class PlayersController {
         playerService.savePlayer(playerDto);
         return ResponseEntity.status(HttpStatus.CREATED).body("Player created successfully");
     }
-
     @GetMapping("/")
     public ResponseEntity<List<Player>> getPlayers() {
         return ResponseEntity.status(HttpStatus.OK).body(playerService.retrievePlayers());
     }
-
     @GetMapping("/{id}")
     public ResponseEntity<Player> getPlayer(@PathVariable("id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(playerService.getPlayer(id));
@@ -59,5 +55,4 @@ public class PlayersController {
         playerService.deletePlayer(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-
 }

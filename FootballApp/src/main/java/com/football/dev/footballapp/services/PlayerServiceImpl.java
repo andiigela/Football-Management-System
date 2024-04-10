@@ -2,10 +2,15 @@ package com.football.dev.footballapp.services;
 import com.football.dev.footballapp.dto.PlayerDto;
 import com.football.dev.footballapp.mapper.PlayerDtoMapper;
 import com.football.dev.footballapp.mapper.UserEntityDTOMapper;
+import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.Player;
+import com.football.dev.footballapp.models.UserEntity;
 import com.football.dev.footballapp.models.enums.Foot;
+import com.football.dev.footballapp.repository.ClubRepository;
 import com.football.dev.footballapp.repository.PlayerRepository;
+import com.football.dev.footballapp.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,20 +20,28 @@ import java.util.function.Function;
 @Service
 public class PlayerServiceImpl implements PlayerService {
     private final PlayerRepository playerRepository;
+    private final ClubRepository clubRepository;
     private final Function<PlayerDto, Player> playerDtoToPlayer;
-    public PlayerServiceImpl(PlayerRepository playerRepository,Function<PlayerDto, Player> playerDtoToPlayer){
+    public PlayerServiceImpl(PlayerRepository playerRepository,Function<PlayerDto, Player> playerDtoToPlayer,
+                             ClubRepository clubRepository){
         this.playerRepository=playerRepository;
         this.playerDtoToPlayer=playerDtoToPlayer;
+        this.clubRepository=clubRepository;
     }
     @Override
     public void savePlayer(PlayerDto playerDto){
         Player player = playerDtoToPlayer.apply(playerDto);
         if(player == null) return;
+        Club clubDb = clubRepository.findClubByUserEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(clubDb == null) throw new EntityNotFoundException("User is not authenticated.");
+        player.setClub(clubDb);
         playerRepository.save(player);
     }
     @Override
     public List<Player> retrievePlayers() {
-        return playerRepository.findAll();
+        Club clubDb = clubRepository.findClubByUserEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(clubDb == null) throw new EntityNotFoundException("User is not authenticated.");
+        return playerRepository.findPlayersByClub(clubDb);
     }
     @Override
     public Player getPlayer(Long id) {
