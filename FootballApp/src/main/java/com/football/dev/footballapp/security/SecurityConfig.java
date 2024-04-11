@@ -42,6 +42,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/auth/refreshToken").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/users/**").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/users/**").authenticated()
+                .requestMatchers(HttpMethod.PUT, "/api/users/**").authenticated()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();

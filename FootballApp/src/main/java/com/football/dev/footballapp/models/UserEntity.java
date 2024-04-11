@@ -2,6 +2,7 @@ package com.football.dev.footballapp.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.football.dev.footballapp.models.enums.Gender;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
@@ -12,6 +13,7 @@ import java.util.Date;
 @Table(name = "users")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Where(clause = "is_deleted=false")
 public class UserEntity extends BaseEntity {
 
@@ -43,5 +45,20 @@ public class UserEntity extends BaseEntity {
     @OneToOne(mappedBy = "userInfo", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private RefreshToken refreshToken;
+    public UserEntity(String firstName, String lastName, String email, String phone, String country,
+                      Date birthDate, String profilePicture, String address, String city,
+                      String postalCode, Gender gender) {
 
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phone = phone;
+        this.country = country;
+        this.birthDate = birthDate;
+        profile_picture = profilePicture;
+        this.address = address;
+        this.city = city;
+        postal_code = postalCode;
+        this.gender = gender;
+    }
 }
