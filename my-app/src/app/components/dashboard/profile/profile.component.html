@@ -160,7 +160,7 @@
                       <h6 class="mb-0">Birth Date</h6>
                     </div>
                     <div class="col-sm-9">
-                      <input type="date" class="form-control" formControlName="birthDate" />
+                      <input type="date" class="form-control" formControlName="birthDate" [value]="userProfile.birthDate | date:'yyyy-MM-dd'"/>
                     </div>
                   </div>
                   <hr />
@@ -197,8 +197,7 @@
                     </div>
                     <div class="col-sm-9">
                       <select class="form-control" formControlName="gender">
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
+                        <option *ngFor="let option of genderOptions" [value]="option.value" [selected]="option.value === userProfile.gender">{{ option.label }}</option>
                       </select>
                     </div>
                   </div>
@@ -218,3 +217,4 @@
     </div>
   </div>
 </div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">

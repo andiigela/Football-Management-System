@@ -34,7 +34,10 @@ export class ProfileComponent implements OnInit {
             gender: ['', Validators.required]
         });
     }
-
+  genderOptions = [
+    { label: 'MALE', value: 'MALE' },
+    { label: 'FEMALE', value: 'FEMALE' }
+  ];
     ngOnInit(): void {
         const userId: number | null = this.authService.getUserIdFromToken();
 
