@@ -9,5 +9,5 @@ import java.util.Date;
 import java.util.List;
 
 public record UserEntityDto (String firstName, String lastName, String email, String phone, String country, Date birthDate,
-                            String profilePicture, String address, String city, String postalCode, Gender gender){
+                            String profile_picture, String address, String city, String postal_code, Gender gender){
 }

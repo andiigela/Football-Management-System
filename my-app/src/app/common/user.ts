@@ -8,10 +8,10 @@ export interface User {
     phone: string;
     country: string;
     birthDate: Date;
-    profilePicture: string;
+    profile_picture: string;
     address: string;
     city: string;
-    postalCode: string;
+    postal_code: string;
     roleId: number;
     gender: string;
 }

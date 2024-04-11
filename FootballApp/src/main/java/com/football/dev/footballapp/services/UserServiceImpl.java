@@ -78,10 +78,10 @@ public class UserServiceImpl implements UserService{
         userToUpdate.setPhone(updatedUserDto.phone());
         userToUpdate.setCountry(updatedUserDto.country());
         userToUpdate.setBirthDate(updatedUserDto.birthDate());
-        userToUpdate.setProfile_picture(updatedUserDto.profilePicture());
+        userToUpdate.setProfile_picture(updatedUserDto.profile_picture());
         userToUpdate.setAddress(updatedUserDto.address());
         userToUpdate.setCity(updatedUserDto.city());
-        userToUpdate.setPostal_code(updatedUserDto.postalCode());
+        userToUpdate.setPostal_code(updatedUserDto.postal_code());
         userToUpdate.setGender(updatedUserDto.gender());
 
         userRepository.save(userToUpdate);
