@@ -3,6 +3,9 @@
   <hr />
   <div class="container pt-5 pb-5">
     <div class="main-body">
+      <div *ngIf="showMissingInfoMessage" class="alert alert-danger" role="alert">
+        Please provide your personal information.
+      </div>
       <div class="row gutters-sm">
         <div class="col-md-4 mb-3">
           <div class="card">
@@ -133,7 +136,7 @@
                       <h6 class="mb-0">Email</h6>
                     </div>
                     <div class="col-sm-9">
-                      <input type="email" class="form-control" formControlName="email" />
+                      <input type="email" class="form-control" formControlName="email" readonly/>
                     </div>
                   </div>
                   <hr />

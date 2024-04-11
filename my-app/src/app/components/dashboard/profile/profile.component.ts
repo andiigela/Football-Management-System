@@ -13,6 +13,7 @@ export class ProfileComponent implements OnInit {
     profileForm: FormGroup;
     userProfile: any;
     editMode: boolean = false;
+    showMissingInfoMessage: boolean = false;
 
     constructor(
         private userService: UserService,
@@ -71,11 +72,23 @@ export class ProfileComponent implements OnInit {
                 postal_code: this.userProfile.postal_code,
                 gender: this.userProfile.gender
             });
+
+
+            if (!this.userProfile.firstName ||
+                !this.userProfile.lastName ||
+                !this.userProfile.email ||
+                !this.userProfile.phone ||
+                !this.userProfile.country ||
+                !this.userProfile.birthDate ||
+                !this.userProfile.gender) {
+                this.showMissingInfoMessage = true;
+            } else {
+                this.showMissingInfoMessage = false;
+            }
         } else {
             console.log('User profile is null');
         }
     }
-
     toggleEditMode() {
         this.editMode = !this.editMode;
     }
@@ -83,9 +96,9 @@ export class ProfileComponent implements OnInit {
     saveProfile() {
         if (this.profileForm.valid) {
             const userData = this.profileForm.value;
-            const userId: number | null = this.authService.getUserIdFromToken();
+            const userId = this.userProfile.id; // Use the user ID obtained during initialization
 
-            if (userId !== null) {
+            if (userId) {
                 this.userService.updateUser(userId, userData).subscribe(
                     () => {
                         console.log('Profile updated successfully');
