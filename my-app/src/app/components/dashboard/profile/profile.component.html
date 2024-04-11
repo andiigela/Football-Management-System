@@ -25,103 +25,196 @@
         <div class="col-md-8">
           <div class="card mb-3">
             <div class="card-body">
-              <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
-                <div class="col-sm-3">
-                  <h6 class="mb-0">Full Name</h6>
+              <div *ngIf="!editMode">
+                <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Full Name</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary text-capitalize">
+                    {{ userProfile.firstName }} {{ userProfile.lastName }}
+                  </div>
                 </div>
-                <div class="col-sm-9 text-secondary text-capitalize">
-                  {{ userProfile.firstName }} {{ userProfile.lastName }}
+                <hr />
+                <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Email</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    {{ userProfile.email }}
+                  </div>
                 </div>
-              </div>
-              <hr />
-              <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
-                <div class="col-sm-3">
-                  <h6 class="mb-0">Email</h6>
+                <hr />
+                <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Phone</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    {{ userProfile.phone }}
+                  </div>
                 </div>
-                <div class="col-sm-9 text-secondary">
-                  {{ userProfile.email }}
+                <hr />
+                <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Country</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    {{ userProfile.country }}
+                  </div>
                 </div>
-              </div>
-              <hr />
-              <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
-                <div class="col-sm-3">
-                  <h6 class="mb-0">Phone</h6>
+                <hr />
+                <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Birth Date</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    {{ userProfile.birthDate | date }}
+                  </div>
                 </div>
-                <div class="col-sm-9 text-secondary">
-                  {{ userProfile.phone }}
-                </div>
-              </div>
-              <hr />
-              <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
-                <div class="col-sm-3">
-                  <h6 class="mb-0">Country</h6>
-                </div>
-                <div class="col-sm-9 text-secondary">
-                  {{ userProfile.country }}
-                </div>
-              </div>
-              <hr />
-              <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
-                <div class="col-sm-3">
-                  <h6 class="mb-0">Birth Date</h6>
-                </div>
-                <div class="col-sm-9 text-secondary">
-                  {{ userProfile.birthDate | date }}
-                </div>
-              </div>
-              <hr />
+                <hr />
 
-              <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
-                <div class="col-sm-3">
-                  <h6 class="mb-0">Address</h6>
+                <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Address</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    {{ userProfile.address }}
+                  </div>
                 </div>
-                <div class="col-sm-9 text-secondary">
-                  {{ userProfile.address }}
+                <hr />
+                <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">City</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    {{ userProfile.city }}
+                  </div>
+                </div>
+                <hr />
+                <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Postal Code</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    {{ userProfile.postal_code }}
+                  </div>
+                </div>
+                <hr />
+                <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Gender</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    {{ userProfile.gender }}
+                  </div>
+                </div>
+                <hr />
+                <div class="row justify-content-end">
+                  <div class="col-sm-20 text-secondary text-right">
+                    <button class="btn btn-outline-secondary" (click)="toggleEditMode()">
+                      Edit your profile
+                    </button>
+                  </div>
                 </div>
               </div>
-              <hr />
-              <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
-                <div class="col-sm-3">
-                  <h6 class="mb-0">City</h6>
-                </div>
-                <div class="col-sm-9 text-secondary">
-                  {{ userProfile.city }}
-                </div>
+              <div *ngIf="editMode">
+                <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+                  <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Full Name</h6>
+                    </div>
+                    <div class="col-sm-9">
+                      <input type="text" class="form-control" formControlName="firstName" />
+                      <input type="text" class="form-control" formControlName="lastName" />
+                    </div>
+                  </div>
+                  <hr />
+                  <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Email</h6>
+                    </div>
+                    <div class="col-sm-9">
+                      <input type="email" class="form-control" formControlName="email" />
+                    </div>
+                  </div>
+                  <hr />
+                  <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Phone</h6>
+                    </div>
+                    <div class="col-sm-9">
+                      <input type="text" class="form-control" formControlName="phone" />
+                    </div>
+                  </div>
+                  <hr />
+                  <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Country</h6>
+                    </div>
+                    <div class="col-sm-9">
+                      <input type="text" class="form-control" formControlName="country" />
+                    </div>
+                  </div>
+                  <hr />
+                  <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Birth Date</h6>
+                    </div>
+                    <div class="col-sm-9">
+                      <input type="date" class="form-control" formControlName="birthDate" />
+                    </div>
+                  </div>
+                  <hr />
+                  <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Address</h6>
+                    </div>
+                    <div class="col-sm-9">
+                      <input type="text" class="form-control" formControlName="address" />
+                    </div>
+                  </div>
+                  <hr />
+                  <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">City</h6>
+                    </div>
+                    <div class="col-sm-9">
+                      <input type="text" class="form-control" formControlName="city" />
+                    </div>
+                  </div>
+                  <hr />
+                  <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Postal Code</h6>
+                    </div>
+                    <div class="col-sm-9">
+                      <input type="text" class="form-control" formControlName="postal_code" />
+                    </div>
+                  </div>
+                  <hr />
+                  <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Gender</h6>
+                    </div>
+                    <div class="col-sm-9">
+                      <select class="form-control" formControlName="gender">
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                      </select>
+                    </div>
+                  </div>
+                  <hr />
+                  <div class="row justify-content-end">
+                    <div class="col-sm-20 text-secondary text-right">
+                      <button type="submit" class="btn btn-primary">Save</button>
+                      <button type="button" class="btn btn-outline-secondary" (click)="toggleEditMode()">Cancel</button>
+                    </div>
+                  </div>
+                </form>
               </div>
-              <hr />
-              <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
-                <div class="col-sm-3">
-                  <h6 class="mb-0">Postal Code</h6>
-                </div>
-                <div class="col-sm-9 text-secondary">
-                  {{ userProfile.postal_code }}
-                </div>
-              </div>
-              <hr />
-              <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
-                <div class="col-sm-3">
-                  <h6 class="mb-0">Gender</h6>
-                </div>
-                <div class="col-sm-9 text-secondary">
-                  {{ userProfile.gender }}
-                </div>
-              </div>
-              <hr />
-              <!--
-
-              <div class="row justify-content-end">
-                <div class="col-sm-20 text-secondary text-right">
-                  <a class="btn btn-outline-secondary" [routerLink]="['/edit-profile']">
-                    Edit your profile
-                  </a>
-                </div>
-              </div>
-            </div>-->
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-</div>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">

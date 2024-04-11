@@ -2,8 +2,10 @@ package com.football.dev.footballapp.controllers;
 
 import com.football.dev.footballapp.dto.UserEntityDto;
 import com.football.dev.footballapp.models.UserEntity;
+import com.football.dev.footballapp.security.JWTGenerator;
 import com.football.dev.footballapp.services.UserService;
 import com.football.dev.footballapp.services.UserServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +19,13 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/")
 @CrossOrigin("http://localhost:4200")
 public class UserController {
-    private UserService userService;
-    public UserController(UserService userService){
+    private final UserService userService;
+    private final JWTGenerator jwtGenerator;
+
+
+    public UserController(UserService userService, JWTGenerator jwtGenerator){
         this.userService=userService;
+        this.jwtGenerator = jwtGenerator;
     }
     @GetMapping("users")
     @PreAuthorize("hasRole('ADMIN')")
@@ -47,7 +53,17 @@ public class UserController {
     }
 
     @PutMapping("users/update/{userId}")
-    public ResponseEntity<Void> updateUser(@PathVariable Long userId, @RequestBody UserEntityDto updatedUserDto) {
+    public ResponseEntity<String> updateUser(@PathVariable Long userId, @RequestBody UserEntityDto updatedUserDto, HttpServletRequest request) {
+        String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
+
+        String token = authorizationHeader.substring(7);
+
+        if (!jwtGenerator.validateToken(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
         userService.updateUser(userId, updatedUserDto);
         return ResponseEntity.ok().build();
     }

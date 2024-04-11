@@ -12,6 +12,7 @@ import { AuthService } from "../../../services/auth.service";
 export class ProfileComponent implements OnInit {
     profileForm: FormGroup;
     userProfile: any;
+    editMode: boolean = false;
 
     constructor(
         private userService: UserService,
@@ -72,7 +73,10 @@ export class ProfileComponent implements OnInit {
         }
     }
 
-    /*
+    toggleEditMode() {
+        this.editMode = !this.editMode;
+    }
+
     saveProfile() {
         if (this.profileForm.valid) {
             const userData = this.profileForm.value;
@@ -82,11 +86,20 @@ export class ProfileComponent implements OnInit {
                 this.userService.updateUser(userId, userData).subscribe(
                     () => {
                         console.log('Profile updated successfully');
-
+                        // Fetch updated user profile data after saving
+                        this.userService.getUserProfile(userId).subscribe(
+                            (data) => {
+                                this.userProfile = data;
+                                this.loadUserProfile();
+                            },
+                            (error) => {
+                                console.log('Error fetching updated user profile:', error);
+                            }
+                        );
+                        this.toggleEditMode(); // Exit edit mode after saving
                     },
                     (error) => {
                         console.log('Error updating user profile:', error);
-
                     }
                 );
             } else {
@@ -95,5 +108,6 @@ export class ProfileComponent implements OnInit {
         } else {
             console.log('Form is invalid. Please fill all required fields.');
         }
-    }*/
+    }
+
 }

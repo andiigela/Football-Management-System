@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -7,9 +7,14 @@ import { Observable } from 'rxjs';
 })
 export class UserService {
   private apiUrl = 'http://localhost:8080/api/users';
-
   constructor(private http: HttpClient) { }
-
+  private getHeaders(): HttpHeaders {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem("accessToken")}`
+    })
+    return headers;
+  }
   getUsers(currentUserId: number | null): Observable<any[]> {
     if (currentUserId !== null) {
       return this.http.get<any[]>(`${this.apiUrl}?currentUserId=${currentUserId}`);
@@ -28,11 +33,13 @@ export class UserService {
   }
 
   getUserProfile(userId: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${userId}`);
+    let headers = this.getHeaders();
+    return this.http.get(`${this.apiUrl}/${userId}`,{headers});
   }
 
   updateUser(userId: number, userData: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${userId}`, userData);
+    let headers = this.getHeaders();
+    return this.http.put(`${this.apiUrl}/update/${userId}`, userData,{headers});
   }
 
   saveUser(userData: any): Observable<any> {
