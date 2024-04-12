@@ -31,13 +31,12 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public void deleteUser(Long userId) {
-        try {
-            userRepository.deleteById(userId);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to delete user with ID: " + userId, e);
-        }
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setIsDeleted(true);
+        userRepository.save(user);
     }
+
     @Override
     public List<UserEntity> getUsersByRole(String role) {
         return userRepository.findByRoleDescription(role);

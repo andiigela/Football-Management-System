@@ -1,20 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../../services/user.service';
-import {HttpClient} from "@angular/common/http";
-import {AuthService} from "../../../services/auth.service";
-import {User} from "../../../common/user";
+import { HttpClient } from "@angular/common/http";
+import { AuthService } from "../../../services/auth.service";
+import { User } from "../../../common/user";
 
 @Component({
-  selector: 'app-users',
-  templateUrl: './users.component.html',
-  styleUrls: ['./users.component.css']
+    selector: 'app-users',
+    templateUrl: './users.component.html',
+    styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit {
-  users: any[] = [];
+    users: User[] = [];
     currentUserId: number | null = null;
 
     constructor(private http: HttpClient, private userService: UserService, private authService: AuthService) { }
-
 
     ngOnInit(): void {
         this.getCurrentUserId();
@@ -29,7 +28,8 @@ export class UsersComponent implements OnInit {
         if (this.currentUserId !== null) {
             this.userService.getUsers(this.currentUserId).subscribe(
                 (users: User[]) => {
-                    this.users = users;
+                    // Filter out users with isDeleted=true
+                    this.users = users.filter(user => !user.isDeleted);
                 },
                 (error: any) => {
                     console.error('Error loading users:', error);
@@ -57,6 +57,7 @@ export class UsersComponent implements OnInit {
     deleteUser(userId: number): void {
         this.userService.deleteUser(userId).subscribe(
             () => {
+                // Remove the deleted user from the users array
                 this.users = this.users.filter(user => user.id !== userId);
             },
             (error: any) => {
@@ -64,4 +65,5 @@ export class UsersComponent implements OnInit {
             }
         );
     }
+
 }

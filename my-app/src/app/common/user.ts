@@ -14,4 +14,5 @@ export interface User {
     postal_code: string;
     roleId: number;
     gender: string;
+    isDeleted: boolean;
 }

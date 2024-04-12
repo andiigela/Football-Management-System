@@ -96,7 +96,7 @@ export class ProfileComponent implements OnInit {
     saveProfile() {
         if (this.profileForm.valid) {
             const userData = this.profileForm.value;
-            const userId = this.userProfile.id; // Use the user ID obtained during initialization
+            const userId = this.userProfile.id;
 
             if (userId) {
                 this.userService.updateUser(userId, userData).subscribe(
