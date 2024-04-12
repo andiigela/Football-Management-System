@@ -3,6 +3,7 @@ import { UserService } from '../../../services/user.service';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from "../../../services/auth.service";
+import {DatePipe} from "@angular/common";
 
 @Component({
     selector: 'app-profile',
@@ -19,7 +20,8 @@ export class ProfileComponent implements OnInit {
         private userService: UserService,
         private route: ActivatedRoute,
         private formBuilder: FormBuilder,
-        private authService: AuthService
+        private authService: AuthService,
+        private datePipe: DatePipe
     ) {
         this.profileForm = this.formBuilder.group({
             firstName: ['', Validators.required],
@@ -57,38 +59,40 @@ export class ProfileComponent implements OnInit {
         }
     }
 
-    loadUserProfile() {
-        if (this.userProfile) {
-            this.profileForm.patchValue({
-                firstName: this.userProfile.firstName,
-                lastName: this.userProfile.lastName,
-                email: this.userProfile.email,
-                phone: this.userProfile.phone,
-                country: this.userProfile.country,
-                birthDate: this.userProfile.birthDate,
-                profile_picture: this.userProfile.profile_picture,
-                address: this.userProfile.address,
-                city: this.userProfile.city,
-                postal_code: this.userProfile.postal_code,
-                gender: this.userProfile.gender
-            });
+  loadUserProfile() {
+    if (this.userProfile) {
+      // Format the birth date
+      const formattedBirthDate = this.datePipe.transform(this.userProfile.birthDate, 'yyyy-MM-dd');
 
+      // Populate the form with user profile data
+      this.profileForm.patchValue({
+        firstName: this.userProfile.firstName,
+        lastName: this.userProfile.lastName,
+        email: this.userProfile.email,
+        phone: this.userProfile.phone,
+        country: this.userProfile.country,
+        birthDate: formattedBirthDate, // Use the formatted date here
+        profile_picture: this.userProfile.profile_picture,
+        address: this.userProfile.address,
+        city: this.userProfile.city,
+        postal_code: this.userProfile.postal_code,
+        gender: this.userProfile.gender
+      });
 
-            if (!this.userProfile.firstName ||
-                !this.userProfile.lastName ||
-                !this.userProfile.email ||
-                !this.userProfile.phone ||
-                !this.userProfile.country ||
-                !this.userProfile.birthDate ||
-                !this.userProfile.gender) {
-                this.showMissingInfoMessage = true;
-            } else {
-                this.showMissingInfoMessage = false;
-            }
-        } else {
-            console.log('User profile is null');
-        }
+      // Check if any attribute is null in the user profile data
+      this.showMissingInfoMessage = !(
+        this.userProfile.firstName &&
+        this.userProfile.lastName &&
+        this.userProfile.email &&
+        this.userProfile.phone &&
+        this.userProfile.country &&
+        this.userProfile.birthDate &&
+        this.userProfile.gender
+      );
+    } else {
+      console.log('User profile is null');
     }
+  }
     toggleEditMode() {
         this.editMode = !this.editMode;
     }
