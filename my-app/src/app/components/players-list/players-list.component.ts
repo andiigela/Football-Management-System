@@ -1,16 +1,18 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Injectable, OnInit} from '@angular/core';
 import {PlayerService} from "../../services/player.service";
 import {PlayerDto} from "../../common/player-dto";
 import {Router} from "@angular/router";
-import {PageResponseDto} from "../../common/page-response-dto";
-
 @Component({
   selector: 'app-players-list',
   templateUrl: './players-list.component.html',
   styleUrls: ['./players-list.component.css']
 })
 export class PlayersListComponent implements OnInit{
-  playersList: PageResponseDto = new PageResponseDto([],0,0,0);
+  playersList: PlayerDto[]=[];
+  pageNumber: number = 0;
+  pageSize: number = 10;
+  totalElements: number = 0;
+
   constructor(private playerService: PlayerService,private router: Router) {
   }
   ngOnInit(): void {
@@ -18,8 +20,10 @@ export class PlayersListComponent implements OnInit{
   }
   public getPlayers(){
     this.playerService.retrievePlayers("0","10").subscribe((response)=>{
-       this.playersList = response;
-       console.log(response);
+       this.playersList = response.content;
+       this.pageNumber = response.pageNumber;
+       this.pageSize = response.pageSize;
+       this.totalElements = response.totalElements;
     })
   }
   editPlayer(id: number){

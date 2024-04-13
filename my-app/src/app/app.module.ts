@@ -15,6 +15,7 @@ import {RegisterComponent} from "./components/register/register.component";
 import { CreatePlayerComponent } from './components/create-player/create-player.component';
 import { PlayersListComponent } from './components/players-list/players-list.component';
 import { PlayerEditComponent } from './components/player-edit/player-edit.component';
+import {NgbPaginationModule} from "@ng-bootstrap/ng-bootstrap";
 const routes : Routes = [
   {path: 'players/edit/:id',component:PlayerEditComponent},
   {path: 'players',component:PlayersListComponent},
@@ -41,7 +42,8 @@ const routes : Routes = [
     BrowserModule,
     HttpClientModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    NgbPaginationModule
   ],
   providers: [
     {

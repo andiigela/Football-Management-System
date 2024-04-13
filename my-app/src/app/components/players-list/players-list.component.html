@@ -13,10 +13,7 @@
         </tr>
         </thead>
         <tbody>
-        <div *ngIf="this.playersList.content.length > 0">
-
-        </div>
-        <tr *ngFor="let val of playersList.content">
+        <tr *ngFor="let val of playersList">
             <th scope="row">1</th>
             <td>{{val.name}}</td>
             <td>{{val.height}}</td>
@@ -30,5 +27,37 @@
         </tr>
         </tbody>
     </table>
+  <div class="footer">
+    <div class="row">
+      <div class="col-md-6">
+
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-9" style="padding-left: 30%">
+              <ngb-pagination [page]="pageNumber"
+                              [pageSize]="10"
+                              [collectionSize]="totalElements"
+                              [maxSize]="5"
+                              [boundaryLinks]="true"
+              ></ngb-pagination>
+              <div class="col-md-3 mt-2" style="text-align: right">
+                <span class="mr-2">Page Size</span>
+<!--                <select #pageSelect (change)="updatePage(pageSelect.value)">-->
+<!--                  <option selected="true">5</option>-->
+<!--                  <option>10</option>-->
+<!--                  <option>20</option>-->
+<!--                  <option>30</option>-->
+<!--                </select>-->
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<!--  <ngb-pagination [collectionSize]="totalElements">-->
+
+<!--  </ngb-pagination>-->
 </div>
 
