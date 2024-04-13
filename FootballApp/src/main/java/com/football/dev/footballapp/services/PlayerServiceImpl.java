@@ -1,20 +1,17 @@
 package com.football.dev.footballapp.services;
 import com.football.dev.footballapp.dto.PlayerDto;
-import com.football.dev.footballapp.mapper.PlayerDtoMapper;
-import com.football.dev.footballapp.mapper.UserEntityDTOMapper;
 import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.Player;
-import com.football.dev.footballapp.models.UserEntity;
 import com.football.dev.footballapp.models.enums.Foot;
 import com.football.dev.footballapp.repository.ClubRepository;
 import com.football.dev.footballapp.repository.PlayerRepository;
-import com.football.dev.footballapp.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 
 @Service
@@ -38,10 +35,12 @@ public class PlayerServiceImpl implements PlayerService {
         playerRepository.save(player);
     }
     @Override
-    public List<Player> retrievePlayers() {
+    public Page<Player> retrievePlayers(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Club clubDb = clubRepository.findClubByUserEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         if(clubDb == null) throw new EntityNotFoundException("User is not authenticated.");
-        return playerRepository.findPlayersByClub(clubDb);
+        Page<Player> playersPage = playerRepository.findPlayersByClub(clubDb,pageable);
+        return playersPage;
     }
     @Override
     public Player getPlayer(Long id) {

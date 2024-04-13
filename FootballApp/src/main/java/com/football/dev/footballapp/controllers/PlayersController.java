@@ -1,14 +1,14 @@
 package com.football.dev.footballapp.controllers;
+import com.football.dev.footballapp.dto.PageResponseDto;
 import com.football.dev.footballapp.dto.PlayerDto;
 import com.football.dev.footballapp.models.Player;
 import com.football.dev.footballapp.security.JWTGenerator;
 import com.football.dev.footballapp.services.PlayerService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/players")
@@ -38,8 +38,16 @@ public class PlayersController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Player created successfully");
     }
     @GetMapping("/")
-    public ResponseEntity<List<Player>> getPlayers() {
-        return ResponseEntity.status(HttpStatus.OK).body(playerService.retrievePlayers());
+    public ResponseEntity<PageResponseDto<Player>> getPlayers(@RequestParam(defaultValue = "0") int page,
+                                                              @RequestParam(defaultValue = "10") int size) {
+        Page<Player> playersPage = playerService.retrievePlayers(page,size);
+        PageResponseDto<Player> responseDto = new PageResponseDto<>(
+                playersPage.getContent(),
+                playersPage.getNumber(),
+                playersPage.getSize(),
+                playersPage.getTotalElements()
+        );
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
     @GetMapping("/{id}")
     public ResponseEntity<Player> getPlayer(@PathVariable("id") Long id) {

@@ -13,7 +13,10 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let val of playersList">
+        <div *ngIf="this.playersList.content.length > 0">
+
+        </div>
+        <tr *ngFor="let val of playersList.content">
             <th scope="row">1</th>
             <td>{{val.name}}</td>
             <td>{{val.height}}</td>

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {map, Observable} from "rxjs";
 import {PlayerDto} from "../common/player-dto";
+import {PageResponseDto} from "../common/page-response-dto";
 
 @Injectable({
   providedIn: 'root'
@@ -20,9 +21,12 @@ export class PlayerService {
     let headers = this.getHeaders();
     return this.http.post(`${this.playerUrl}/create`,playerDto,{headers});
   }
-  public retrievePlayers(): Observable<PlayerDto[]>{
+  public retrievePlayers(pageNumber: string, pageSize: string): Observable<PageResponseDto>{
     let headers = this.getHeaders();
-    return this.http.get<PlayerDto[]>(`${this.playerUrl}/`,{headers});
+    const params = new HttpParams()
+      .set('page', pageNumber)
+      .set('size', pageSize);
+    return this.http.get<PageResponseDto>(`${this.playerUrl}/?page=${pageNumber}&size=${pageSize}`,{headers});
   }
   public retrievePlayer(id: number): Observable<PlayerDto>{
     let headers = this.getHeaders();
