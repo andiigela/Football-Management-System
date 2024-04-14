@@ -26,4 +26,9 @@ public class Injuries extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "player_scouted_id")
     private PlayerScouted playerScouted;
+
+    public Injuries(String injuryType, InjuryStatus injuryStatus) {
+        this.injuryType = injuryType;
+        this.injuryStatus = injuryStatus;
+    }
 }
