@@ -12,7 +12,6 @@ export class PlayerService {
   constructor(private http: HttpClient) { }
   private getHeaders(): HttpHeaders {
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
       'Authorization': `Bearer ${localStorage.getItem("accessToken")}`
     })
     return headers;
@@ -37,5 +36,17 @@ export class PlayerService {
     let headers = this.getHeaders();
     return this.http.delete(`${this.playerUrl}/delete/${id}`,{headers})
   }
+  public uploadFile(file: File): void{
+    const headers = this.getHeaders();
+    const formData = new FormData();
+    formData.append("file",file);
+    this.http.post<any>(`${this.playerUrl}/upload`,formData,{headers}).subscribe((response)=>{
+      console.log('File upload successful:', response)
+    },(error) =>{
+      console.error('Error uploading file:', error);
+        }
+    );
+  }
 
 }
+

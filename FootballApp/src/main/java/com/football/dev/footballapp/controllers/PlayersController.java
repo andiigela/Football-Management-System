@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/players")
@@ -62,5 +63,10 @@ public class PlayersController {
     public ResponseEntity<String> deletePlayer(@PathVariable("id") Long id){
         playerService.deletePlayer(id);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+    @PostMapping("/upload")
+    public ResponseEntity<> uploadPlayerPicture(@RequestParam("file") MultipartFile file){
+
+        return "File uploaded successfully: " + file.getOriginalFilename();
     }
 }

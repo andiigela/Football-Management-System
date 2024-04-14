@@ -28,7 +28,6 @@ export class CreatePlayerComponent implements OnInit {
   }
   ngOnInit(): void {
   }
-
   public createPlayer(): void {
     const formData = this.playerForm.value;
     const playerDto = new PlayerDto(
@@ -41,6 +40,9 @@ export class CreatePlayerComponent implements OnInit {
     );
     this.playerService.createPlayer(playerDto).subscribe(res=>console.log(res))
     this.router.navigateByUrl("/dashboard")
-
+  }
+  onFileSelected(event: any){
+    const file: File = event.target.files[0];
+    this.playerService.uploadFile(file);
   }
 }
