@@ -23,4 +23,7 @@ public class Injuries extends BaseEntity{
     private Date expectedRecoveryTime;
     @Enumerated(EnumType.STRING)
     private InjuryStatus injuryStatus;
+    @ManyToOne
+    @JoinColumn(name = "player_scouted_id")
+    private PlayerScouted playerScouted;
 }
