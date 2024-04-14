@@ -39,7 +39,7 @@ public class PlayerServiceImpl implements PlayerService {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Club clubDb = clubRepository.findClubByUserEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         if(clubDb == null) throw new EntityNotFoundException("User is not authenticated.");
-        Page<Player> playersPage = playerRepository.findPlayersByClub(clubDb,pageable);
+        Page<Player> playersPage = playerRepository.findPlayersByClubOrderByInsertDateTimeAsc(clubDb,pageable);
         return playersPage;
     }
     @Override

@@ -9,7 +9,7 @@ import {Router} from "@angular/router";
 })
 export class PlayersListComponent implements OnInit{
   playersList: PlayerDto[]=[];
-  pageNumber: number = 0;
+  pageNumber: number = 1;
   pageSize: number = 10;
   totalElements: number = 0;
 
@@ -19,12 +19,14 @@ export class PlayersListComponent implements OnInit{
     this.getPlayers();
   }
   public getPlayers(){
-    this.playerService.retrievePlayers("0","10").subscribe((response)=>{
+    this.playerService.retrievePlayers(this.pageNumber-1,this.pageSize).subscribe((response)=>{
        this.playersList = response.content;
-       this.pageNumber = response.pageNumber;
-       this.pageSize = response.pageSize;
        this.totalElements = response.totalElements;
     })
+  }
+  OnPageChange(pageNumber: number){
+    this.pageNumber = pageNumber;
+    this.getPlayers();
   }
   editPlayer(id: number){
     this.router.navigate(['/players/edit/',id])
@@ -32,7 +34,8 @@ export class PlayersListComponent implements OnInit{
   deletePlayer(id: number){
     this.playerService.deletePlayer(id)
         .subscribe(()=> {
-          //this.playersList = this.playersList.filter(player => player.id != id)
+          this.playersList = this.playersList.filter(player => player.id != id)
+          this.getPlayers();
         })
   }
 }

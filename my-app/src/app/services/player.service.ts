@@ -21,11 +21,8 @@ export class PlayerService {
     let headers = this.getHeaders();
     return this.http.post(`${this.playerUrl}/create`,playerDto,{headers});
   }
-  public retrievePlayers(pageNumber: string, pageSize: string): Observable<PageResponseDto>{
+  public retrievePlayers(pageNumber: number, pageSize: number): Observable<PageResponseDto>{
     let headers = this.getHeaders();
-    const params = new HttpParams()
-      .set('page', pageNumber)
-      .set('size', pageSize);
     return this.http.get<PageResponseDto>(`${this.playerUrl}/?page=${pageNumber}&size=${pageSize}`,{headers});
   }
   public retrievePlayer(id: number): Observable<PlayerDto>{

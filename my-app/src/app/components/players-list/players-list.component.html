@@ -38,26 +38,13 @@
                               [pageSize]="10"
                               [collectionSize]="totalElements"
                               [maxSize]="5"
-                              [boundaryLinks]="true"
+                              (pageChange)="OnPageChange($event)"
               ></ngb-pagination>
-              <div class="col-md-3 mt-2" style="text-align: right">
-                <span class="mr-2">Page Size</span>
-<!--                <select #pageSelect (change)="updatePage(pageSelect.value)">-->
-<!--                  <option selected="true">5</option>-->
-<!--                  <option>10</option>-->
-<!--                  <option>20</option>-->
-<!--                  <option>30</option>-->
-<!--                </select>-->
-              </div>
-
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-<!--  <ngb-pagination [collectionSize]="totalElements">-->
-
-<!--  </ngb-pagination>-->
 </div>
 
