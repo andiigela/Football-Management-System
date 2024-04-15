@@ -13,5 +13,10 @@ public class CorsConfiguration implements WebMvcConfigurer {
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*")
                 .allowCredentials(true);
+        registry.addMapping("/images/**")
+                .allowedOrigins("http://localhost:4200")
+                .allowedMethods("GET")  // Allow only GET requests for image resources
+                .allowedHeaders("*")
+                .allowCredentials(true);
     }
 }

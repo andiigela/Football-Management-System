@@ -39,6 +39,9 @@ export class PlayerService {
     let headers = this.getHeaders();
     return this.http.delete(`${this.playerUrl}/delete/${id}`,{headers})
   }
-
+  public getImageUrl(imagePath: string): Observable<any>{
+    let headers = this.getHeaders();
+    return this.http.get(`http://localhost:8080/images/${imagePath}`,{headers});
+  }
 }
 

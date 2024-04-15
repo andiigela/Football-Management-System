@@ -20,8 +20,11 @@ export class PlayersListComponent implements OnInit{
   }
   public getPlayers(){
     this.playerService.retrievePlayers(this.pageNumber-1,this.pageSize).subscribe((response)=>{
-       this.playersList = response.content;
-       this.totalElements = response.totalElements;
+      response.content.forEach(player => {
+        this.getPlayerImageUrl(player)
+      })
+      this.playersList = response.content;
+      this.totalElements = response.totalElements;
     })
   }
   OnPageChange(pageNumber: number){
@@ -37,5 +40,15 @@ export class PlayersListComponent implements OnInit{
           this.playersList = this.playersList.filter(player => player.id != id)
           this.getPlayers();
         })
+  }
+  getPlayerImageUrl(playerDto: PlayerDto):void {
+    if(playerDto.imagePath != ""){
+      this.playerService.getImageUrl(playerDto.imagePath).subscribe(()=>{
+        playerDto.imagePath = `http://localhost:8080/images/${playerDto.imagePath}`
+      },(err)=>{
+        console.log(err);
+        playerDto.imagePath = '';
+      })
+    }
   }
 }
