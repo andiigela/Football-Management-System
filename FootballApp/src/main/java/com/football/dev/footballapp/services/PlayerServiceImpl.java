@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.function.Function;
 
@@ -26,8 +27,9 @@ public class PlayerServiceImpl implements PlayerService {
         this.clubRepository=clubRepository;
     }
     @Override
-    public void savePlayer(PlayerDto playerDto){
+    public void savePlayer(PlayerDto playerDto, MultipartFile file){
         Player player = playerDtoToPlayer.apply(playerDto);
+        player.setImagePath(file.getOriginalFilename());
         if(player == null) return;
         Club clubDb = clubRepository.findClubByUserEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         if(clubDb == null) throw new EntityNotFoundException("User is not authenticated.");

@@ -16,9 +16,12 @@ export class PlayerService {
     })
     return headers;
   }
-  public createPlayer(playerDto: PlayerDto): Observable<any>{
+  public createPlayer(playerDto: PlayerDto,file: File): Observable<any>{
     let headers = this.getHeaders();
-    return this.http.post(`${this.playerUrl}/create`,playerDto,{headers});
+    const formData = new FormData();
+    formData.append("file",file);
+    formData.append('playerDto', JSON.stringify(playerDto)); // Convert playerDto to JSON string and append
+    return this.http.post(`${this.playerUrl}/create`,formData,{headers});
   }
   public retrievePlayers(pageNumber: number, pageSize: number): Observable<PageResponseDto>{
     let headers = this.getHeaders();
@@ -35,17 +38,6 @@ export class PlayerService {
   public deletePlayer(id: number): Observable<any>{
     let headers = this.getHeaders();
     return this.http.delete(`${this.playerUrl}/delete/${id}`,{headers})
-  }
-  public uploadFile(file: File): void{
-    const headers = this.getHeaders();
-    const formData = new FormData();
-    formData.append("file",file);
-    this.http.post<any>(`${this.playerUrl}/upload`,formData,{headers}).subscribe((response)=>{
-      console.log('File upload successful:', response)
-    },(error) =>{
-      console.error('Error uploading file:', error);
-        }
-    );
   }
 
 }

@@ -16,6 +16,7 @@ export class CreatePlayerComponent implements OnInit {
   playerForm:FormGroup;
   footOptions = Object.values(Foot);
   positionOptions = Object.values(FootballPosition);
+  file: File|null = null;
   constructor(private formBuilder: FormBuilder,private playerService: PlayerService,private router: Router) {
     this.playerForm = this.formBuilder.group({
       name: [''],
@@ -38,11 +39,15 @@ export class CreatePlayerComponent implements OnInit {
       formData.preferred_foot,
       formData.position
     );
-    this.playerService.createPlayer(playerDto).subscribe(res=>console.log(res))
-    this.router.navigateByUrl("/dashboard")
+    if(this.file?.name != ""){
+      this.playerService.createPlayer(playerDto,this.file!).subscribe(()=>{
+          this.router.navigateByUrl("/dashboard")
+      },(err)=>{console.log(err)});
+    }
   }
   onFileSelected(event: any){
     const file: File = event.target.files[0];
-    this.playerService.uploadFile(file);
+    this.file = file;
+    console.log(this.file);
   }
 }

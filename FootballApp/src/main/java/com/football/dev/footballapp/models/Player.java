@@ -36,6 +36,7 @@ public class Player extends BaseEntity {
     private Double height;
     private Double weight;
     public String name;
+    private String imagePath;
     @Enumerated(value = EnumType.STRING)
     private Foot preferred_foot;
     public static Foot getFootFromString(String footString) {
