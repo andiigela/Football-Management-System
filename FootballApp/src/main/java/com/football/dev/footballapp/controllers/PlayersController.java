@@ -34,7 +34,6 @@ public class PlayersController {
     @PostMapping("/create")
     public ResponseEntity<PlayerDto> createPlayer(@RequestParam("file") MultipartFile file,
                                                @RequestParam("playerDto") String playerDto) {
-
         try {
             PlayerDto playerDtoMapped = objectMapper.readValue(playerDto,PlayerDto.class);
             Boolean isUploaded = fileUploadService.uploadFile(file);
@@ -44,7 +43,6 @@ public class PlayersController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
     @GetMapping("/")
     public ResponseEntity<PageResponseDto<Player>> getPlayers(@RequestParam(defaultValue = "0") int page,

@@ -20,11 +20,9 @@ export class PlayersListComponent implements OnInit{
   }
   public getPlayers(){
     this.playerService.retrievePlayers(this.pageNumber-1,this.pageSize).subscribe((response)=>{
-      response.content.forEach(player => {
-        this.getPlayerImageUrl(player)
-      })
       this.playersList = response.content;
       this.totalElements = response.totalElements;
+      this.updatePlayerList(this.playersList) // this.playersList, sepse kemi inicializu 2 rreshta me larte.
     })
   }
   OnPageChange(pageNumber: number){
@@ -41,14 +39,20 @@ export class PlayersListComponent implements OnInit{
           this.getPlayers();
         })
   }
+  updatePlayerList(playersList: PlayerDto[]){
+    playersList.forEach(playerDto => this.getPlayerImageUrl(playerDto)) // set ImagePath to player.imagePath for each player
+  }
   getPlayerImageUrl(playerDto: PlayerDto):void {
-    if(playerDto.imagePath != ""){
-      this.playerService.getImageUrl(playerDto.imagePath).subscribe(()=>{
-        playerDto.imagePath = `http://localhost:8080/images/${playerDto.imagePath}`
-      },(err)=>{
-        console.log(err);
-        playerDto.imagePath = '';
-      })
+    if (playerDto.imagePath) {
+      this.playerService.getImageUrl(playerDto.imagePath).subscribe((blob: Blob) => {
+          const imageUrl = URL.createObjectURL(blob);
+          playerDto.imagePath = imageUrl;
+        },
+        error => {
+          console.error(`Error fetching image for player: ${playerDto.name}`, error);
+          playerDto.imagePath = ''; // Set default image path
+        }
+      );
     }
   }
 }

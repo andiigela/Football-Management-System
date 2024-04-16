@@ -41,7 +41,7 @@ export class PlayerService {
   }
   public getImageUrl(imagePath: string): Observable<any>{
     let headers = this.getHeaders();
-    return this.http.get(`http://localhost:8080/images/${imagePath}`,{headers});
+    return this.http.get(`http://localhost:8080/images/${imagePath}`,{headers,responseType: 'blob'});
   }
 }
 
