@@ -3,10 +3,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.football.dev.footballapp.dto.PageResponseDto;
 import com.football.dev.footballapp.dto.PlayerDto;
 import com.football.dev.footballapp.models.Player;
-import com.football.dev.footballapp.security.JWTGenerator;
 import com.football.dev.footballapp.services.FileUploadService;
 import com.football.dev.footballapp.services.PlayerService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,8 +34,6 @@ public class PlayersController {
                                                @RequestParam("playerDto") String playerDto) {
         try {
             PlayerDto playerDtoMapped = objectMapper.readValue(playerDto,PlayerDto.class);
-            Boolean isUploaded = fileUploadService.uploadFile(file);
-            if(!isUploaded) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             playerService.savePlayer(playerDtoMapped,file);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (IOException e) {

@@ -9,6 +9,8 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,22 +21,26 @@ import java.util.function.Function;
 public class PlayerServiceImpl implements PlayerService {
     private final PlayerRepository playerRepository;
     private final ClubRepository clubRepository;
+    private final FileUploadService fileUploadService;
     private final Function<PlayerDto, Player> playerDtoToPlayer;
     public PlayerServiceImpl(PlayerRepository playerRepository,Function<PlayerDto, Player> playerDtoToPlayer,
-                             ClubRepository clubRepository){
+                             ClubRepository clubRepository,FileUploadService fileUploadService){
         this.playerRepository=playerRepository;
         this.playerDtoToPlayer=playerDtoToPlayer;
         this.clubRepository=clubRepository;
+        this.fileUploadService=fileUploadService;
     }
     @Override
     public void savePlayer(PlayerDto playerDto, MultipartFile file){
         Player player = playerDtoToPlayer.apply(playerDto);
-        player.setImagePath(file.getOriginalFilename());
+        String fileUpload = fileUploadService.uploadFile(playerDto.getName(),file);
+        if(fileUpload == null) throw new RuntimeException("Failed to upload file.");
+        player.setImagePath(fileUpload); // saved filename
         if(player == null) return;
         Club clubDb = clubRepository.findClubByUserEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         if(clubDb == null) throw new EntityNotFoundException("User is not authenticated.");
         player.setClub(clubDb);
-        playerRepository.save(player);
+        Player createdPlayer = playerRepository.save(player);
     }
     @Override
     public Page<Player> retrievePlayers(int pageNumber, int pageSize) {
