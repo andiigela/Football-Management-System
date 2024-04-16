@@ -48,6 +48,5 @@ export class CreatePlayerComponent implements OnInit {
   onFileSelected(event: any){
     const file: File = event.target.files[0];
     this.file = file;
-    console.log(this.file);
   }
 }

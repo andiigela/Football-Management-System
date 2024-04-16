@@ -16,6 +16,7 @@ export class PlayerEditComponent implements OnInit{
   editForm: FormGroup;
   footOptions = Object.values(Foot);
   positionOptions = Object.values(FootballPosition);
+  file: File|null = null;
   constructor(private playerService: PlayerService,private route: ActivatedRoute,private formBuilder: FormBuilder,
               private router: Router) {
     this.editForm = this.formBuilder.group({
@@ -37,7 +38,7 @@ export class PlayerEditComponent implements OnInit{
     const formValue = this.editForm.value
     let playerEditInfo = new PlayerDto(formValue.name, formValue.height, formValue.weight,
         formValue.shirtNumber, formValue.preferred_foot, "");
-    this.playerService.updatePlayer(playerEditInfo,this.playerEdit.id)
+    this.playerService.updatePlayer(playerEditInfo,this.playerEdit.id,this.file!)
         .subscribe(()=>{
           this.router.navigate(["/players"])
         });
@@ -46,6 +47,7 @@ export class PlayerEditComponent implements OnInit{
     this.playerService.retrievePlayer(playerId).subscribe((player)=>{
       this.playerEdit = new PlayerDto(player.name,player.height,player.weight,player.shirtNumber,player.preferred_foot,"");
       this.playerEdit.id=player.id
+      this.getEditPlayerImageUrl(player.imagePath);
       this.editForm.patchValue({
         name: player.name,
         height: player.height,
@@ -53,8 +55,18 @@ export class PlayerEditComponent implements OnInit{
         shirtNumber: player.shirtNumber,
         preferred_foot: player.preferred_foot,
         position: 'GOALKEEPER'
-      })
+      });
     })
+  }
+  getEditPlayerImageUrl(imagePath: string){
+    this.playerService.getImageUrl(imagePath).subscribe((blob: Blob) => {
+      const imageUrl = URL.createObjectURL(blob);
+      this.playerEdit.imagePath = imageUrl;
+    })
+  }
+  onFileSelected(event: any){
+    const file: File= event.target.files;
+    this.file = file;
   }
 
 }

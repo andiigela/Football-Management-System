@@ -1,5 +1,10 @@
 <div class="container">
     <form (ngSubmit)="updatePlayer()" [formGroup]="editForm">
+      <div class="form-group">
+        <img [src]="playerEdit.imagePath" width="100" height="100"/>
+        <br>
+        <input type="file" name="file" (click)="onFileSelected($event)" />
+      </div>
         <div class="form-group">
             <label for="name">Name</label>
             <input type="text" class="form-control" formControlName="name" id="name" placeholder="Enter name">
