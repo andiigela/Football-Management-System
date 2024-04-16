@@ -38,7 +38,8 @@ export class PlayerEditComponent implements OnInit{
     const formValue = this.editForm.value
     let playerEditInfo = new PlayerDto(formValue.name, formValue.height, formValue.weight,
         formValue.shirtNumber, formValue.preferred_foot, "");
-    this.playerService.updatePlayer(playerEditInfo,this.playerEdit.id,this.file!)
+    playerEditInfo.id = this.playerEdit.id;
+    this.playerService.updatePlayer(playerEditInfo,this.file!)
         .subscribe(()=>{
           this.router.navigate(["/players"])
         });

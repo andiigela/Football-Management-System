@@ -1,4 +1,5 @@
 package com.football.dev.footballapp.controllers;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.football.dev.footballapp.dto.PageResponseDto;
 import com.football.dev.footballapp.dto.PlayerDto;
@@ -57,8 +58,14 @@ public class PlayersController {
         return ResponseEntity.status(HttpStatus.OK).body(playerService.getPlayer(id));
     }
     @PostMapping("/edit/{id}")
-    public ResponseEntity<String> editPlayer(@RequestBody PlayerDto playerDto, @PathVariable("id") Long id) {
-        playerService.updatePlayer(playerDto,id);
+    public ResponseEntity<String> editPlayer(@RequestParam("file") MultipartFile file,@RequestParam("playerDto") String playerDto,
+                                             @PathVariable("id") Long id) {
+        try {
+            PlayerDto playerDtoMapped = objectMapper.readValue(playerDto, PlayerDto.class);
+            playerService.updatePlayer(playerDtoMapped,id,file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return ResponseEntity.status(HttpStatus.OK).build();
     }
     @DeleteMapping("/delete/{id}")

@@ -57,14 +57,17 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public void updatePlayer(PlayerDto playerDto,Long id) {
+    public void updatePlayer(PlayerDto playerDto,Long id,MultipartFile file) {
         if(playerDto == null) return;
         Player playerDb = playerRepository.findById(id).orElseThrow(()->new EntityNotFoundException("Player not found with id: " + id));
+        String fileUpload = fileUploadService.uploadFile(playerDto.getName(),file);
+        if(fileUpload == null) throw new RuntimeException("Failed to upload file.");
         playerDb.setName(playerDto.getName());
         playerDb.setHeight(playerDto.getHeight());
         playerDb.setWeight(playerDto.getWeight());
         playerDb.setShirtNumber(playerDto.getShirtNumber());
         playerDb.setPreferred_foot(Foot.valueOf(playerDto.getPreferred_foot()));
+        playerDb.setImagePath(fileUpload);
         playerRepository.save(playerDb);
     }
     @Override
