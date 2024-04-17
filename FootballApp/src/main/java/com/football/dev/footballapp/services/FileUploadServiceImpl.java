@@ -18,8 +18,7 @@ public class FileUploadServiceImpl implements FileUploadService {
         if(file.isEmpty() || file.getOriginalFilename() == null) return null;
         String splittedOriginalFileName[] = StringUtils.cleanPath(file.getOriginalFilename()).split("\\.");
         if(splittedOriginalFileName.length > 0){
-            String filenameWithoutExtension = StringUtils.stripFilenameExtension(file.getOriginalFilename()).replace(" ","-");
-            String filename = filenameWithoutExtension + "-" + name.replace(" ","-") + "-" + UUID.randomUUID() + "." + splittedOriginalFileName[splittedOriginalFileName.length-1];
+            String filename = this.constructFilename(name,file,splittedOriginalFileName);
             Path targetLocation = Paths.get(uploadDir).resolve(filename); // bashkon /static/images + "emri_file.txt";
             try {
                 Files.copy(file.getInputStream(),targetLocation); // e run "emri_file.txt" ne qat directory
@@ -30,4 +29,21 @@ public class FileUploadServiceImpl implements FileUploadService {
         }
         return null;
     }
+    public String constructFilename(String name,MultipartFile file,String[] splittedOriginalFileName){
+        String filenameWithoutExtension = StringUtils.stripFilenameExtension(file.getOriginalFilename()).replace(" ","-");
+        String filename = filenameWithoutExtension + "-" + name.replace(" ","-") + "-" + UUID.randomUUID() + "." + splittedOriginalFileName[splittedOriginalFileName.length-1];
+        return filename;
+    }
+    @Override
+    public void deleteFile(String imagePath) {
+        if(!imagePath.trim().isEmpty() && imagePath != null){
+            Path targetLocation = Paths.get(uploadDir).resolve(imagePath); // bashkon /static/images + "emri_file.txt";
+            try {
+                Files.deleteIfExists(targetLocation);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
 }

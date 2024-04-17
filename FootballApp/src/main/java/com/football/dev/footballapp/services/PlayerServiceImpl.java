@@ -47,7 +47,7 @@ public class PlayerServiceImpl implements PlayerService {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Club clubDb = clubRepository.findClubByUserEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         if(clubDb == null) throw new EntityNotFoundException("User is not authenticated.");
-        Page<Player> playersPage = playerRepository.findPlayersByClubOrderByInsertDateTimeAsc(clubDb,pageable);
+        Page<Player> playersPage = playerRepository.findPlayersByClubAndIsDeletedFalseOrderByInsertDateTimeAsc(clubDb,pageable);
         return playersPage;
     }
     @Override
@@ -55,11 +55,11 @@ public class PlayerServiceImpl implements PlayerService {
         if (id == null || id <= 0) throw new IllegalArgumentException("Player id must be a positive non-zero value");
         return playerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + id));
     }
-
     @Override
     public void updatePlayer(PlayerDto playerDto,Long id,MultipartFile file) {
         if(playerDto == null) return;
         Player playerDb = playerRepository.findById(id).orElseThrow(()->new EntityNotFoundException("Player not found with id: " + id));
+        fileUploadService.deleteFile(playerDb.getImagePath()); // deleting previous file.
         String fileUpload = fileUploadService.uploadFile(playerDto.getName(),file);
         if(fileUpload == null) throw new RuntimeException("Failed to upload file.");
         playerDb.setName(playerDto.getName());
@@ -72,9 +72,10 @@ public class PlayerServiceImpl implements PlayerService {
     }
     @Override
     public void deletePlayer(Long id) {
-        if (id == null || id <= 0) throw new IllegalArgumentException("Player id must be a positive non-zero value");
-        playerRepository.deleteById(id);
-
+        Player playerDb = this.getPlayer(id);
+        if(playerDb == null) throw new EntityNotFoundException("Player not found with specified id: " + id);
+        playerDb.isDeleted = true;
+        playerRepository.save(playerDb);
     }
 
 }
