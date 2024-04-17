@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface PlayerScoutedService {
     List<PlayerScouted> getAllPlayerScoutedReports();
-    //PlayerScoutedDto editPlayerDetails(PlayerScoutedDto playerScoutedDto);
-   // void deletePlayerScoutedReport(long id);
+    void editPlayerDetails(PlayerScoutedDto playerScoutedDto, Long id);
+    void deletePlayerScoutedReport(long id);
 }

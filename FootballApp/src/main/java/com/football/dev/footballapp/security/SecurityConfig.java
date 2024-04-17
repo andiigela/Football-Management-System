@@ -39,6 +39,9 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/player-scouted/reports").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/api/player-scouted/edit/{id}").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/api/player-scouted/delete/{id}").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll() //endpoint me i testu tokens
                 .requestMatchers(HttpMethod.POST, "/api/auth/refreshToken").permitAll() //endpoint me i testu tokens
                 .requestMatchers(HttpMethod.GET, "/api/users").authenticated() //endpoint me i testu tokens
