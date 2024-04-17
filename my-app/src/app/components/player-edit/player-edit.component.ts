@@ -66,8 +66,9 @@ export class PlayerEditComponent implements OnInit{
     })
   }
   onFileSelected(event: any){
-    const file: File= event.target.files;
+    const file: File= event.target.files[0];
     this.file = file;
+    console.log(this.file)
   }
 
 }
