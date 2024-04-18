@@ -5,7 +5,7 @@ import { UsersComponent } from './users/users.component';
 import { NavbarComponent } from "./navbar/navbar.component";
 import { CommonModule, DatePipe } from "@angular/common"; // Import DatePipe
 import { AuthGuard2 } from "../../services/auth2.guard";
-import { ProfileComponent } from './profile/profile.component';
+import { ProfileComponent } from '../profile/profile.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 const routes: Routes = [
