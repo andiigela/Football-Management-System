@@ -12,10 +12,21 @@ import { LoginstatusComponent } from './components/loginstatus/loginstatus.compo
 import {AuthGuard} from "./services/auth.guard";
 import {AuthGuard2} from "./services/auth2.guard";
 import {RegisterComponent} from "./components/register/register.component";
+import { MatchComponent } from './components/match/match.component';
+import { TransferComponent } from './components/transfer/transfer.component';
+import {LeagueComponent} from "./components/league/league.component";
+import {UpdateLeagueComponent} from "./components/update-league-component/update-league-component.component";
+
 const routes : Routes = [
   {path: 'login',component:LoginComponent,canActivate: [AuthGuard]},
   {path: 'dashboard',component:DashboardComponent,canActivate: [AuthGuard2]},
-  {path: 'register', component:RegisterComponent,canActivate: [AuthGuard]}
+  {path: 'register', component:RegisterComponent,canActivate: [AuthGuard]},
+  {path: 'league',component:LeagueComponent,canActivate:[AuthGuard2]},
+  {path : 'match',component:MatchComponent,canActivate:[AuthGuard2]},
+  {path: 'transfer',component:TransferComponent,canActivate:[AuthGuard2]},
+  { path: 'update-league/:id', component:UpdateLeagueComponent }, // Route for updating league data with a parameter for league ID
+
+
 ]
 
 
@@ -25,7 +36,11 @@ const routes : Routes = [
     LoginComponent,
     DashboardComponent,
     LoginstatusComponent,
-    RegisterComponent
+    RegisterComponent,
+    LeagueComponent,
+    MatchComponent,
+    TransferComponent,
+    UpdateLeagueComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
