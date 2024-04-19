@@ -8,7 +8,8 @@ import {DatePipe} from "@angular/common";
 @Component({
     selector: 'app-profile',
     templateUrl: './profile.component.html',
-    styleUrls: ['./profile.component.css']
+    styleUrls: ['./profile.component.css'],
+    providers: [DatePipe]
 })
 export class ProfileComponent implements OnInit {
     profileForm: FormGroup;

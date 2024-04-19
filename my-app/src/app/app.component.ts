@@ -23,6 +23,10 @@ export class AppComponent implements OnInit {
     const userRole = this.authService.getRoleFromToken();
     return of(userRole === 'ADMIN');
   }
+  isClub(): Observable<boolean> {
+    const userRole = this.authService.getRoleFromToken();
+    return of(userRole === 'USER');
+  }
 
   logout(): void {
     this.authService.logout();

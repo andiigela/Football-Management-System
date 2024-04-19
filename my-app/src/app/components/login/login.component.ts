@@ -43,11 +43,11 @@ export class LoginComponent implements OnInit {
                     if (isEnabled) {
                         const role = payload.role;
 
-                        if (role === 'ADMIN') {
+                        if (role === 'ADMIN' || role === 'USER') {
                             this.authService.setTokens(res.accessToken, res.refreshToken);
                             this.router.navigateByUrl("/dashboard");
                         } else {
-                            console.log("User is not an admin.");
+                          console.log("Unknown role:", role);
                         }
                     } else {
                         this.enableError = true;

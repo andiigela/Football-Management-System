@@ -12,15 +12,16 @@ import { LoginstatusComponent } from './components/loginstatus/loginstatus.compo
 import {AuthGuard} from "./services/auth.guard";
 import {AuthGuard2} from "./services/auth2.guard";
 import {RegisterComponent} from "./components/register/register.component";
-import {DashboardModule} from "./components/dashboard/dashboard.module";
 import {ProfileComponent} from "./components/profile/profile.component";
+import {UsersComponent} from "./components/users/users.component";
 
 
 const routes : Routes = [
   {path: 'login',component:LoginComponent,canActivate: [AuthGuard]},
   {path: 'profile',component:ProfileComponent,canActivate: [AuthGuard2]},
   {path: 'dashboard',component:DashboardComponent,canActivate: [AuthGuard2]},
-  {path: 'dashboard/users',component:DashboardComponent,canActivate: [AuthGuard2]},
+  {path: 'dashboard/users',component:UsersComponent,canActivate: [AuthGuard2]},
+  {path: 'players',component:DashboardComponent,canActivate: [AuthGuard2]},
   {path: 'register', component:RegisterComponent,canActivate: [AuthGuard]}
 ]
 
@@ -31,7 +32,9 @@ const routes : Routes = [
     LoginComponent,
     LoginstatusComponent,
     RegisterComponent,
-    DashboardComponent
+    DashboardComponent,
+    ProfileComponent,
+    UsersComponent
 
   ],
   imports: [
@@ -40,7 +43,7 @@ const routes : Routes = [
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
-    DashboardModule
+
   ],
   providers: [
     {

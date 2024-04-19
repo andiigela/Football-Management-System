@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../../../services/user.service';
+import { UserService } from '../../services/user.service';
 import { HttpClient } from "@angular/common/http";
-import { AuthService } from "../../../services/auth.service";
-import { User } from "../../../common/user";
+import { AuthService } from "../../services/auth.service";
+import { User } from "../../common/user";
 
 @Component({
     selector: 'app-users',

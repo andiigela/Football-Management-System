@@ -16,6 +16,13 @@
         </li>
       </ul>
     </ng-container>
+    <ng-container *ngIf="isClub() | async">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/players">Players</a>
+        </li>
+      </ul>
+    </ng-container>
   </div>
 
 
