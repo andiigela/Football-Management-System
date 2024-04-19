@@ -49,6 +49,8 @@ export class AuthService {
         localStorage.setItem(this.refreshTokenKey, refreshToken);
         console.log('Tokens set');
         this.isAuthenticated.next(true);
+        const userEmail = this.getEmailFromToken();
+        this.setUserEmail(userEmail);
     }
     getAccessToken(): string | null {
         return localStorage.getItem(this.accessTokenKey);
@@ -83,12 +85,12 @@ export class AuthService {
     const payload = this.parseJwtPayload(accessToken);
     return payload?.userId || null;
   }
-    getEmailFromToken(): number | null {
+    getEmailFromToken(): string | null {
         const accessToken: string | null = this.getAccessToken();
         if (!accessToken) return null;
 
         const payload = this.parseJwtPayload(accessToken);
-        return payload?.email || null;
+        return payload?.sub || null;
     }
   parseJwtPayload(token: string): any {
         const payloadBase64 = token.split('.')[1];

@@ -5,15 +5,14 @@
   </button>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
-
     <ng-container *ngIf="isAdmin() | async">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
           <a class="nav-link" routerLink="/dashboard/users">Users</a>
         </li>
-        <li class="nav-item">
+       <!--<li class="nav-item">
           <a class="nav-link" routerLink="/profile">Profile</a>
-        </li>
+        </li>-->
       </ul>
     </ng-container>
     <ng-container *ngIf="isClub() | async">
@@ -24,13 +23,15 @@
       </ul>
     </ng-container>
   </div>
+  <ng-container *ngIf="authService.isAuthenticated | async" class="navbar-text" style="margin-right: 20px;">
+    <a *ngIf="authService.isAuthenticated | async" class="nav-link profile-link" routerLink="/profile">
+       {{ authService.getUserEmail() | async }}
+    </a>
+  </ng-container>
+  <div class="ml-auto" style="margin-right: 50px; margin-left: 30px;">
+    <app-loginstatus></app-loginstatus>
+    <a *ngIf="!(authService.isAuthenticated | async)" class="btn btn-outline-primary" routerLink="/register" style="margin-left: 20px;">Register</a>
 
-
-    <div class="ml-auto" style="margin-right: 50px"> <!-- Align to the right -->
-      <app-loginstatus></app-loginstatus>
-      <a *ngIf="!(authService.isAuthenticated | async)" class="btn btn-outline-primary" routerLink="/register" style="margin-left: 20px;">Register</a>
-    </div>
-
-
+  </div>
 </nav>
 <router-outlet></router-outlet>
