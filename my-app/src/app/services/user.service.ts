@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable } from 'rxjs';
+import {User} from "../common/user";
 
 @Injectable({
   providedIn: 'root'
@@ -15,13 +16,17 @@ export class UserService {
     })
     return headers;
   }
-  getUsers(currentUserId: number | null): Observable<any[]> {
-    if (currentUserId !== null) {
-      return this.http.get<any[]>(`${this.apiUrl}?currentUserId=${currentUserId}`);
-    } else {
-      console.log("User ID not available.");
-      return this.http.get<any[]>(this.apiUrl);
-    }
+  // getUsers(currentUserId: number | null): Observable<any[]> {
+  //   if (currentUserId !== null) {
+  //     return this.http.get<any[]>(`${this.apiUrl}?currentUserId=${currentUserId}&isDeleted=false`);
+  //   } else {
+  //     console.log("User ID not available.");
+  //     return this.http.get<any[]>(this.apiUrl);
+  //   }
+  // }
+  getUsersWithUserRole(): Observable<User[]> {
+    const headers = this.getHeaders();
+    return this.http.get<User[]>(`${this.apiUrl}`, { headers });
   }
 
   updateUserStatus(userId: number, enabled: boolean): Observable<any> {

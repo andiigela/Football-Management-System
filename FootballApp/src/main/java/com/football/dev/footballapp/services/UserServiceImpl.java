@@ -96,5 +96,8 @@ public class UserServiceImpl implements UserService{
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-
+    @Override
+    public List<UserEntity> getUsersByRoleAndIsDeleted(String role, boolean isDeleted) {
+        return userRepository.findByRoleDescriptionAndIsDeleted(role, isDeleted);
+    }
 }

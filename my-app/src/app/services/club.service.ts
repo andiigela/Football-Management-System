@@ -23,8 +23,6 @@ export class ClubService {
     const url = `${this.apiUrl}/edit/${clubId}`;
     return this.http.put(url, JSON.stringify(clubData), { headers: headers });
   }
-
-
   getClubById(clubId: number): Observable<ClubDto> {
     let headers = this.getHeaders();
     const url = `${this.apiUrl}/${clubId}`;
@@ -42,11 +40,11 @@ export class ClubService {
     return this.http.delete(url);
   }
 
-  getClubIdByUserId(userId: number): Observable<number> {
-    let headers = this.getHeaders();
-    const url = `${this.apiUrl}/clubId/${userId}`;
-    return this.http.get<number>(url);
-  }
+  // getClubIdByUserId(userId: number): Observable<number> {
+  //   let headers = this.getHeaders();
+  //   const url = `${this.apiUrl}/clubId/${userId}`;
+  //   return this.http.get<number>(url);
+  // }
   getClubDataByUserId(userId: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${userId}/club`);
   }

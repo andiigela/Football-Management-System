@@ -25,19 +25,14 @@ export class UsersComponent implements OnInit {
     }
 
     loadUsers(): void {
-        if (this.currentUserId !== null) {
-            this.userService.getUsers(this.currentUserId).subscribe(
-                (users: User[]) => {
-                    // Filter out users with isDeleted=true
-                    this.users = users.filter(user => !user.isDeleted);
-                },
-                (error: any) => {
-                    console.error('Error loading users:', error);
-                }
-            );
-        } else {
-            console.log("User ID not available in token.");
-        }
+        this.userService.getUsersWithUserRole().subscribe(
+            (users: User[]) => {
+                this.users = users;
+            },
+            (error: any) => {
+                console.error('Error loading users:', error);
+            }
+        );
     }
 
     updateUserStatus(userId: number, enabled: boolean): void {

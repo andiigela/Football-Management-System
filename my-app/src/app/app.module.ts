@@ -14,6 +14,7 @@ import {AuthGuard2} from "./services/auth2.guard";
 import {RegisterComponent} from "./components/register/register.component";
 import {ProfileComponent} from "./components/profile/profile.component";
 import {UsersComponent} from "./components/users/users.component";
+import {ClubComponent} from "./components/club/club.component";
 
 
 const routes : Routes = [
@@ -22,7 +23,8 @@ const routes : Routes = [
   {path: 'dashboard',component:DashboardComponent,canActivate: [AuthGuard2]},
   {path: 'dashboard/users',component:UsersComponent,canActivate: [AuthGuard2]},
   {path: 'players',component:DashboardComponent,canActivate: [AuthGuard2]},
-  {path: 'register', component:RegisterComponent,canActivate: [AuthGuard]}
+  {path: 'register', component:RegisterComponent,canActivate: [AuthGuard]},
+  {path: 'club', component:ClubComponent,canActivate: [AuthGuard2]}
 ]
 
 
@@ -34,7 +36,8 @@ const routes : Routes = [
     RegisterComponent,
     DashboardComponent,
     ProfileComponent,
-    UsersComponent
+    UsersComponent,
+      ClubComponent
 
   ],
   imports: [

@@ -1,5 +1,5 @@
 export interface ClubDto {
-  clubId: number;
+  id: number;
   name: string;
   foundedYear: number;
   city: string;

@@ -31,8 +31,9 @@ public class UserController {
     @GetMapping("users")
     @PreAuthorize("hasRole('ADMIN')")
     public List<UserEntity> getUsersWithUserRole() {
-        return userService.getUsersByRole("USER");
+        return userService.getUsersByRoleAndIsDeleted("USER", false);
     }
+
     /*public List<UserEntity> getAllUsers(@RequestParam Long currentUserId) {
         return userService.getAllUsers().stream()
                 .filter(user -> !user.getId().equals(currentUserId))

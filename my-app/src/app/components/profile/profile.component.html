@@ -24,6 +24,16 @@
               </div>
             </div>
           </div>
+          <div class="col-md-12 mb-3">
+            <div *ngIf="authService.getRoleFromToken() === 'USER'" class="card mt-3" >
+              <div class="card-body">
+                <div class="text-center">
+                  <h4>Club Info</h4>
+                </div>
+                <app-club></app-club>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="col-md-8">
           <div class="card mb-3">
@@ -113,46 +123,46 @@
                   </div>
                 </div>
                 <hr/>
-                <ng-container *ngIf="userRole === 'USER' && clubData">
-                  <h4 class="text-center">Club Information</h4>
-                  <hr/>
-                  <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
-                    <div class="col-sm-3">
-                      <h6 class="mb-0">Club Name</h6>
-                    </div>
-                    <div class="col-sm-9 text-secondary">
-                      {{ clubData!.name }}
-                    </div>
-                  </div>
-                  <hr/>
-                  <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
-                    <div class="col-sm-3">
-                      <h6 class="mb-0">Founded Year</h6>
-                    </div>
-                    <div class="col-sm-9 text-secondary">
-                      {{ clubData!.foundedYear }}
-                    </div>
-                  </div>
-                  <hr/>
-                  <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
-                    <div class="col-sm-3">
-                      <h6 class="mb-0">City</h6>
-                    </div>
-                    <div class="col-sm-9 text-secondary">
-                      {{ clubData!.city }}
-                    </div>
-                  </div>
-                  <hr/>
-                  <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
-                    <div class="col-sm-3">
-                      <h6 class="mb-0">Website</h6>
-                    </div>
-                    <div class="col-sm-9 text-secondary">
-                      {{ clubData!.website }}
-                    </div>
-                  </div>
+<!--                <ng-container *ngIf="userRole === 'USER' && clubData">-->
+<!--                  <h4 class="text-center">Club Information</h4>-->
+<!--                  <hr/>-->
+<!--                  <div class="row" style="padding-top: 15px; padding-bottom: 15px;">-->
+<!--                    <div class="col-sm-3">-->
+<!--                      <h6 class="mb-0">Club Name</h6>-->
+<!--                    </div>-->
+<!--                    <div class="col-sm-9 text-secondary">-->
+<!--                      {{ clubData!.name }}-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                  <hr/>-->
+<!--                  <div class="row" style="padding-top: 15px; padding-bottom: 15px;">-->
+<!--                    <div class="col-sm-3">-->
+<!--                      <h6 class="mb-0">Founded Year</h6>-->
+<!--                    </div>-->
+<!--                    <div class="col-sm-9 text-secondary">-->
+<!--                      {{ clubData!.foundedYear }}-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                  <hr/>-->
+<!--                  <div class="row" style="padding-top: 15px; padding-bottom: 15px;">-->
+<!--                    <div class="col-sm-3">-->
+<!--                      <h6 class="mb-0">City</h6>-->
+<!--                    </div>-->
+<!--                    <div class="col-sm-9 text-secondary">-->
+<!--                      {{ clubData!.city }}-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                  <hr/>-->
+<!--                  <div class="row" style="padding-top: 15px; padding-bottom: 15px;">-->
+<!--                    <div class="col-sm-3">-->
+<!--                      <h6 class="mb-0">Website</h6>-->
+<!--                    </div>-->
+<!--                    <div class="col-sm-9 text-secondary">-->
+<!--                      {{ clubData!.website }}-->
+<!--                    </div>-->
+<!--                  </div>-->
 
-                </ng-container>
+<!--                </ng-container>-->
                 <hr />
                 <div class="row justify-content-end">
                   <div class="col-sm-20 text-secondary text-right">
@@ -250,43 +260,43 @@
                     </div>
                   </div>
                   <hr />
-                  <div *ngIf="userRole === 'USER'">
-                    <h4 class="text-center">Club Information</h4>
-                    <hr/>
-                    <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
-                      <div class="col-sm-3">
-                        <h6 class="mb-0">Club Name</h6>
-                      </div>
-                      <div class="col-sm-9">
-                        <input type="text" class="form-control" formControlName="clubName" [value]="clubData?.name" />
-                      </div>
-                    </div>
-                    <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
-                      <div class="col-sm-3">
-                        <h6 class="mb-0">Founded Year</h6>
-                      </div>
-                      <div class="col-sm-9">
-                        <input type="text" class="form-control" formControlName="foundedYear" [value]="clubData?.foundedYear" />
-                      </div>
-                    </div>
-                    <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
-                      <div class="col-sm-3">
-                        <h6 class="mb-0">City</h6>
-                      </div>
-                      <div class="col-sm-9">
-                        <input type="text" class="form-control" formControlName="city" [value]="clubData?.city" />
-                      </div>
-                    </div>
-                    <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
-                      <div class="col-sm-3">
-                        <h6 class="mb-0">Website</h6>
-                      </div>
-                      <div class="col-sm-9">
-                        <input type="text" class="form-control" formControlName="website" [value]="clubData?.website" />
-                      </div>
-                    </div>
+<!--                  <div *ngIf="userRole === 'USER'">-->
+<!--                    <h4 class="text-center">Club Information</h4>-->
+<!--                    <hr/>-->
+<!--                    <div class="row" style="padding-top: 15px; padding-bottom: 15px;">-->
+<!--                      <div class="col-sm-3">-->
+<!--                        <h6 class="mb-0">Club Name</h6>-->
+<!--                      </div>-->
+<!--                      <div class="col-sm-9">-->
+<!--                        <input type="text" class="form-control" formControlName="clubName" [value]="clubData?.name" />-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                    <div class="row" style="padding-top: 15px; padding-bottom: 15px;">-->
+<!--                      <div class="col-sm-3">-->
+<!--                        <h6 class="mb-0">Founded Year</h6>-->
+<!--                      </div>-->
+<!--                      <div class="col-sm-9">-->
+<!--                        <input type="text" class="form-control" formControlName="foundedYear" [value]="clubData?.foundedYear" />-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                    <div class="row" style="padding-top: 15px; padding-bottom: 15px;">-->
+<!--                      <div class="col-sm-3">-->
+<!--                        <h6 class="mb-0">City</h6>-->
+<!--                      </div>-->
+<!--                      <div class="col-sm-9">-->
+<!--                        <input type="text" class="form-control" formControlName="city" [value]="clubData?.city" />-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                    <div class="row" style="padding-top: 15px; padding-bottom: 15px;">-->
+<!--                      <div class="col-sm-3">-->
+<!--                        <h6 class="mb-0">Website</h6>-->
+<!--                      </div>-->
+<!--                      <div class="col-sm-9">-->
+<!--                        <input type="text" class="form-control" formControlName="website" [value]="clubData?.website" />-->
+<!--                      </div>-->
+<!--                    </div>-->
 
-                  </div>
+<!--                  </div>-->
                   <hr />
 
 

@@ -59,7 +59,6 @@ public class ClubController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: " + e.getMessage());
         }
     }
-
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteClub(@PathVariable("id") Long id){
         clubService.deleteClub(id);
@@ -74,13 +73,13 @@ public class ClubController {
             return new ResponseEntity<>("Failed to fetch club for the user", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/clubId/{userId}")
-    public ResponseEntity<?> getClubIdByUserId(@PathVariable Long userId) {
-        try {
-            Long clubId = clubService.getClubIdByUserId(userId);
-            return new ResponseEntity<>(clubId, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Failed to fetch club ID for the user", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    @GetMapping("/clubId/{userId}")
+//    public ResponseEntity<?> getClubIdByUserId(@PathVariable Long userId) {
+//        try {
+//            Long clubId = clubService.getClubIdByUserId(userId);
+//            return new ResponseEntity<>(clubId, HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>("Failed to fetch club ID for the user", HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 }

@@ -16,5 +16,5 @@ public interface UserService {
     void saveUser(UserEntityDto user);
     void updateUser(Long userId, UserEntityDto updatedUser);
     UserEntity getUserProfile(Long userId);
-
+    List<UserEntity> getUsersByRoleAndIsDeleted(String role, boolean isDeleted);
 }

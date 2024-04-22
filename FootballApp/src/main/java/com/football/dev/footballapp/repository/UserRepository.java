@@ -12,5 +12,5 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Boolean existsByEmail(String username);
     List<UserEntity> findAll();
     List<UserEntity> findByRoleDescription(String role);
-
+    List<UserEntity> findByRoleDescriptionAndIsDeleted(String role, boolean isDeleted);
 }
