@@ -26,13 +26,12 @@ public class Club extends BaseEntity{
 
   //shtoni atribute tjera te nevojshme
 
-    public Club(String name, Stadium stadium, Integer foundedYear, String city, String website, League league){
+    public Club(String name, Integer foundedYear, String city, String website){
         this.name=name;
-        this.stadium = stadium;
         this.foundedYear = foundedYear;
         this.city = city;
         this.website = website;
-        this.league = league;
+
 
     }
 }

@@ -1,6 +1,7 @@
 package com.football.dev.footballapp.services;
 
 import com.football.dev.footballapp.dto.UserEntityDto;
+import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.UserEntity;
 
 import java.util.ArrayList;
@@ -15,4 +16,5 @@ public interface UserService {
     void saveUser(UserEntityDto user);
     void updateUser(Long userId, UserEntityDto updatedUser);
     UserEntity getUserProfile(Long userId);
+
 }

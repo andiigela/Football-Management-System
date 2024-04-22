@@ -1,6 +1,7 @@
 package com.football.dev.footballapp.controllers;
 
 import com.football.dev.footballapp.dto.UserEntityDto;
+import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.UserEntity;
 import com.football.dev.footballapp.security.JWTGenerator;
 import com.football.dev.footballapp.services.UserService;
@@ -71,5 +72,6 @@ public class UserController {
     public UserEntity getUserProfile(@PathVariable Long userId) {
         return userService.getUserProfile(userId);
     }
+
 }
 

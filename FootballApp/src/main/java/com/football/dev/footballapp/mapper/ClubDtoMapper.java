@@ -11,8 +11,8 @@ public class ClubDtoMapper implements Function<ClubDto, Club> {
 
     @Override
     public Club apply(ClubDto clubDto) {
-        Club club = new Club(clubDto.getName(), clubDto.getStadium(), clubDto.getFoundedYear(),
-                clubDto.getCity(), clubDto.getWebsite(), clubDto.getLeague());
+        Club club = new Club(clubDto.getName(), clubDto.getFoundedYear(),
+                clubDto.getCity(), clubDto.getWebsite());
         return club;
     }
 }

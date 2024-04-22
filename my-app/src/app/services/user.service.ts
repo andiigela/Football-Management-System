@@ -42,7 +42,7 @@ export class UserService {
     return this.http.put(`${this.apiUrl}/update/${userId}`, userData,{headers});
   }
 
-  saveUser(userData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/save`, userData);
+  getClubData(userId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${userId}/club`);
   }
 }

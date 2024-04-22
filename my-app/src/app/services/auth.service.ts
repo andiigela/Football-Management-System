@@ -15,6 +15,7 @@ export class AuthService {
     private readonly refreshTokenKey = 'refreshToken';
     private readonly accessTokenKey = 'accessToken';
     currentUserEmail = new BehaviorSubject<string | null>(null);
+    currentClubId = new BehaviorSubject<number | null>(null);
 
     constructor(private httpClient: HttpClient, private router: Router) {
         // Check authentication status on application startup

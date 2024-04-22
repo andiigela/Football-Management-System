@@ -1,5 +1,7 @@
 export interface ClubDto {
-  id: number;
+  clubId: number;
   name: string;
-  userId: number;
+  foundedYear: number;
+  city: string;
+  website: string;
 }

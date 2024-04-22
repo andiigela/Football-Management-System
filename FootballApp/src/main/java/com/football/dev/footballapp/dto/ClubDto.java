@@ -16,10 +16,7 @@ import lombok.*;
 public class ClubDto {
 
     private String name;
-    private Stadium stadium;
     private Integer foundedYear;
     private String city;
     private String website;
-    private League league;
-
 }

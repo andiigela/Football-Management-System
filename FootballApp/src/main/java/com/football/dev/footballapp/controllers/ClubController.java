@@ -26,7 +26,7 @@ public class ClubController {
 
     }
 
-    @PostMapping("/create")
+   /* @PostMapping("/create")
     public ResponseEntity<String> createClub(@RequestParam("clubDto") String clubDto) {
         try {
             ClubDto clubDtoMapped = objectMapper.readValue(clubDto,ClubDto.class);
@@ -37,7 +37,7 @@ public class ClubController {
         }catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: " + e.getMessage());
         }
-    }
+    }*/
 
     @GetMapping("/")
     public List<Club> getAllClubs() {
@@ -49,22 +49,38 @@ public class ClubController {
         return ResponseEntity.status(HttpStatus.OK).body(clubService.getClubById(id));
     }
 
-    @PostMapping("/edit/{id}")
-    public ResponseEntity<String> editClub(@RequestParam("clubDto") String clubDto,
-                                             @PathVariable("id") Long id) {
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<String> editClub(@RequestBody ClubDto clubDto,
+                                           @PathVariable("id") Long id) {
         try {
-            ClubDto clubDtoMapped = objectMapper.readValue(clubDto, ClubDto.class);
-            clubService.updateClub(clubDtoMapped,id);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }catch (EntityNotFoundException e) {
+            clubService.updateClub(clubDto, id);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: " + e.getMessage());
         }
-        return ResponseEntity.status(HttpStatus.OK).build();
     }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteClub(@PathVariable("id") Long id){
         clubService.deleteClub(id);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+    @GetMapping("/{userId}/club")
+    public ResponseEntity<?> getClubByUserId(@PathVariable Long userId) {
+        try {
+            Club club = clubService.getClubByUserId(userId);
+            return new ResponseEntity<>(club, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to fetch club for the user", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping("/clubId/{userId}")
+    public ResponseEntity<?> getClubIdByUserId(@PathVariable Long userId) {
+        try {
+            Long clubId = clubService.getClubIdByUserId(userId);
+            return new ResponseEntity<>(clubId, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to fetch club ID for the user", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
