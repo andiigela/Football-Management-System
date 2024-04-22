@@ -1,7 +1,6 @@
 package com.football.dev.footballapp.services;
 
 import com.football.dev.footballapp.dto.*;
-import com.football.dev.footballapp.mapper.UserEntityDTOMapper;
 import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.RefreshToken;
 import com.football.dev.footballapp.models.Role;
@@ -10,7 +9,6 @@ import com.football.dev.footballapp.repository.ClubRepository;
 import com.football.dev.footballapp.repository.RoleRepository;
 import com.football.dev.footballapp.repository.UserRepository;
 import com.football.dev.footballapp.security.JWTGenerator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,7 +16,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.Collections;
+
+import java.util.List;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -49,8 +48,7 @@ public class AuthServiceImpl implements AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         if(authentication.isAuthenticated()){
-            JwtResponseDto tokenPair =this.jwtGenerator.generateTokens(loginDto.getUsername());
-            return tokenPair;
+            return this.jwtGenerator.generateTokens(loginDto.getUsername());
         }
         throw new UsernameNotFoundException("Invalid user request");
     }
@@ -78,7 +76,7 @@ public class AuthServiceImpl implements AuthService {
 
         Club club = new Club();
         club.setName(registerDto.getClubName());
-        club.setUser(user);
+        club.setUser(List.of(user));
         clubRepository.save(club);
     }
 
