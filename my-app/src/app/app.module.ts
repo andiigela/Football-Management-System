@@ -16,8 +16,15 @@ import { MatchComponent } from './components/match/match.component';
 import { TransferComponent } from './components/transfer/transfer.component';
 import {LeagueComponent} from "./components/league/league.component";
 import {UpdateLeagueComponent} from "./components/update-league-component/update-league-component.component";
+import { CreatePlayerComponent } from './components/create-player/create-player.component';
+import { PlayersListComponent } from './components/players-list/players-list.component';
+import { PlayerEditComponent } from './components/player-edit/player-edit.component';
+import {NgbPaginationModule} from "@ng-bootstrap/ng-bootstrap";
 
 const routes : Routes = [
+  {path: 'players/edit/:id',component:PlayerEditComponent},
+  {path: 'players',component:PlayersListComponent},
+  {path: 'create-player',component:CreatePlayerComponent},
   {path: 'login',component:LoginComponent,canActivate: [AuthGuard]},
   {path: 'dashboard',component:DashboardComponent,canActivate: [AuthGuard2]},
   {path: 'register', component:RegisterComponent,canActivate: [AuthGuard]},
@@ -40,14 +47,18 @@ const routes : Routes = [
     LeagueComponent,
     MatchComponent,
     TransferComponent,
-    UpdateLeagueComponent
+    UpdateLeagueComponent,
+    CreatePlayerComponent,
+    PlayersListComponent,
+    PlayerEditComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
     BrowserModule,
     HttpClientModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    NgbPaginationModule
   ],
   providers: [
     {
