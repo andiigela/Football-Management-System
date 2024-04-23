@@ -1,0 +1,40 @@
+<div *ngIf="leagues.length > 0">
+  <h2>Data from Backend</h2>
+  <div class="card-container">
+    <div *ngFor="let league of leagues" class="card">
+      <div class="card-content">
+        <h3>{{ league.name }}</h3>
+        <p>Start Date: {{ league.start_date | date }}</p>
+        <p>End Date: {{ league.end_date | date }}</p>
+        <p>Description: {{ league.description }}</p>
+      </div>
+      <div class="card-actions">
+        <button (click)="updateLeague(league)" class="btn-update">Update</button>
+        <button (click)="deleteLeague(league.id)" class="btn-delete">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div>
+  <h2>Create New League</h2>
+  <form (submit)="createLeague()">
+    <div>
+      <label for="newName">Name:</label>
+      <input type="text" id="newName" name="newName" [(ngModel)]="newLeague.name" required>
+    </div>
+    <div>
+      <label for="newStartDate">Start Date:</label>
+      <input type="date" id="newStartDate" name="newStartDate" [(ngModel)]="newLeague.start_date" required>
+    </div>
+    <div>
+      <label for="newEndDate">End Date:</label>
+      <input type="date" id="newEndDate" name="newEndDate" [(ngModel)]="newLeague.end_date" required>
+    </div>
+    <div>
+      <label for="newDescription">Description:</label>
+      <textarea id="newDescription" name="newDescription" [(ngModel)]="newLeague.description" required></textarea>
+    </div>
+    <button type="submit">Create</button>
+  </form>
+</div>

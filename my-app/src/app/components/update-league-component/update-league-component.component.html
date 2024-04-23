@@ -1,0 +1,24 @@
+<!-- update-league.component.html -->
+
+<div>
+  <h2>Update League</h2>
+  <form (submit)="updateLeague()">
+    <div>
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" [(ngModel)]="league.name" required>
+    </div>
+    <div>
+      <label for="startDate">Start Date:</label>
+      <input type="date" id="startDate" name="startDate" [(ngModel)]="league.start_date" required>
+    </div>
+    <div>
+      <label for="endDate">End Date:</label>
+      <input type="date" id="endDate" name="endDate" [(ngModel)]="league.end_date" required>
+    </div>
+    <div>
+      <label for="description">Description:</label>
+      <textarea id="description" name="description" [(ngModel)]="league.description" required></textarea>
+    </div>
+    <button type="submit">Update</button>
+  </form>
+</div>

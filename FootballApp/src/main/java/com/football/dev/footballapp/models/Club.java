@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,9 +22,11 @@ public class Club extends BaseEntity{
     private String website;
     @ManyToOne
     private League league;
-    @OneToOne
+    @OneToMany
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private UserEntity user;
+    private List<UserEntity> user;
+    @OneToMany
+    private List<Player>players;
 
   //shtoni atribute tjera te nevojshme
 
