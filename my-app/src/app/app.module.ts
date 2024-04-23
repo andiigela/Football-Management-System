@@ -19,12 +19,18 @@ import {ClubComponent} from "./components/club/club.component";
 
 const routes : Routes = [
   {path: 'login',component:LoginComponent,canActivate: [AuthGuard]},
+  {path: 'register', component:RegisterComponent,canActivate: [AuthGuard]},
   {path: 'profile',component:ProfileComponent,canActivate: [AuthGuard2]},
   {path: 'dashboard',component:DashboardComponent,canActivate: [AuthGuard2]},
   {path: 'dashboard/users',component:UsersComponent,canActivate: [AuthGuard2]},
-  {path: 'players',component:DashboardComponent,canActivate: [AuthGuard2]},
-  {path: 'register', component:RegisterComponent,canActivate: [AuthGuard]},
-  {path: 'club', component:ClubComponent,canActivate: [AuthGuard2]}
+  {path: 'club', component:ClubComponent,canActivate: [AuthGuard2]},
+  //{path: 'players',component:PlayerComponent,canActivate: [AuthGuard2]},
+  //{path: 'create-player',component:CreatePlayerComponent},
+  //{path: 'players/edit/:id',component:PlayerEditComponent},
+  //{path: 'league',component:LeagueComponent,canActivate:[AuthGuard2]},
+  //{path : 'match',component:MatchComponent,canActivate:[AuthGuard2]},
+  //{path: 'transfer',component:TransferComponent,canActivate:[AuthGuard2]},
+  //{path: 'update-league/:id', component:UpdateLeagueComponent },
 ]
 
 
