@@ -29,4 +29,13 @@ public class Club extends BaseEntity{
     private List<Player>players;
 
   //shtoni atribute tjera te nevojshme
+
+    public Club(String name, Integer foundedYear, String city, String website){
+        this.name=name;
+        this.foundedYear = foundedYear;
+        this.city = city;
+        this.website = website;
+
+
+    }
 }

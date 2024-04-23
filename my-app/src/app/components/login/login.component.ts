@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { LoginDto } from "../../common/login-dto";
 import { Router } from "@angular/router";
 import { AuthService } from "../../services/auth.service";
@@ -12,38 +12,55 @@ import { AuthService } from "../../services/auth.service";
 })
 export class LoginComponent implements OnInit {
     loginFormGroup: FormGroup = new FormGroup<any>({});
-    loginError: boolean = false; // Flag to indicate login error
-  constructor(private formBuilder: FormBuilder, private http: HttpClient, private router: Router, private authService: AuthService) {}
+    loginError: boolean = false;
+    enableError: boolean = false;
+
+    constructor(private formBuilder: FormBuilder, private http: HttpClient, private router: Router, private authService: AuthService) { }
 
     ngOnInit(): void {
-      this.authService.checkIsAuthenticated();
-      this.loginFormGroup = this.formBuilder.group({
+        this.authService.checkIsAuthenticated();
+        this.loginFormGroup = this.formBuilder.group({
             login: this.formBuilder.group({
-                username: new FormControl('',[Validators.required]),
-                password: new FormControl('',[Validators.required])
+                email: ['', [Validators.required, Validators.email]],
+                password: new FormControl('', [Validators.required])
             })
         });
     }
 
     loginButton(): void {
         this.loginFormGroup.markAllAsTouched();
-        const username: string = this.loginFormGroup.controls['login'].get('username')?.value;
+        const email: string = this.loginFormGroup.controls['login'].get('email')?.value;
         const password: string = this.loginFormGroup.controls['login'].get('password')?.value;
 
-        const loginDto = new LoginDto(username, password);
+        const loginDto = new LoginDto(email, password);
 
-        if(username != '' && password != ''){
+        if (email != '' && password != '') {
             this.authService.loginUser(loginDto).subscribe((res: any) => {
-                    this.authService.setTokens(res.accessToken, res.refreshToken);
-                    this.router.navigateByUrl("/dashboard");
-                },(error => {
-                  if(error.status == 401){
-                      this.loginError = true;
-                  }
+                if (res.accessToken) {
+                    const payload = this.authService.parseJwtPayload(res.accessToken);
+                    const isEnabled = payload.enabled;
 
-                })
-            );
+                    if (isEnabled) {
+                        const role = payload.role;
+
+                        if (role === 'ADMIN' || role === 'USER') {
+                            this.authService.setTokens(res.accessToken, res.refreshToken);
+                            this.router.navigateByUrl("/dashboard");
+                        } else {
+                          console.log("Unknown role:", role);
+                        }
+                    } else {
+                        this.enableError = true;
+                    }
+                } else {
+                    this.loginError = true;
+                }
+            }, (error => {
+                if (error.status == 401) {
+                    this.loginError = true;
+                }
+            }));
         }
-
     }
 }
+
