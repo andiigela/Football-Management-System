@@ -16,7 +16,7 @@ export class PlayerEditComponent implements OnInit{
   editForm: FormGroup;
   footOptions = Object.values(Foot);
   positionOptions = Object.values(FootballPosition);
-  file: File|null = null;
+  file: File|null= null;
   constructor(private playerService: PlayerService,private route: ActivatedRoute,private formBuilder: FormBuilder,
               private router: Router) {
     this.editForm = this.formBuilder.group({
@@ -39,7 +39,7 @@ export class PlayerEditComponent implements OnInit{
     let playerEditInfo = new PlayerDto(formValue.name, formValue.height, formValue.weight,
         formValue.shirtNumber, formValue.preferred_foot, "");
     playerEditInfo.id = this.playerEdit.id;
-    this.playerService.updatePlayer(playerEditInfo,this.file!)
+    this.playerService.updatePlayer(playerEditInfo,this.file)
         .subscribe(()=>{
           this.router.navigate(["/players"])
         });
@@ -68,7 +68,6 @@ export class PlayerEditComponent implements OnInit{
   onFileSelected(event: any){
     const file: File= event.target.files[0];
     this.file = file;
-    console.log(this.file)
   }
 
 }

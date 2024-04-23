@@ -15,6 +15,14 @@ import {RegisterComponent} from "./components/register/register.component";
 import {ProfileComponent} from "./components/profile/profile.component";
 import {UsersComponent} from "./components/users/users.component";
 import {ClubComponent} from "./components/club/club.component";
+import {PlayersListComponent} from "./components/players-list/players-list.component";
+import {CreatePlayerComponent} from "./components/create-player/create-player.component";
+import {PlayerEditComponent} from "./components/player-edit/player-edit.component";
+import {LeagueComponent} from "./components/league/league.component";
+import {MatchComponent} from "./components/match/match.component";
+import {TransferComponent} from "./components/transfer/transfer.component";
+import {UpdateLeagueComponent} from "./components/update-league-component/update-league-component.component";
+import {NgbPaginationModule} from "@ng-bootstrap/ng-bootstrap";
 
 
 const routes : Routes = [
@@ -24,13 +32,13 @@ const routes : Routes = [
   {path: 'dashboard',component:DashboardComponent,canActivate: [AuthGuard2]},
   {path: 'dashboard/users',component:UsersComponent,canActivate: [AuthGuard2]},
   {path: 'club', component:ClubComponent,canActivate: [AuthGuard2]},
-  //{path: 'players',component:PlayerComponent,canActivate: [AuthGuard2]},
-  //{path: 'create-player',component:CreatePlayerComponent},
-  //{path: 'players/edit/:id',component:PlayerEditComponent},
-  //{path: 'league',component:LeagueComponent,canActivate:[AuthGuard2]},
-  //{path : 'match',component:MatchComponent,canActivate:[AuthGuard2]},
-  //{path: 'transfer',component:TransferComponent,canActivate:[AuthGuard2]},
-  //{path: 'update-league/:id', component:UpdateLeagueComponent },
+  {path: 'players',component:PlayersListComponent,canActivate: [AuthGuard2]},
+  {path: 'create-player',component:CreatePlayerComponent},
+  {path: 'players/edit/:id',component:PlayerEditComponent},
+  // {path: 'league',component:LeagueComponent,canActivate:[AuthGuard2]},
+  // {path : 'match',component:MatchComponent,canActivate:[AuthGuard2]},
+  // {path: 'transfer',component:TransferComponent,canActivate:[AuthGuard2]},
+  // {path: 'update-league/:id', component:UpdateLeagueComponent },
 ]
 
 
@@ -43,8 +51,14 @@ const routes : Routes = [
     DashboardComponent,
     ProfileComponent,
     UsersComponent,
-      ClubComponent
-
+    ClubComponent,
+    CreatePlayerComponent,
+    PlayerEditComponent,
+    PlayersListComponent,
+    LeagueComponent,
+    MatchComponent,
+    TransferComponent,
+    UpdateLeagueComponent,
   ],
   imports: [
     RouterModule.forRoot(routes),
@@ -52,6 +66,7 @@ const routes : Routes = [
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
+    NgbPaginationModule,
 
   ],
   providers: [

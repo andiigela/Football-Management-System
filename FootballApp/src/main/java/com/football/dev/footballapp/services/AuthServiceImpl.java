@@ -77,12 +77,8 @@ public class AuthServiceImpl implements AuthService {
 
         Role role = roleRepository.findByDescription("USER")
                 .orElseThrow(() -> new IllegalStateException("Default role not found"));
-
         user.setRole(role);
-
         userRepository.save(user);
-
-
         Club club = new Club();
         club.setName(registerDto.getClubName());
         club.setUser(user);

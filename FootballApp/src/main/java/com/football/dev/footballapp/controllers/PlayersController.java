@@ -22,8 +22,6 @@ public class PlayersController {
     private final PlayerService playerService;
     private final FileUploadService fileUploadService;
     private final ObjectMapper objectMapper;
-
-
     public PlayersController(PlayerService playerService,ObjectMapper objectMapper,FileUploadService fileUploadService) {
         this.playerService = playerService;
         this.fileUploadService=fileUploadService;
@@ -58,7 +56,7 @@ public class PlayersController {
         return ResponseEntity.status(HttpStatus.OK).body(playerService.getPlayer(id));
     }
     @PostMapping("/edit/{id}")
-    public ResponseEntity<String> editPlayer(@RequestParam("file") MultipartFile file,@RequestParam("playerDto") String playerDto,
+    public ResponseEntity<String> editPlayer(@RequestParam(value = "file",required = false) MultipartFile file,@RequestParam("playerDto") String playerDto,
                                              @PathVariable("id") Long id) {
         try {
             PlayerDto playerDtoMapped = objectMapper.readValue(playerDto, PlayerDto.class);

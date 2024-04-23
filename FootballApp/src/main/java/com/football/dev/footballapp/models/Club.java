@@ -22,9 +22,9 @@ public class Club extends BaseEntity{
     private String website;
     @ManyToOne
     private League league;
-    @OneToMany
+    @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private List<UserEntity> user;
+    private UserEntity user;
     @OneToMany
     private List<Player>players;
 

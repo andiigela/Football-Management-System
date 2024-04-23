@@ -40,7 +40,7 @@ public class PlayerServiceImpl implements PlayerService {
         Club clubDb = clubRepository.findClubByUserEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         if(clubDb == null) throw new EntityNotFoundException("User is not authenticated.");
         player.setClub(clubDb);
-        Player createdPlayer = playerRepository.save(player);
+        playerRepository.save(player);
     }
     @Override
     public Page<Player> retrievePlayers(int pageNumber, int pageSize) {
@@ -56,20 +56,32 @@ public class PlayerServiceImpl implements PlayerService {
         return playerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + id));
     }
     @Override
-    public void updatePlayer(PlayerDto playerDto,Long id,MultipartFile file) {
-        if(playerDto == null) return;
-        Player playerDb = playerRepository.findById(id).orElseThrow(()->new EntityNotFoundException("Player not found with id: " + id));
-        fileUploadService.deleteFile(playerDb.getImagePath()); // deleting previous file.
-        String fileUpload = fileUploadService.uploadFile(playerDto.getName(),file);
-        if(fileUpload == null) throw new RuntimeException("Failed to upload file.");
+    public void updatePlayer(PlayerDto playerDto, Long id, MultipartFile file) {
+        if (playerDto == null) {
+            return;
+        }
+        Player playerDb = playerRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + id));
+        if (file != null && !file.isEmpty()) {
+            // A new file is provided, handle file upload
+            fileUploadService.deleteFile(playerDb.getImagePath()); // Deleting previous file
+            String fileUpload = fileUploadService.uploadFile(playerDto.getName(), file);
+            if (fileUpload == null) {
+                throw new RuntimeException("Failed to upload file.");
+            }
+            playerDb.setImagePath(fileUpload); // Update imagePath with new file path
+        }
+        // Update other fields
         playerDb.setName(playerDto.getName());
         playerDb.setHeight(playerDto.getHeight());
         playerDb.setWeight(playerDto.getWeight());
         playerDb.setShirtNumber(playerDto.getShirtNumber());
-        playerDb.setPreferred_foot(Foot.valueOf(playerDto.getPreferred_foot()));
-        playerDb.setImagePath(fileUpload);
+        if (playerDto.getPreferred_foot() != null) {
+            playerDb.setPreferred_foot(Foot.valueOf(playerDto.getPreferred_foot()));
+        }
         playerRepository.save(playerDb);
     }
+
     @Override
     public void deletePlayer(Long id) {
         Player playerDb = this.getPlayer(id);
