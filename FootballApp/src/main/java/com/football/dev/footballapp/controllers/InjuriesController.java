@@ -20,16 +20,16 @@ public class InjuriesController {
     public InjuriesController(InjuryService injuryService){
         this.injuryService=injuryService;
     }
-    @PostMapping("/create")
-    public ResponseEntity<String> createInjury(@RequestBody InjuryDto injuryDto) {
-        injuryService.saveInjury(injuryDto);
+    @PostMapping("/{playerId}/create")
+    public ResponseEntity<String> createInjury(@PathVariable("playerId") Long playerId,@RequestBody InjuryDto injuryDto) {
+        injuryService.saveInjury(injuryDto,playerId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
-    @GetMapping("/")
+    @GetMapping("/{playerId}")
     public ResponseEntity<PageResponseDto<InjuryDto>> getInjuries(@PathVariable("playerId") Long playerId,@RequestParam(defaultValue = "0") int page,
                                                               @RequestParam(defaultValue = "10") int size) {
         Page<InjuryDto> injuryDtoPage = injuryService.retrieveInjuries(playerId,page,size);
-        PageResponseDto<Player> responseDto = new PageResponseDto<>(
+        PageResponseDto<InjuryDto> responseDto = new PageResponseDto<>(
                 injuryDtoPage.getContent(),
                 injuryDtoPage.getNumber(),
                 injuryDtoPage.getSize(),
