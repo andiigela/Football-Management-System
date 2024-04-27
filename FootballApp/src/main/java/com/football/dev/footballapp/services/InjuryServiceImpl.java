@@ -14,6 +14,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,29 +30,40 @@ public class InjuryServiceImpl implements InjuryService{
     @Override
     public void saveInjury(InjuryDto injuryDto,Long playerId) {
         if(injuryDto == null) throw new IllegalArgumentException("injuryDto cannot be null");
-        Player playerDb = playerRepository.findById(playerId).orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + playerId));;
+        Player playerDb = playerRepository.findById(playerId).orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + playerId));
         injuryRepository.save(new Injury(injuryDto.getInjuryType(),injuryDto.getInjuryDate(),injuryDto.getExpectedRecoveryTime(),injuryDto.getInjuryStatus(),playerDb));
     }
     @Override
     public Page<InjuryDto> retrieveInjuries(Long playerId, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<Injury> injuryPage = injuryRepository.findInjuriesByPlayerId(playerId, pageable); // Assuming this returns Page<Injury>
-        List<InjuryDto> injuryDtos = injuryPage.getContent() // Get the content (List) from the Page
+        Page<Injury> injuryPage = injuryRepository.findInjuriesByPlayerId(playerId, pageable);
+        List<InjuryDto> injuryDtos = injuryPage.getContent()
                 .stream()
                 .map(injuryDtoMapper)
                 .collect(Collectors.toList());
-        return PageableExecutionUtils.getPage(injuryDtos, injuryPage.getPageable(), injuryPage::getTotalPages); // Create Page<InjuryDto>
+        return PageableExecutionUtils.getPage(injuryDtos, injuryPage.getPageable(), injuryPage::getTotalPages);
     }
     @Override
-    public Injury getInjury(Long id) {
-        return null;
+    public InjuryDto getInjury(Long playerId,Long injuryId) {
+        Optional<Injury> injury = injuryRepository.findInjuryByIdAndPlayerIdAndIsDeletedFalse(injuryId,playerId);
+        if(injury.isPresent()) return injuryDtoMapper.apply(injury.get());
+        throw new EntityNotFoundException("Injury not found with ids: playerId: " + playerId + " injuryId: " + injuryId);
     }
     @Override
-    public void updateInjury(InjuryDto injuryDto, Long id) {
-
+    public void updateInjury(InjuryDto injuryDto, Long injuryId, Long playerId) {
+        injuryRepository.findInjuryByIdAndPlayerIdAndIsDeletedFalse(injuryId,playerId).ifPresent(injuryDb -> {
+            injuryDb.setInjuryType(injuryDto.getInjuryType());
+            injuryDb.setInjuryDate(injuryDto.getInjuryDate());
+            injuryDb.setExpectedRecoveryTime(injuryDto.getExpectedRecoveryTime());
+            injuryDb.setInjuryStatus(injuryDto.getInjuryStatus());
+            injuryRepository.save(injuryDb);
+        });
     }
     @Override
-    public void deleteInjury(Long id) {
-
+    public void deleteInjury(Long injuryId, Long playerId) {
+        injuryRepository.findInjuryByIdAndPlayerIdAndIsDeletedFalse(injuryId,playerId).ifPresent(injuryDb -> {
+            injuryDb.setIsDeleted(true);
+            injuryRepository.save(injuryDb);
+        });
     }
 }

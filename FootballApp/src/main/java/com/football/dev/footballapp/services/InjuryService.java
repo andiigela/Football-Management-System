@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 public interface InjuryService {
     void saveInjury(InjuryDto injuryDto, Long playerId);
     Page<InjuryDto> retrieveInjuries(Long playerId,int pageNumber, int pageSize);
-    Injury getInjury(Long id);
-    void updateInjury(InjuryDto injuryDto, Long id);
-    void deleteInjury(Long id);
+    InjuryDto getInjury(Long playerId,Long injuryId);
+    void updateInjury(InjuryDto injuryDto, Long injuryId, Long playerId);
+    void deleteInjury(Long injuryId, Long playerId);
 }

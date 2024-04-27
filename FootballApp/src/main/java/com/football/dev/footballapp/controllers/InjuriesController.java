@@ -37,4 +37,14 @@ public class InjuriesController {
         );
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
+    @GetMapping("/{playerId}/edit/{injuryId}")
+    public ResponseEntity<InjuryDto> getInjury(@PathVariable("playerId") Long playerId,@PathVariable("injuryId") Long injuryId) {
+        return ResponseEntity.status(HttpStatus.OK).body(injuryService.getInjury(injuryId,playerId));
+    }
+    @PostMapping("/{playerId}/edit/{injuryId}")
+    public ResponseEntity<InjuryDto> editInjury(@PathVariable("playerId") Long playerId,@PathVariable("injuryId") Long injuryId,
+                                                @RequestBody InjuryDto injuryDto) {
+        injuryService.updateInjury(injuryDto,injuryId,playerId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }
