@@ -23,9 +23,11 @@ import {MatchComponent} from "./components/match/match.component";
 import {TransferComponent} from "./components/transfer/transfer.component";
 import {UpdateLeagueComponent} from "./components/update-league-component/update-league-component.component";
 import {NgbPaginationModule} from "@ng-bootstrap/ng-bootstrap";
+import {InjuriesListComponent} from "./components/injuries-list/injuries-list.component";
 
 
 const routes : Routes = [
+  {path: 'injuries',component:InjuriesListComponent},
   {path: 'login',component:LoginComponent,canActivate: [AuthGuard]},
   {path: 'register', component:RegisterComponent,canActivate: [AuthGuard]},
   {path: 'profile',component:ProfileComponent,canActivate: [AuthGuard2]},
@@ -59,6 +61,7 @@ const routes : Routes = [
     MatchComponent,
     TransferComponent,
     UpdateLeagueComponent,
+    InjuriesListComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
