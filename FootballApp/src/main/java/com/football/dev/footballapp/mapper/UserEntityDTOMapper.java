@@ -11,11 +11,10 @@ import java.util.function.Function;
 public class UserEntityDTOMapper implements Function<UserEntityDto, UserEntity> {
     @Override
     public UserEntity apply(UserEntityDto userEntityDto) {
-        return new UserEntity(userEntityDto.firstName(),
-                userEntityDto.lastName(),userEntityDto.email(),
-                userEntityDto.phone(), userEntityDto.country(),
-                userEntityDto.birthDate(),
-                userEntityDto.profile_picture(),userEntityDto.address(),
-                userEntityDto.city(),userEntityDto.postal_code(), userEntityDto.gender());
+        return new UserEntity(userEntityDto.getFirstName(),
+                userEntityDto.getLastName(),userEntityDto.getEmail(),
+                userEntityDto.getPhone(), userEntityDto.getCountry(),
+                userEntityDto.getBirthDate(),userEntityDto.getAddress(),
+                userEntityDto.getCity(),userEntityDto.getPostal_code(), userEntityDto.getGender());
     }
 }

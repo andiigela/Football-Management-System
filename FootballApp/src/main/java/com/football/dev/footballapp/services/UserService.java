@@ -3,6 +3,7 @@ package com.football.dev.footballapp.services;
 import com.football.dev.footballapp.dto.UserEntityDto;
 import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.UserEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ public interface UserService {
     void deleteUser(Long userId);
     List<UserEntity> getUsersByRole(String role);
     void saveUser(UserEntityDto user);
-    void updateUser(Long userId, UserEntityDto updatedUser);
+    void updateUser(Long userId, UserEntityDto updatedUser, MultipartFile file);
     UserEntity getUserProfile(Long userId);
     List<UserEntity> getUsersByRoleAndIsDeleted(String role, boolean isDeleted);
 }

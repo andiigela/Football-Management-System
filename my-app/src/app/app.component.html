@@ -40,7 +40,7 @@
   </div>
   <ng-container *ngIf="authService.isAuthenticated | async" class="navbar-text" style="margin-right: 20px;">
     <a *ngIf="authService.isAuthenticated | async" class="nav-link profile-link" routerLink="/profile">
-       {{ authService.getUserEmail() | async }}
+       Your Profile
     </a>
   </ng-container>
   <div class="ml-auto" style="margin-right: 50px; margin-left: 30px;">

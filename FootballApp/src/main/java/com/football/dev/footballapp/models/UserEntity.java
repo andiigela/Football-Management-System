@@ -46,7 +46,7 @@ public class UserEntity extends BaseEntity {
     @JsonIgnore
     private RefreshToken refreshToken;
     public UserEntity(String firstName, String lastName, String email, String phone, String country,
-                      Date birthDate, String profilePicture, String address, String city,
+                      Date birthDate, String address, String city,
                       String postalCode, Gender gender) {
 
         this.firstName = firstName;
@@ -55,7 +55,6 @@ public class UserEntity extends BaseEntity {
         this.phone = phone;
         this.country = country;
         this.birthDate = birthDate;
-        profile_picture = profilePicture;
         this.address = address;
         this.city = city;
         postal_code = postalCode;

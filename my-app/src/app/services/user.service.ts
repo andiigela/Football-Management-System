@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable } from 'rxjs';
-import {User} from "../common/user";
+import {UserDto} from "../common/user-dto";
 
 @Injectable({
   providedIn: 'root'
@@ -24,9 +24,9 @@ export class UserService {
   //     return this.http.get<any[]>(this.apiUrl);
   //   }
   // }
-  getUsersWithUserRole(): Observable<User[]> {
+  getUsersWithUserRole(): Observable<UserDto[]> {
     const headers = this.getHeaders();
-    return this.http.get<User[]>(`${this.apiUrl}`, { headers });
+    return this.http.get<UserDto[]>(`${this.apiUrl}`, { headers });
   }
 
   updateUserStatus(userId: number, enabled: boolean): Observable<any> {
@@ -39,15 +39,31 @@ export class UserService {
 
   getUserProfile(userId: number): Observable<any> {
     let headers = this.getHeaders();
+    console.log('Headers:', headers);
     return this.http.get(`${this.apiUrl}/${userId}`,{headers});
   }
 
-  updateUser(userId: number, userData: any): Observable<any> {
+  updateUser(updatedUserDto: UserDto,file: File|null): Observable<any> {
     let headers = this.getHeaders();
-    return this.http.put(`${this.apiUrl}/update/${userId}`, userData,{headers});
+    console.log('Headers:', headers);
+    console.log(file);
+    console.log(updatedUserDto);
+    const formData = new FormData();
+
+    if(file != null){
+      formData.append("file",file!);
+    }
+    formData.append("updatedUserDto",JSON.stringify(updatedUserDto));
+    console.log(formData.get("file"));
+    return this.http.post(`${this.apiUrl}/update/${updatedUserDto.userId}`, formData,{headers});
   }
 
   getClubData(userId: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${userId}/club`);
+  }
+
+  public getImageUrl(profile_picture: string): Observable<any>{
+    let headers = this.getHeaders();
+    return this.http.get(`http://localhost:8080/images/${profile_picture}`,{headers,responseType: 'blob'});
   }
 }

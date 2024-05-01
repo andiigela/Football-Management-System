@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { HttpClient } from "@angular/common/http";
 import { AuthService } from "../../services/auth.service";
-import { User } from "../../common/user";
+import { UserDto } from "../../common/user-dto";
 
 @Component({
     selector: 'app-users',
@@ -10,7 +10,7 @@ import { User } from "../../common/user";
     styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit {
-    users: User[] = [];
+    users: UserDto[] = [];
     currentUserId: number | null = null;
 
     constructor(private http: HttpClient, private userService: UserService, private authService: AuthService) { }
@@ -26,7 +26,7 @@ export class UsersComponent implements OnInit {
 
     loadUsers(): void {
         this.userService.getUsersWithUserRole().subscribe(
-            (users: User[]) => {
+            (users: UserDto[]) => {
                 this.users = users;
             },
             (error: any) => {
@@ -38,7 +38,7 @@ export class UsersComponent implements OnInit {
     updateUserStatus(userId: number, enabled: boolean): void {
         this.userService.updateUserStatus(userId, enabled).subscribe(
             () => {
-                const userToUpdate = this.users.find(user => user.id === userId);
+                const userToUpdate = this.users.find(user => user.userId === userId);
                 if (userToUpdate) {
                     userToUpdate.enabled = enabled;
                 }
@@ -53,7 +53,7 @@ export class UsersComponent implements OnInit {
         this.userService.deleteUser(userId).subscribe(
             () => {
                 // Remove the deleted user from the users array
-                this.users = this.users.filter(user => user.id !== userId);
+                this.users = this.users.filter(user => user.userId !== userId);
             },
             (error: any) => {
                 console.error('Error deleting user:', error);

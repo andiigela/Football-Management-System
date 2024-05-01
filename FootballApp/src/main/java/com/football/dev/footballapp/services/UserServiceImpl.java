@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,9 +19,12 @@ import java.util.function.Function;
 public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final Function<UserEntityDto, UserEntity> userEntityDtoToUserEntity;
-    public UserServiceImpl(UserRepository userRepository, Function<UserEntityDto, UserEntity> userEntityDtoToUserEntity){
+    private final FileUploadService fileUploadService;
+    public UserServiceImpl(UserRepository userRepository, Function<UserEntityDto, UserEntity> userEntityDtoToUserEntity,
+            FileUploadService fileUploadService){
         this.userRepository=userRepository;
         this.userEntityDtoToUserEntity = userEntityDtoToUserEntity;
+        this.fileUploadService=fileUploadService;
     }
     public List<UserEntity> getAllUsers() {
         return userRepository.findAll();
@@ -70,21 +74,28 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void updateUser(Long userId, UserEntityDto updatedUserDto) {
+    public void updateUser(Long userId, UserEntityDto updatedUserDto, MultipartFile file) {
         if(updatedUserDto == null) return;
         UserEntity userToUpdate = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-
-        userToUpdate.setFirstName(updatedUserDto.firstName());
-        userToUpdate.setLastName(updatedUserDto.lastName());
-        userToUpdate.setPhone(updatedUserDto.phone());
-        userToUpdate.setCountry(updatedUserDto.country());
-        userToUpdate.setBirthDate(updatedUserDto.birthDate());
-        userToUpdate.setProfile_picture(updatedUserDto.profile_picture());
-        userToUpdate.setAddress(updatedUserDto.address());
-        userToUpdate.setCity(updatedUserDto.city());
-        userToUpdate.setPostal_code(updatedUserDto.postal_code());
-        userToUpdate.setGender(updatedUserDto.gender());
+        if (file != null && !file.isEmpty()) {
+            // A new file is provided, handle file upload
+            // fileUploadService.deleteFile(userToUpdate.getProfile_picture());Deleting previous file
+            String fileUpload = fileUploadService.uploadFile(userToUpdate.getFirstName(), file);
+            if (fileUpload == null) {
+                throw new RuntimeException("Failed to upload file.");
+            }
+            userToUpdate.setProfile_picture(fileUpload); // Update imagePath with new file path
+        }
+        userToUpdate.setFirstName(updatedUserDto.getFirstName());
+        userToUpdate.setLastName(updatedUserDto.getLastName());
+        userToUpdate.setPhone(updatedUserDto.getPhone());
+        userToUpdate.setCountry(updatedUserDto.getCountry());
+        userToUpdate.setBirthDate(updatedUserDto.getBirthDate());
+        userToUpdate.setAddress(updatedUserDto.getAddress());
+        userToUpdate.setCity(updatedUserDto.getCity());
+        userToUpdate.setPostal_code(updatedUserDto.getPostal_code());
+        userToUpdate.setGender(updatedUserDto.getGender());
 
         userRepository.save(userToUpdate);
     }

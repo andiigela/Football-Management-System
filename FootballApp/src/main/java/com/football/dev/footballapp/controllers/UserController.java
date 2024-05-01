@@ -1,5 +1,6 @@
 package com.football.dev.footballapp.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.football.dev.footballapp.dto.UserEntityDto;
 import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.UserEntity;
@@ -12,7 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,11 +25,13 @@ import java.util.stream.Collectors;
 public class UserController {
     private final UserService userService;
     private final JWTGenerator jwtGenerator;
+    private final ObjectMapper objectMapper;
 
 
-    public UserController(UserService userService, JWTGenerator jwtGenerator){
+    public UserController(UserService userService, JWTGenerator jwtGenerator,ObjectMapper objectMapper){
         this.userService=userService;
         this.jwtGenerator = jwtGenerator;
+        this.objectMapper=objectMapper;
     }
     @GetMapping("users")
     @PreAuthorize("hasRole('ADMIN')")
@@ -54,21 +59,19 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping("users/update/{userId}")
-    public ResponseEntity<String> updateUser(@PathVariable Long userId, @RequestBody UserEntityDto updatedUserDto, HttpServletRequest request) {
-        String authorizationHeader = request.getHeader("Authorization");
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+    @PostMapping("users/update/{userId}")
+    public ResponseEntity<String> updateUser(@RequestParam(value = "file", required = false) MultipartFile file,
+                                             @RequestParam("updatedUserDto") String updatedUserDto,
+                                             @PathVariable("userId") Long userId) {
+        try {
+            UserEntityDto userEntityDtoMapped = objectMapper.readValue(updatedUserDto, UserEntityDto.class);
+            userService.updateUser(userId, userEntityDtoMapped, file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-
-        String token = authorizationHeader.substring(7);
-
-        if (!jwtGenerator.validateToken(token)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-        }
-        userService.updateUser(userId, updatedUserDto);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
+
     @GetMapping("users/{userId}")
     public UserEntity getUserProfile(@PathVariable Long userId) {
         return userService.getUserProfile(userId);

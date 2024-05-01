@@ -25,6 +25,7 @@ import {UpdateLeagueComponent} from "./components/update-league-component/update
 import {NgbPaginationModule} from "@ng-bootstrap/ng-bootstrap";
 
 
+
 const routes : Routes = [
   {path: 'login',component:LoginComponent,canActivate: [AuthGuard]},
   {path: 'register', component:RegisterComponent,canActivate: [AuthGuard]},
@@ -35,6 +36,7 @@ const routes : Routes = [
   {path: 'players',component:PlayersListComponent,canActivate: [AuthGuard2]},
   {path: 'create-player',component:CreatePlayerComponent},
   {path: 'players/edit/:id',component:PlayerEditComponent},
+
   // {path: 'league',component:LeagueComponent,canActivate:[AuthGuard2]},
   // {path : 'match',component:MatchComponent,canActivate:[AuthGuard2]},
   // {path: 'transfer',component:TransferComponent,canActivate:[AuthGuard2]},
@@ -58,7 +60,7 @@ const routes : Routes = [
     LeagueComponent,
     MatchComponent,
     TransferComponent,
-    UpdateLeagueComponent,
+    UpdateLeagueComponent
   ],
   imports: [
     RouterModule.forRoot(routes),

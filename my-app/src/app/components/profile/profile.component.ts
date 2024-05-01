@@ -1,27 +1,33 @@
-// profile.component.ts
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from "../../services/auth.service";
-import { DatePipe } from "@angular/common";
+import { AuthService } from '../../services/auth.service';
+import { DatePipe } from '@angular/common';
 import { ClubDto } from '../../common/club-dto';
-import {ClubService} from "../../services/club.service";
+import { ClubService } from '../../services/club.service';
+import { UserDto } from '../../common/user-dto';
+import { Gender } from '../../enums/gender';
 
 @Component({
     selector: 'app-profile',
     templateUrl: './profile.component.html',
     styleUrls: ['./profile.component.css'],
-    providers: [DatePipe]
+    providers: [DatePipe],
 })
 export class ProfileComponent implements OnInit {
     profileForm: FormGroup;
-    userProfile: any;
+    userProfile: UserDto = new UserDto('', '', '', '', '', new Date(), '', '', '', Gender.MALE);
     editMode: boolean = false;
     showMissingInfoMessage: boolean = false;
     userRole: string = '';
-    clubData: ClubDto | null = null;
+    file: File | null = null;
 
+    // Define gender options using the enum
+    genderOptions = [
+        { label: Gender.MALE, value: Gender.MALE },
+        { label: Gender.FEMALE, value: Gender.FEMALE },
+    ];
 
     constructor(
         private userService: UserService,
@@ -38,20 +44,13 @@ export class ProfileComponent implements OnInit {
             phone: ['', Validators.required],
             country: ['', Validators.required],
             birthDate: ['', Validators.required],
-            profile_picture: [''],
+            // profile_picture: [''],
             address: [''],
             city: [''],
             postal_code: [''],
             gender: ['', Validators.required],
-
         });
-
     }
-
-    genderOptions = [
-        { label: 'MALE', value: 'MALE' },
-        { label: 'FEMALE', value: 'FEMALE' }
-    ];
 
     ngOnInit(): void {
         const userId: number | null = this.authService.getUserIdFromToken();
@@ -60,6 +59,7 @@ export class ProfileComponent implements OnInit {
             // Fetch user profile
             this.userService.getUserProfile(userId).subscribe(
                 (data) => {
+                    this.getEditProfileImageUrl(data.profile_picture);
                     this.userProfile = data;
                     this.loadUserProfile();
                 },
@@ -71,14 +71,17 @@ export class ProfileComponent implements OnInit {
             // Fetch user role
             const userRole = this.authService.getRoleFromToken();
             this.userRole = userRole !== null ? userRole : '';
-
         } else {
             console.log('User ID is null');
         }
     }
+
     loadUserProfile() {
         if (this.userProfile) {
-            const formattedBirthDate = this.datePipe.transform(this.userProfile.birthDate, 'yyyy-MM-dd');
+            const formattedBirthDate = this.datePipe.transform(
+                this.userProfile.birthDate,
+                'yyyy-MM-dd'
+            );
 
             this.profileForm.patchValue({
                 firstName: this.userProfile.firstName,
@@ -87,11 +90,11 @@ export class ProfileComponent implements OnInit {
                 phone: this.userProfile.phone,
                 country: this.userProfile.country,
                 birthDate: formattedBirthDate,
-                profile_picture: this.userProfile.profile_picture,
+                //profile_picture: this.userProfile.profile_picture,
                 address: this.userProfile.address,
                 city: this.userProfile.city,
                 postal_code: this.userProfile.postal_code,
-                gender: this.userProfile.gender
+                gender: this.userProfile.gender,
             });
 
             this.showMissingInfoMessage = !(
@@ -114,40 +117,47 @@ export class ProfileComponent implements OnInit {
 
     saveProfile() {
         if (this.profileForm.valid) {
-            const userData = this.profileForm.value;
-            const userId = this.userProfile.id;
+            const formValue = this.profileForm.value;
+            let userData = new UserDto(
+                formValue.firstName,
+                formValue.lastName,
+                formValue.email,
+                formValue.phone,
+                formValue.country,
+                formValue.birthDate,
+                formValue.address,
+                formValue.city,
+                formValue.postal_code,
+                formValue.gender
+            );
 
-            if (userId) {
-                // Update the user profile
-                this.userService.updateUser(userId, userData).subscribe(
-                    () => {
-                        console.log('User profile updated successfully');
-                        // Fetch the updated user profile data
-                        this.userService.getUserProfile(userId).subscribe(
-                            (data) => {
-                                this.userProfile = data;
-                                this.loadUserProfile();
-                            },
-                            (error) => {
-                                console.log('Error fetching updated user profile:', error);
-                            }
-                        );
+            userData.userId = this.authService.getUserIdFromToken() || 0;
 
-
-                        this.toggleEditMode();
-                    },
-                    (error) => {
-                        console.log('Error updating user profile:', error);
-                    }
-                );
-            } else {
-                console.log('User ID is null');
-            }
+            this.userService.updateUser(userData, this.file).subscribe(
+                (data) => {
+                    this.router.navigate(['/players']);
+                    console.log('User profile updated successfully');
+                    console.log(data);
+                },
+                (error) => {
+                    console.log('Error updating user profile:', error);
+                }
+            );
         } else {
             console.log('Form is invalid. Please fill all required fields.');
         }
     }
-    redirectToClub() {
-        this.router.navigate(['/club']);
+
+    getEditProfileImageUrl(profile_picture: string) {
+        this.userService.getImageUrl(profile_picture).subscribe((blob: Blob) => {
+            const profile_picture = URL.createObjectURL(blob);
+            this.userProfile.profile_picture = profile_picture;
+        });
+    }
+
+    onFileSelected(event: any) {
+        const file: File = event.target.files[0];
+        this.file = file;
+        console.log('hey:' + file);
     }
 }
