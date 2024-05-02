@@ -22,10 +22,13 @@ public class UserEntityDto {
     private String phone;
     private String country;
     private Date birthDate;
-//    private String profile_picture;
+    private String profile_picture;
     private String address;
     private String city;
     private String postal_code;
     private Gender gender;
 
 }
+
+
+

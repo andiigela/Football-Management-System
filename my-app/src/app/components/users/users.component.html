@@ -11,14 +11,14 @@
     </thead>
     <tbody>
     <tr *ngFor="let user of users">
-      <td>{{ user.userId }}</td>
+      <td>{{ user.id }}</td>
       <td>{{ user.email }}</td>
       <td>{{ user.enabled ? 'Enabled' : 'Disabled' }}</td>
       <td>
-        <button class="btn btn-primary" (click)="updateUserStatus(user.userId, !user.enabled)">
+        <button class="btn btn-primary" (click)="updateUserStatus(user.id, !user.enabled)">
           {{ user.enabled ? 'Disable' : 'Enable' }}
         </button>
-        <button class="btn btn-danger" (click)="deleteUser(user.userId)">Delete</button>
+        <button class="btn btn-danger" (click)="deleteUser(user.id)">Delete</button>
       </td>
     </tr>
     </tbody>

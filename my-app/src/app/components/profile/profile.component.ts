@@ -6,8 +6,8 @@ import { AuthService } from '../../services/auth.service';
 import { DatePipe } from '@angular/common';
 import { ClubDto } from '../../common/club-dto';
 import { ClubService } from '../../services/club.service';
-import { UserDto } from '../../common/user-dto';
 import { Gender } from '../../enums/gender';
+import {User} from "../../common/user-dto";
 
 @Component({
     selector: 'app-profile',
@@ -17,7 +17,7 @@ import { Gender } from '../../enums/gender';
 })
 export class ProfileComponent implements OnInit {
     profileForm: FormGroup;
-    userProfile: UserDto = new UserDto('', '', '', '', '', new Date(), '', '', '', Gender.MALE);
+    userProfile!: User;
     editMode: boolean = false;
     showMissingInfoMessage: boolean = false;
     userRole: string = '';
@@ -44,7 +44,7 @@ export class ProfileComponent implements OnInit {
             phone: ['', Validators.required],
             country: ['', Validators.required],
             birthDate: ['', Validators.required],
-            // profile_picture: [''],
+            profile_picture: [''],
             address: [''],
             city: [''],
             postal_code: [''],
@@ -90,7 +90,7 @@ export class ProfileComponent implements OnInit {
                 phone: this.userProfile.phone,
                 country: this.userProfile.country,
                 birthDate: formattedBirthDate,
-                //profile_picture: this.userProfile.profile_picture,
+                profile_picture: this.userProfile.profile_picture,
                 address: this.userProfile.address,
                 city: this.userProfile.city,
                 postal_code: this.userProfile.postal_code,
@@ -118,31 +118,30 @@ export class ProfileComponent implements OnInit {
     saveProfile() {
         if (this.profileForm.valid) {
             const formValue = this.profileForm.value;
-            let userData = new UserDto(
-                formValue.firstName,
-                formValue.lastName,
-                formValue.email,
-                formValue.phone,
-                formValue.country,
-                formValue.birthDate,
-                formValue.address,
-                formValue.city,
-                formValue.postal_code,
-                formValue.gender
-            );
+            let userData = {
+                firstName: formValue.firstName,
+                lastName: formValue.lastName,
+                email: formValue.email,
+                phone: formValue.phone,
+                country: formValue.country,
+                birthDate: formValue.birthDate,
+                profile_picture: formValue.profile_picture,
+                address: formValue.address,
+                city: formValue.city,
+                postal_code: formValue.postal_code,
+                gender: formValue.gender
+            };
 
-            userData.userId = this.authService.getUserIdFromToken() || 0;
-
-            this.userService.updateUser(userData, this.file).subscribe(
-                (data) => {
-                    this.router.navigate(['/players']);
+            this.userService.updateUser(userData as User, this.file).subscribe({
+                next: (data) => {
+                    // Handle response if needed
                     console.log('User profile updated successfully');
                     console.log(data);
                 },
-                (error) => {
+                error: (error) => {
                     console.log('Error updating user profile:', error);
                 }
-            );
+            });
         } else {
             console.log('Form is invalid. Please fill all required fields.');
         }

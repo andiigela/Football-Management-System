@@ -66,11 +66,12 @@ public class UserController {
         try {
             UserEntityDto userEntityDtoMapped = objectMapper.readValue(updatedUserDto, UserEntityDto.class);
             userService.updateUser(userId, userEntityDtoMapped, file);
+            return ResponseEntity.status(HttpStatus.OK).build();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update user: " + e.getMessage());
         }
-        return ResponseEntity.status(HttpStatus.OK).build();
     }
+
 
     @GetMapping("users/{userId}")
     public UserEntity getUserProfile(@PathVariable Long userId) {
