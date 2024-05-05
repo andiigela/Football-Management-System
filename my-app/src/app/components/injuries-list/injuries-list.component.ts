@@ -34,6 +34,9 @@ export class InjuriesListComponent implements OnInit {
     this.pageNumber = pageNumber;
     this.getInjuries();
   }
+  redirectToCreateInjury(){
+    this.router.navigate([`/players/${this.currentPlayerInjuryId}/injuries/create`])
+  }
 
 
 
