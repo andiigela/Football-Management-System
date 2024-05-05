@@ -27,13 +27,13 @@ import {InjuriesListComponent} from "./components/injuries-list/injuries-list.co
 
 
 const routes : Routes = [
-  {path: 'injuries',component:InjuriesListComponent},
   {path: 'login',component:LoginComponent,canActivate: [AuthGuard]},
   {path: 'register', component:RegisterComponent,canActivate: [AuthGuard]},
   {path: 'profile',component:ProfileComponent,canActivate: [AuthGuard2]},
   {path: 'dashboard',component:DashboardComponent,canActivate: [AuthGuard2]},
   {path: 'dashboard/users',component:UsersComponent,canActivate: [AuthGuard2]},
   {path: 'club', component:ClubComponent,canActivate: [AuthGuard2]},
+  {path: 'players/:id/injuries',component:InjuriesListComponent},
   {path: 'players',component:PlayersListComponent,canActivate: [AuthGuard2]},
   {path: 'create-player',component:CreatePlayerComponent},
   {path: 'players/edit/:id',component:PlayerEditComponent},

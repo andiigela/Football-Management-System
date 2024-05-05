@@ -55,4 +55,7 @@ export class PlayersListComponent implements OnInit{
       );
     }
   }
+  redirectToPlayerInjuries(playerId: number){
+    this.router.navigate([`/players/${playerId}/injuries`]);
+  }
 }

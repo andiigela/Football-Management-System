@@ -15,6 +15,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/injuries")
+@CrossOrigin("http://localhost:4200")
 public class InjuriesController {
     private final InjuryService injuryService;
     public InjuriesController(InjuryService injuryService){
@@ -25,7 +26,7 @@ public class InjuriesController {
         injuryService.saveInjury(injuryDto,playerId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
-    @GetMapping("/{playerId}")
+    @GetMapping("/{playerId}/")
     public ResponseEntity<PageResponseDto<InjuryDto>> getInjuries(@PathVariable("playerId") Long playerId,@RequestParam(defaultValue = "0") int page,
                                                               @RequestParam(defaultValue = "10") int size) {
         Page<InjuryDto> injuryDtoPage = injuryService.retrieveInjuries(playerId,page,size);

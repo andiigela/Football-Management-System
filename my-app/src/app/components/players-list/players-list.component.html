@@ -11,6 +11,7 @@
             <th scope="col">Foot</th>
             <th scope="col">Position</th>
             <th scope="col">Actions</th>
+            <th scope="col">Injuries</th>
         </tr>
         </thead>
         <tbody>
@@ -30,6 +31,9 @@
             <td>
                 <button class="btn btn-warning mr-2" (click)="editPlayer(val.id)">Edit</button>
                 <button class="btn btn-danger" (click)="deletePlayer(val.id)">Delete</button>
+            </td>
+            <td>
+                <button class="btn btn-secondary" (click)="redirectToPlayerInjuries(val.id)">Show Injuries</button>
             </td>
         </tr>
         </tbody>
