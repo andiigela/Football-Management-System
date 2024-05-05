@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
-import { User } from "../common/user-dto";
+import { User } from "../common/user";
 import {catchError} from "rxjs/operators";
 import {AuthService} from "./auth.service";
 
@@ -40,23 +40,26 @@ export class UserService {
         return this.http.get(`${this.apiUrl}/${userId}`, { headers });
     }
 
-    updateUser(updatedUserDto: User, file: File | null): Observable<any> {
-        let headers = this.getHeaders();
-        const userId = this.authService.getUserIdFromToken(); // Get the user ID from AuthService
-        console.log('Headers:', headers);
-        console.log(file);
-        console.log(updatedUserDto);
-        const formData = new FormData();
-        if (file) {
-            formData.append("file", file);
-        }
-        formData.append("updatedUserDto", JSON.stringify(updatedUserDto));
-
-        return this.http.post(`${this.apiUrl}/update/${userId}`, formData, { headers }).pipe(
-            catchError(error => throwError(error))
-        );
-    }
-
+    // updateUser(updatedUserDto: User, file: File | null): Observable<any> {
+    //     let headers = this.getHeaders();
+    //     const userId = this.authService.getUserIdFromToken(); // Get the user ID from AuthService
+    //     console.log('Headers:', headers);
+    //     console.log(file);
+    //     console.log(updatedUserDto);
+    //     const formData = new FormData();
+    //     if (file) {
+    //         formData.append("file", file);
+    //     }
+    //     formData.append("updatedUserDto", JSON.stringify(updatedUserDto));
+    //
+    //     return this.http.post(`${this.apiUrl}/update/${userId}`, formData, { headers }).pipe(
+    //         catchError(error => throwError(error))
+    //     );
+    // }
+  updateUser(userId: number, userData: any): Observable<any> {
+    let headers = this.getHeaders();
+    return this.http.put(`${this.apiUrl}/update/${userId}`, userData,{headers});
+  }
     getClubData(userId: number): Observable<any> {
         return this.http.get<any>(`${this.apiUrl}/${userId}/club`);
     }

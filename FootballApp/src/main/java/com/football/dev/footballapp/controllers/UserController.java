@@ -59,17 +59,20 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PostMapping("users/update/{userId}")
-    public ResponseEntity<String> updateUser(@RequestParam(value = "file", required = false) MultipartFile file,
-                                             @RequestParam("updatedUserDto") String updatedUserDto,
-                                             @PathVariable("userId") Long userId) {
-        try {
-            UserEntityDto userEntityDtoMapped = objectMapper.readValue(updatedUserDto, UserEntityDto.class);
-            userService.updateUser(userId, userEntityDtoMapped, file);
-            return ResponseEntity.status(HttpStatus.OK).build();
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update user: " + e.getMessage());
+    @PutMapping("users/update/{userId}")
+    public ResponseEntity<String> updateUser(@PathVariable Long userId, @RequestBody UserEntityDto updatedUserDto, HttpServletRequest request) {
+        String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
         }
+
+        String token = authorizationHeader.substring(7);
+
+        if (!jwtGenerator.validateToken(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+        userService.updateUser(userId, updatedUserDto);
+        return ResponseEntity.ok().build();
     }
 
 
