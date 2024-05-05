@@ -24,6 +24,7 @@ import {TransferComponent} from "./components/transfer/transfer.component";
 import {UpdateLeagueComponent} from "./components/update-league-component/update-league-component.component";
 import {NgbPaginationModule} from "@ng-bootstrap/ng-bootstrap";
 import {InjuriesListComponent} from "./components/injuries-list/injuries-list.component";
+import {CreateInjuryComponent} from "./components/create-injury/create-injury.component";
 
 
 const routes : Routes = [
@@ -33,6 +34,7 @@ const routes : Routes = [
   {path: 'dashboard',component:DashboardComponent,canActivate: [AuthGuard2]},
   {path: 'dashboard/users',component:UsersComponent,canActivate: [AuthGuard2]},
   {path: 'club', component:ClubComponent,canActivate: [AuthGuard2]},
+  {path: 'players/:id/injuries/create',component:CreateInjuryComponent},
   {path: 'players/:id/injuries',component:InjuriesListComponent},
   {path: 'players',component:PlayersListComponent,canActivate: [AuthGuard2]},
   {path: 'create-player',component:CreatePlayerComponent},
@@ -61,7 +63,8 @@ const routes : Routes = [
     MatchComponent,
     TransferComponent,
     UpdateLeagueComponent,
-    InjuriesListComponent
+    InjuriesListComponent,
+    CreateInjuryComponent
   ],
   imports: [
     RouterModule.forRoot(routes),

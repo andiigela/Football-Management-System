@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {PageResponseDto} from "../common/page-response-dto";
+import {PlayerDto} from "../common/player-dto";
+import {InjuryDto} from "../common/injury-dto";
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +22,9 @@ export class InjuryService {
     let headers = this.getHeaders();
     return this.http.get<PageResponseDto>(`${this.injuryUrl}/${playerId}/?page=${pageNumber}&size=${pageSize}`,{headers});
   }
-
+  public createInjury(playerId: number,injuryDto: InjuryDto): Observable<any>{
+    let headers = this.getHeaders();
+    return this.http.post(`${this.injuryUrl}/${playerId}/create`,injuryDto,{headers});
+  }
 
 }
