@@ -27,6 +27,7 @@ export class InjuriesListComponent implements OnInit {
   public getInjuries(){
     this.injuryService.retrieveInjuries(this.currentPlayerInjuryId,this.pageNumber-1,this.pageSize).subscribe((response)=>{
       this.playerInjuriesList = response.content;
+      console.log(response.content)
       this.totalElements = response.totalElements;
     })
   }
@@ -37,7 +38,9 @@ export class InjuriesListComponent implements OnInit {
   redirectToCreateInjury(){
     this.router.navigate([`/players/${this.currentPlayerInjuryId}/injuries/create`])
   }
-
+  editInjury(injuryId: number){
+    this.router.navigate([`/players/${this.currentPlayerInjuryId}/injuries/${injuryId}/edit`])
+  }
 
 
 }

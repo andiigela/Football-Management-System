@@ -9,6 +9,7 @@ import java.util.Date;
 @Getter
 @Setter
 public class InjuryDto {
+    private Long id;
     private String injuryType;
     private LocalDate injuryDate;
     private LocalDate expectedRecoveryTime;

@@ -8,6 +8,6 @@ import java.util.function.Function;
 public class InjuryDtoMapper implements Function<Injury, InjuryDto> {
     @Override
     public InjuryDto apply(Injury injury) {
-        return new InjuryDto(injury.getInjuryType(),injury.getInjuryDate(),injury.getExpectedRecoveryTime(),injury.getInjuryStatus());
+        return new InjuryDto(injury.getId(), injury.getInjuryType(),injury.getInjuryDate(),injury.getExpectedRecoveryTime(),injury.getInjuryStatus());
     }
 }

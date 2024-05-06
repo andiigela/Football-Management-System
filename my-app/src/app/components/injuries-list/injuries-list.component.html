@@ -7,6 +7,7 @@
       <th scope="col">Injury Type Name</th>
       <th scope="col">Injury Date</th>
       <th scope="col">Expiration Date</th>
+      <th scope="col">Actions</th>
     </tr>
     </thead>
     <tbody>
@@ -15,10 +16,10 @@
       <td>{{ val.injuryType }}</td>
       <td>{{ val.injuryDate }}</td>
       <td>{{ val.expectedRecoveryTime }}</td>
-<!--      <td>-->
-<!--        <button class="btn btn-warning mr-2" (click)="editPlayer(val.id)">Edit</button>-->
+      <td>
+        <button class="btn btn-warning mr-2" (click)="editInjury(val.id)">Edit</button>
 <!--        <button class="btn btn-danger" (click)="deletePlayer(val.id)">Delete</button>-->
-<!--      </td>-->
+      </td>
     </tr>
     </tbody>
   </table>
