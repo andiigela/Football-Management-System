@@ -1,10 +1,12 @@
-package com.football.dev.footballapp.services;
+package com.football.dev.footballapp.services.impl;
 import com.football.dev.footballapp.dto.PlayerDto;
 import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.Player;
 import com.football.dev.footballapp.models.enums.Foot;
 import com.football.dev.footballapp.repository.ClubRepository;
 import com.football.dev.footballapp.repository.PlayerRepository;
+import com.football.dev.footballapp.services.FileUploadService;
+import com.football.dev.footballapp.services.PlayerService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

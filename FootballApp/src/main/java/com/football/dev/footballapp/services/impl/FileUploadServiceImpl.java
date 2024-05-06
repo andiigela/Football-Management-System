@@ -1,4 +1,5 @@
-package com.football.dev.footballapp.services;
+package com.football.dev.footballapp.services.impl;
+import com.football.dev.footballapp.services.FileUploadService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;

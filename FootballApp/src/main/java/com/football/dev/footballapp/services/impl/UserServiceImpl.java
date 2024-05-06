@@ -1,10 +1,12 @@
-package com.football.dev.footballapp.services;
+package com.football.dev.footballapp.services.impl;
 
 import com.football.dev.footballapp.dto.UserEntityDto;
 import com.football.dev.footballapp.exceptions.UserNotFoundException;
 import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.UserEntity;
 import com.football.dev.footballapp.repository.UserRepository;
+import com.football.dev.footballapp.services.FileUploadService;
+import com.football.dev.footballapp.services.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final Function<UserEntityDto, UserEntity> userEntityDtoToUserEntity;
     private final FileUploadService fileUploadService;

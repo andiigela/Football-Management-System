@@ -2,6 +2,7 @@ package com.football.dev.footballapp.models;
 
 import com.fasterxml.jackson.databind.ser.Serializers;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -30,6 +31,7 @@ public class Match extends BaseEntity {
     private String result;
     private Integer homeTeamScore;
     private Integer awayTeamScore;
-
+    @ManyToOne
+    private Season season;
 
 }
