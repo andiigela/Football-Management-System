@@ -48,7 +48,7 @@ public class InjuriesController {
         injuryService.updateInjury(injuryDto,injuryId,playerId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-    @PostMapping("/{playerId}/delete/{injuryId}")
+    @DeleteMapping("/{playerId}/delete/{injuryId}")
     public ResponseEntity<InjuryDto> deleteInjury(@PathVariable("playerId") Long playerId,@PathVariable("injuryId") Long injuryId) {
         injuryService.deleteInjury(injuryId,playerId);
         return ResponseEntity.status(HttpStatus.OK).build();

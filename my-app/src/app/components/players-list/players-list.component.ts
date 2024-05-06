@@ -36,7 +36,6 @@ export class PlayersListComponent implements OnInit{
     this.playerService.deletePlayer(id)
         .subscribe(()=> {
           this.playersList = this.playersList.filter(player => player.id != id)
-          this.getPlayers();
         })
   }
   updatePlayerList(playersList: PlayerDto[]){

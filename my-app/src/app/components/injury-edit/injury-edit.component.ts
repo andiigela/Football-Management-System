@@ -52,5 +52,4 @@ export class InjuryEditComponent implements OnInit {
     });
   }
 
-
 }

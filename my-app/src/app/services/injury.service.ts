@@ -34,5 +34,8 @@ export class InjuryService {
     let headers = this.getHeaders();
     return this.http.put(`${this.injuryUrl}/${playerId}/edit/${injuryDto.id}`,injuryDto,{headers});
   }
-
+  public deleteInjury(playerId: number,injuryId: number): Observable<any>{
+    let headers = this.getHeaders();
+    return this.http.delete(`${this.injuryUrl}/${playerId}/delete/${injuryId}`,{headers});
+  }
 }

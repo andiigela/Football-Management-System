@@ -15,17 +15,17 @@ export class InjuriesListComponent implements OnInit {
   pageNumber: number = 1;
   pageSize: number = 10;
   totalElements: number = 0;
-  currentPlayerInjuryId: number = 0;
+  currentPlayerId: number = 0;
   constructor(private injuryService: InjuryService,private router: Router,private activatedRoute: ActivatedRoute) {
   }
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params=>{
-      this.currentPlayerInjuryId = +params['id']
+      this.currentPlayerId = +params['id']
       this.getInjuries();
     })
   }
   public getInjuries(){
-    this.injuryService.retrieveInjuries(this.currentPlayerInjuryId,this.pageNumber-1,this.pageSize).subscribe((response)=>{
+    this.injuryService.retrieveInjuries(this.currentPlayerId,this.pageNumber-1,this.pageSize).subscribe((response)=>{
       this.playerInjuriesList = response.content;
       console.log(response.content)
       this.totalElements = response.totalElements;
@@ -36,11 +36,14 @@ export class InjuriesListComponent implements OnInit {
     this.getInjuries();
   }
   redirectToCreateInjury(){
-    this.router.navigate([`/players/${this.currentPlayerInjuryId}/injuries/create`])
+    this.router.navigate([`/players/${this.currentPlayerId}/injuries/create`])
   }
   editInjury(injuryId: number){
-    this.router.navigate([`/players/${this.currentPlayerInjuryId}/injuries/${injuryId}/edit`])
+    this.router.navigate([`/players/${this.currentPlayerId}/injuries/${injuryId}/edit`])
   }
-
-
+  deleteInjury(injuryId: number){
+    this.injuryService.deleteInjury(this.currentPlayerId,injuryId).subscribe(()=>{
+      this.playerInjuriesList = this.playerInjuriesList.filter(injury => injury.id != injuryId)
+    });
+  }
 }
