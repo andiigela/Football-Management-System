@@ -1,5 +1,5 @@
 <div class="container">
-  <form [formGroup]="injuryForm">
+  <form (ngSubmit)="editInjury()" [formGroup]="injuryForm">
     <div class="form-group">
       <label for="injuryType">Injury Type Name</label>
       <input type="text" class="form-control" formControlName="injuryType" id="injuryType" placeholder="Enter Injury Type">

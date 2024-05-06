@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -12,6 +13,7 @@ import java.util.Date;
 @Setter
 @Entity
 @Table(name = "injuries")
+@Where(clause = "is_deleted=false")
 public class Injury extends BaseEntity{
     public Injury(String injuryType, LocalDate injuryDate, LocalDate expectedRecoveryTime,InjuryStatus injuryStatus,Player player){
         this.injuryType=injuryType;

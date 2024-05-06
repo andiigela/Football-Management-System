@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface InjuryRepository extends JpaRepository<Injury,Long> {
     Page<Injury> findInjuriesByPlayerId(Long playerId,Pageable pageable);
-    Optional<Injury> findInjuryByIdAndPlayerIdAndIsDeletedFalse(Long injuryId, Long playerId);
+    Optional<Injury> findByIdAndPlayerId(Long injuryId, Long playerId);
+
 }

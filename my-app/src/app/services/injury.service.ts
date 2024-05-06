@@ -26,5 +26,13 @@ export class InjuryService {
     let headers = this.getHeaders();
     return this.http.post(`${this.injuryUrl}/${playerId}/create`,injuryDto,{headers});
   }
+  public retrieveInjury(playerId: number,injuryId: number): Observable<any>{
+    let headers = this.getHeaders();
+    return this.http.get(`${this.injuryUrl}/${playerId}/${injuryId}`,{headers}) // retrieving the injury for edit
+  }
+  public editInjury(playerId: number,injuryDto: InjuryDto): Observable<any>{
+    let headers = this.getHeaders();
+    return this.http.put(`${this.injuryUrl}/${playerId}/edit/${injuryDto.id}`,injuryDto,{headers});
+  }
 
 }

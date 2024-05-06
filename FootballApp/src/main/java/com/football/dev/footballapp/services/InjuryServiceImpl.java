@@ -44,14 +44,14 @@ public class InjuryServiceImpl implements InjuryService{
         return PageableExecutionUtils.getPage(injuryDtos, injuryPage.getPageable(), injuryPage::getTotalPages);
     }
     @Override
-    public InjuryDto getInjury(Long playerId,Long injuryId) {
-        Optional<Injury> injury = injuryRepository.findInjuryByIdAndPlayerIdAndIsDeletedFalse(injuryId,playerId);
+    public InjuryDto getInjury(Long injuryId,Long playerId) {
+        Optional<Injury> injury = injuryRepository.findByIdAndPlayerId(injuryId,playerId);
         if(injury.isPresent()) return injuryDtoMapper.apply(injury.get());
         throw new EntityNotFoundException("Injury not found with ids: playerId: " + playerId + " injuryId: " + injuryId);
     }
     @Override
     public void updateInjury(InjuryDto injuryDto, Long injuryId, Long playerId) {
-        injuryRepository.findInjuryByIdAndPlayerIdAndIsDeletedFalse(injuryId,playerId).ifPresent(injuryDb -> {
+        injuryRepository.findByIdAndPlayerId(injuryId,playerId).ifPresent(injuryDb -> {
             injuryDb.setInjuryType(injuryDto.getInjuryType());
             injuryDb.setInjuryDate(injuryDto.getInjuryDate());
             injuryDb.setExpectedRecoveryTime(injuryDto.getExpectedRecoveryTime());
@@ -61,7 +61,7 @@ public class InjuryServiceImpl implements InjuryService{
     }
     @Override
     public void deleteInjury(Long injuryId, Long playerId) {
-        injuryRepository.findInjuryByIdAndPlayerIdAndIsDeletedFalse(injuryId,playerId).ifPresent(injuryDb -> {
+        injuryRepository.findByIdAndPlayerId(injuryId,playerId).ifPresent(injuryDb -> {
             injuryDb.setIsDeleted(true);
             injuryRepository.save(injuryDb);
         });

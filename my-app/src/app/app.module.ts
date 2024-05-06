@@ -35,7 +35,7 @@ const routes : Routes = [
   {path: 'dashboard',component:DashboardComponent,canActivate: [AuthGuard2]},
   {path: 'dashboard/users',component:UsersComponent,canActivate: [AuthGuard2]},
   {path: 'club', component:ClubComponent,canActivate: [AuthGuard2]},
-  {path: 'players/:id/injuries/:injuryid/edit',component:InjuryEditComponent},
+  {path: 'players/:id/injuries/:injuryId/edit',component:InjuryEditComponent},
   {path: 'players/:id/injuries/create',component:CreateInjuryComponent},
   {path: 'players/:id/injuries',component:InjuriesListComponent},
   {path: 'players',component:PlayersListComponent,canActivate: [AuthGuard2]},
