@@ -70,16 +70,17 @@ export class EditSeasonComponent implements OnInit {
         this.seasonService.removeMatchFromSeason(seasonId, matchId).subscribe(
             () => {
                 console.log('Match removed successfully');
-                // Add the removed match back to the available matches
-                this.matches.push(match);
                 // Remove the match from the season's matches array
                 this.season.matches = this.season.matches.filter(m => m.id !== match.id);
+                // Add the removed match back to the available matches
+                this.matches.push(match);
             },
             error => {
                 console.log('Error removing match:', error);
             }
         );
     }
+
 
 
     addMatchToSeason(match: MatchDto): void {

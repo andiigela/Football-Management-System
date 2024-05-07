@@ -31,5 +31,17 @@ export class SeasonComponent implements OnInit {
     editSeason(id: number) {
         this.router.navigate(['seasons/edit-season', id]);
     }
+    deleteSeason(seasonId: number): void {
+        this.seasonService.deleteSeason(seasonId).subscribe(
+            () => {
+                console.log('Season deleted successfully');
+                // Update seasons array to remove the deleted season
+                this.seasons = this.seasons.filter(season => season.id !== seasonId);
 
+            },
+            error => {
+                console.log('Error deleting season:', error);
+            }
+        );
+    }
 }
