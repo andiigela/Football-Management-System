@@ -44,4 +44,7 @@ export class SeasonComponent implements OnInit {
             }
         );
     }
+    navigateToCreateSeason() {
+        this.router.navigate(['/create-season']);
+    }
 }

@@ -25,6 +25,7 @@ import {UpdateLeagueComponent} from "./components/update-league-component/update
 import {NgbPaginationModule} from "@ng-bootstrap/ng-bootstrap";
 import {SeasonComponent} from "./components/season/season.component";
 import {EditSeasonComponent} from "./components/edit-season/edit-season.component";
+import {CreateSeasonComponent} from "./components/create-season/create-season.component";
 
 
 
@@ -40,11 +41,11 @@ const routes : Routes = [
   {path: 'players/edit/:id',component:PlayerEditComponent},
   {path: 'seasons',component:SeasonComponent},
   {path: 'seasons/edit-season/:id',component:EditSeasonComponent},
-
-  // {path: 'league',component:LeagueComponent,canActivate:[AuthGuard2]},
-  // {path : 'match',component:MatchComponent,canActivate:[AuthGuard2]},
-  // {path: 'transfer',component:TransferComponent,canActivate:[AuthGuard2]},
-  // {path: 'update-league/:id', component:UpdateLeagueComponent },
+  {path: 'create-season',component:CreateSeasonComponent},
+  {path: 'league',component:LeagueComponent,canActivate:[AuthGuard2]},
+  {path : 'match',component:MatchComponent,canActivate:[AuthGuard2]},
+  {path: 'transfer',component:TransferComponent,canActivate:[AuthGuard2]},
+  {path: 'update-league/:id', component:UpdateLeagueComponent },
 ]
 
 
@@ -66,7 +67,8 @@ const routes : Routes = [
     TransferComponent,
     UpdateLeagueComponent,
     SeasonComponent,
-    EditSeasonComponent
+    EditSeasonComponent,
+    CreateSeasonComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
