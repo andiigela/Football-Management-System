@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {SeasonDto} from "../common/season-dto";
 import {ClubDto} from "../common/club-dto";
+import {MatchDto} from "../common/match-dto";
 
 
 @Injectable({
@@ -34,6 +35,14 @@ export class SeasonService {
 
   deleteSeason(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/delete/${id}`);
+  }
+
+  removeMatchFromSeason(seasonId: number, matchId: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${seasonId}/matches/${matchId}`);
+  }
+
+  addMatchesToSeason(seasonId: number, matchIds: number[]): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/${seasonId}/matches`, matchIds);
   }
 
 

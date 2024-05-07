@@ -1,4 +1,4 @@
-<div>
+<div class="container mt-5">
     <h2>Edit Season</h2>
     <form (ngSubmit)="updateSeason()">
         <div class="form-group">
@@ -6,15 +6,27 @@
             <input type="text" class="form-control" id="seasonName" name="seasonName" [(ngModel)]="season.name" required>
         </div>
         <div class="form-group">
-            <label for="match">Select Matches:</label>
-            <select multiple class="form-control" id="match" name="match" [(ngModel)]="selectedMatchIds">
-                <option *ngFor="let match of matches" [value]="match.id">{{ match.matchDate }}</option>
-            </select>
+            <label>Matches in this Season:</label>
+            <ul class="list-group">
+                <li class="list-group-item" *ngFor="let match of season.matches">
+                    {{ match.matchDate | date }} - {{ match.homeTeamId?.name }} vs {{ match.awayTeamId?.name }}
+                    <button type="button" class="btn btn-danger btn-sm float-right" (click)="removeMatch(match)">Remove</button>
+                </li>
+            </ul>
         </div>
-        <!-- Button to remove selected matches -->
         <div class="form-group">
-            <button type="button" class="btn btn-danger" (click)="removeSelectedMatches()">Remove Selected Matches</button>
+            <label>Add Matches:</label>
+            <ul class="list-group">
+                <li class="list-group-item" *ngFor="let match of matches" [value]="match.id">
+                    {{ match.matchDate | date }} - {{ match.homeTeamId?.name }} vs {{ match.awayTeamId?.name }}
+                    <button type="button" class="btn btn-primary btn-sm mt-2" (click)="addMatchToSeason(match)">Add Match</button>
+                </li>
+            </ul>
+
         </div>
-        <button type="submit" class="btn btn-primary">Update Season</button>
+        <br/>
+        <div class="form-row">
+            <button type="submit" class="btn btn-primary ml-2">Update Season</button>
+        </div>
     </form>
 </div>

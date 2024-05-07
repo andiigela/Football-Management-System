@@ -1,29 +1,32 @@
-<div *ngFor="let season of seasons" class="mb-5">
-  <h2 style="text-align: center">{{ season.name }}</h2>
-  <button (click)="editSeason(season.id)" class="btn btn-primary">Edit Season</button>
-  <table class="table">
-    <thead>
-    <tr>
-      <th>Match Date</th>
-      <th>Stadium</th>
-      <th>Home Team</th>
-      <th>Away Team</th>
-      <th>Home Team Score</th>
-      <th>Away Team Score</th>
-      <th>Result</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let match of season.matches">
-      <td>{{ match.matchDate | date }}</td>
-      <td>{{ match.stadium?.name }}</td>
-      <td>{{ match.homeTeamId?.name }}</td>
-      <td>{{ match.awayTeamId?.name}}</td>
-      <td>{{ match.homeTeamScore }}</td>
-      <td>{{ match.awayTeamScore }}</td>
-      <td>{{ match.result }}</td>
-
-    </tr>
-    </tbody>
-  </table>
+<div class="container mt-5"> <!-- Add margin to the full page -->
+  <div *ngFor="let season of seasons" class="mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-3"> <!-- Use flexbox to align items -->
+      <h2 style="text-align: center; margin-bottom: 0;">{{ season.name }}</h2>
+      <button (click)="editSeason(season.id)" class="btn btn-primary">Edit Season</button>
+    </div>
+    <table class="table">
+      <thead>
+      <tr>
+        <th>Match Date</th>
+        <th>Stadium</th>
+        <th>Home Team</th>
+        <th>Away Team</th>
+        <th>Home Team Score</th>
+        <th>Away Team Score</th>
+        <th>Result</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let match of season.matches">
+        <td>{{ match.matchDate | date }}</td>
+        <td>{{ match.stadium?.name }}</td>
+        <td>{{ match.homeTeamId?.name }}</td>
+        <td>{{ match.awayTeamId?.name}}</td>
+        <td>{{ match.homeTeamScore }}</td>
+        <td>{{ match.awayTeamScore }}</td>
+        <td>{{ match.result }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

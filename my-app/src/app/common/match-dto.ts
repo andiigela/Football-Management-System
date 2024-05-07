@@ -7,6 +7,7 @@ export class MatchDto {
     result: string;
     homeTeamScore: number;
     awayTeamScore: number;
+    seasonId?: { id: number, name: string };
 
     constructor(
         id: number,
@@ -16,7 +17,8 @@ export class MatchDto {
         stadium: { id: number, name: string },
         result: string,
         homeTeamScore: number,
-        awayTeamScore: number
+        awayTeamScore: number,
+        seasonId : { id: number, name: string }
     ) {
         this.id = id;
         this.homeTeamId = homeTeamId;
@@ -26,5 +28,6 @@ export class MatchDto {
         this.result = result;
         this.homeTeamScore = homeTeamScore;
         this.awayTeamScore = awayTeamScore;
+        this.seasonId = seasonId;
     }
 }

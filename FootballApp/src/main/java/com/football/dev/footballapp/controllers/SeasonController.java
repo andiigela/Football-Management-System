@@ -35,24 +35,15 @@ public class SeasonController {
         List<Club> clubs = seasonService.getClubsBySeasonId(seasonId);
         return ResponseEntity.ok(clubs);
     }
-//    @GetMapping("/{seasonId}/awayclubs")
-//    public List<String> getAwayClubsBySeasonId(@PathVariable Long seasonId) {
-//        return seasonService.getAwayClubBySeasonId(seasonId);
-//    }
-//
-//    @GetMapping("/{seasonId}/homeclubs")
-//    public List<String> getHomeClubsBySeasonId(@PathVariable Long seasonId) {
-//        return seasonService.getHomeClubBySeasonId(seasonId);
-//    }
-//
-//    @GetMapping("/{seasonId}/stadiums")
-//    public List<String> getStadiumsBySeasonId(@PathVariable Long seasonId) {
-//        return seasonService.getStadiumBySeasonId(seasonId);
-//    }
     @PostMapping("/save")
     public ResponseEntity<Void> createSeason(@RequestBody SeasonDto seasonDto) {
         seasonService.saveSeason(seasonDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+    @PostMapping("/{seasonId}/matches")
+    public ResponseEntity<Void> addMatchesToSeason(@PathVariable("seasonId") Long seasonId, @RequestBody List<Long> matchIds) {
+        seasonService.addMatchesToSeason(seasonId, matchIds);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/update/{id}")
@@ -64,6 +55,11 @@ public class SeasonController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteSeason(@PathVariable("id") Long id) {
         seasonService.deleteSeason(id);
+        return ResponseEntity.ok().build();
+    }
+    @DeleteMapping("/{seasonId}/matches/{matchId}")
+    public ResponseEntity<Void> removeMatchFromSeason(@PathVariable Long seasonId, @PathVariable Long matchId) {
+        seasonService.removeMatchFromSeason(seasonId, matchId);
         return ResponseEntity.ok().build();
     }
 

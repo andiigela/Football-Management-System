@@ -121,5 +121,38 @@ public class SeasonServiceImpl implements SeasonService {
         }
         return clubs;
     }
+    @Override
+    public void removeMatchFromSeason(Long seasonId, Long matchId) {
+        // Find the season by ID
+        Season season = seasonRepository.findById(seasonId)
+                .orElseThrow(() -> new EntityNotFoundException("Season not found with id: " + seasonId));
+
+        // Find the match by ID
+        Match match = matchRepository.findById(matchId)
+                .orElseThrow(() -> new EntityNotFoundException("Match not found with id: " + matchId));
+
+        // Remove the match from the season
+        match.setSeason(null);
+
+        // Save the updated season
+        seasonRepository.save(season);
+    }
+    @Override
+    public void addMatchesToSeason(Long seasonId, List<Long> matchIds) {
+        // Find the season by ID
+        Season season = seasonRepository.findById(seasonId)
+                .orElseThrow(() -> new EntityNotFoundException("Season not found with id: " + seasonId));
+
+        // Find all matches by IDs
+        List<Match> matches = matchRepository.findAllById(matchIds);
+
+        // Set the season for each match
+        matches.forEach(match -> match.setSeason(season));
+
+        // Save the updated matches
+        matchRepository.saveAll(matches);
+    }
+
+
 
 }

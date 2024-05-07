@@ -26,6 +26,82 @@ export class EditSeasonComponent implements OnInit {
     ngOnInit(): void {
         this.seasonId = this.route.snapshot.params['id'];
         // Fetch season details
+        this.fetchSeasonDetails();
+
+        // Fetch all matches
+        this.matchService.listAllMatches().subscribe(
+            (data: MatchDto[]) => {
+                // Filter out matches already in the season
+                this.matches = data.filter(match => !this.isMatchInSeason(match));
+            },
+            error => {
+                console.log('Error fetching matches:', error);
+            }
+        );
+    }
+    isMatchInSeason(match: MatchDto): boolean {
+        return this.season.matches.some(seasonMatch => seasonMatch.id === match.id);
+    }
+    updateSeason(): void {
+        // Filter out any undefined values from the selectedMatchIds array
+        const selectedMatches = this.selectedMatchIds
+            .map(id => this.matches.find(match => match.id === id))
+            .filter(match => match !== undefined) // Filter out undefined matches
+            .map(match => match as MatchDto); // Cast the matches to MatchDto
+
+        // Assign the filtered array to season.matches
+        this.season.matches = selectedMatches;
+
+        // Update the season on the server
+        this.seasonService.updateSeason(this.seasonId, this.season).subscribe(
+            () => {
+                console.log('Season updated successfully');
+                this.router.navigate(['/seasons']);
+            },
+            error => {
+                console.log('Error updating season:', error);
+            }
+        );
+    }
+
+    removeMatch(match: MatchDto): void {
+        const matchId = match.id;
+        const seasonId = this.seasonId;
+        this.seasonService.removeMatchFromSeason(seasonId, matchId).subscribe(
+            () => {
+                console.log('Match removed successfully');
+                // Add the removed match back to the available matches
+                this.matches.push(match);
+                // Remove the match from the season's matches array
+                this.season.matches = this.season.matches.filter(m => m.id !== match.id);
+            },
+            error => {
+                console.log('Error removing match:', error);
+            }
+        );
+    }
+
+
+    addMatchToSeason(match: MatchDto): void {
+        const seasonId = this.seasonId;
+        const matchIds: number[] = [match.id]; // Assuming match has an 'id' property
+        this.seasonService.addMatchesToSeason(seasonId, matchIds).subscribe(
+            () => {
+                console.log('Match added successfully');
+                // Remove the added match from the available matches
+                this.matches = this.matches.filter(m => m.id !== match.id);
+                // After adding the match, update the season details
+                this.fetchSeasonDetails();
+            },
+            error => {
+                console.log('Error adding match:', error);
+            }
+        );
+    }
+
+
+    private fetchSeasonDetails(): void {
+        // Fetch season details again after making changes
         this.seasonService.getSeasonById(this.seasonId).subscribe(
             (data: SeasonDto) => {
                 this.season = data;
@@ -34,33 +110,6 @@ export class EditSeasonComponent implements OnInit {
                 console.log('Error fetching season:', error);
             }
         );
-
-        // Fetch all matches
-        this.matchService.listAllMatches().subscribe(
-            (data: MatchDto[]) => {
-                this.matches = data;
-            },
-            error => {
-                console.log('Error fetching matches:', error);
-            }
-        );
     }
 
-    updateSeason(): void {
-        this.seasonService.updateSeason(this.seasonId, this.season).subscribe(
-            () => {
-                console.log('Season updated successfully');
-                // Redirect to the season details page or any other route after update
-                this.router.navigate(['/season', this.seasonId]);
-            },
-            error => {
-                console.log('Error updating season:', error);
-            }
-        );
-    }
-
-    removeSelectedMatches(): void {
-        // Filter out the selected matches from the selectedMatchIds array
-        this.selectedMatchIds = this.selectedMatchIds.filter(matchId => !this.matches.some(match => match.id === matchId));
-    }
 }
