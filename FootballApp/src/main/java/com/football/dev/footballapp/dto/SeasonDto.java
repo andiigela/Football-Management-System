@@ -16,4 +16,5 @@ public class SeasonDto {
     private Long id;
     private String name;
     private List<Match> matches;
+    private boolean isDeleted;
 }

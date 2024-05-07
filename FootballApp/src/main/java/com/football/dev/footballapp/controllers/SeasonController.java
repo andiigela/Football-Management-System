@@ -25,17 +25,30 @@ public class SeasonController {
         return ResponseEntity.ok(seasons);
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<SeasonDto> getSeasonById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(seasonService.getSeasonById(id).get());
-    }
+//    @GetMapping("{id}")
+//    public ResponseEntity<SeasonDto> getSeasonById(@PathVariable("id") Long id) {
+//        return ResponseEntity.ok(seasonService.getSeasonById(id).get());
+//    }
 
     @GetMapping("/{seasonId}/clubs")
     public ResponseEntity<List<Club>> getClubsBySeasonId(@PathVariable Long seasonId) {
         List<Club> clubs = seasonService.getClubsBySeasonId(seasonId);
         return ResponseEntity.ok(clubs);
     }
-
+//    @GetMapping("/{seasonId}/awayclubs")
+//    public List<String> getAwayClubsBySeasonId(@PathVariable Long seasonId) {
+//        return seasonService.getAwayClubBySeasonId(seasonId);
+//    }
+//
+//    @GetMapping("/{seasonId}/homeclubs")
+//    public List<String> getHomeClubsBySeasonId(@PathVariable Long seasonId) {
+//        return seasonService.getHomeClubBySeasonId(seasonId);
+//    }
+//
+//    @GetMapping("/{seasonId}/stadiums")
+//    public List<String> getStadiumsBySeasonId(@PathVariable Long seasonId) {
+//        return seasonService.getStadiumBySeasonId(seasonId);
+//    }
     @PostMapping("/save")
     public ResponseEntity<Void> createSeason(@RequestBody SeasonDto seasonDto) {
         seasonService.saveSeason(seasonDto);

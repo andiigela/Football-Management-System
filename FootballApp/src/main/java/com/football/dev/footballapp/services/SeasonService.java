@@ -12,8 +12,11 @@ import java.util.Optional;
 public interface SeasonService {
     void saveSeason(SeasonDto seasonDto);
     List<SeasonDto> getAllSeasons();
-    Optional<SeasonDto> getSeasonById(Long id);
+    //Optional<SeasonDto> getSeasonById(Long id);
     void updateSeason(Long id, SeasonDto seasonDto);
     void deleteSeason(Long id);
     List<Club> getClubsBySeasonId(Long seasonId);
+//    List<String> getAwayClubBySeasonId(Long seasonId);
+//    List<String> getHomeClubBySeasonId(Long seasonId);
+//    List<String> getStadiumBySeasonId(Long seasonId);
 }

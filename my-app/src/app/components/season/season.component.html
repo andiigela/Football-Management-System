@@ -1,0 +1,27 @@
+<div *ngFor="let season of seasons" class="mb-5">
+  <h2 style="text-align: center">{{ season.name }}</h2>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>Match Date</th>
+      <th>Stadium</th>
+      <th>Home Team</th>
+      <th>Away Team</th>
+      <th>Home Team Score</th>
+      <th>Away Team Score</th>
+      <th>Result</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let match of season.matches">
+      <td>{{ match.matchDate | date }}</td>
+      <td>{{ match.stadium?.name }}</td>
+      <td>{{ match.homeTeamId?.name }}</td>
+      <td>{{ match.awayTeamId?.name}}</td>
+      <td>{{ match.homeTeamScore }}</td>
+      <td>{{ match.awayTeamScore }}</td>
+      <td>{{ match.result }}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
