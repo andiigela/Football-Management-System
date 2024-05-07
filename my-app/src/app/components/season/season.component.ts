@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SeasonDto } from "../../common/season-dto";
 import { SeasonService } from "../../services/season.service";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-season',
@@ -10,7 +11,7 @@ import { SeasonService } from "../../services/season.service";
 export class SeasonComponent implements OnInit {
     seasons: SeasonDto[] = [];
 
-    constructor(private seasonService: SeasonService) {}
+    constructor(private seasonService: SeasonService, private router: Router) {}
 
     ngOnInit(): void {
         this.loadSeasons();
@@ -27,4 +28,8 @@ export class SeasonComponent implements OnInit {
             }
         );
     }
+    editSeason(id: number) {
+        this.router.navigate(['seasons/edit-season', id]);
+    }
+
 }

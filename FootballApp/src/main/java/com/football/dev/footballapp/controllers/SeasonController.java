@@ -25,10 +25,10 @@ public class SeasonController {
         return ResponseEntity.ok(seasons);
     }
 
-//    @GetMapping("{id}")
-//    public ResponseEntity<SeasonDto> getSeasonById(@PathVariable("id") Long id) {
-//        return ResponseEntity.ok(seasonService.getSeasonById(id).get());
-//    }
+    @GetMapping("{id}")
+    public ResponseEntity<SeasonDto> getSeasonById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(seasonService.getSeasonById(id).get());
+    }
 
     @GetMapping("/{seasonId}/clubs")
     public ResponseEntity<List<Club>> getClubsBySeasonId(@PathVariable Long seasonId) {

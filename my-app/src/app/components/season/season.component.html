@@ -1,5 +1,6 @@
 <div *ngFor="let season of seasons" class="mb-5">
   <h2 style="text-align: center">{{ season.name }}</h2>
+  <button (click)="editSeason(season.id)" class="btn btn-primary">Edit Season</button>
   <table class="table">
     <thead>
     <tr>
@@ -21,6 +22,7 @@
       <td>{{ match.homeTeamScore }}</td>
       <td>{{ match.awayTeamScore }}</td>
       <td>{{ match.result }}</td>
+
     </tr>
     </tbody>
   </table>

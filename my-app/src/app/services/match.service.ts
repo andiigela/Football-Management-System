@@ -8,7 +8,7 @@ import {MatchDto} from "../common/match-dto";
   providedIn: 'root'
 })
 export class MatchService {
-  private readonly transferUrl : string = `${environment.api.baseUrl + environment.api.matchUrl}}`
+  private readonly transferUrl : string = `${environment.api.baseUrl + environment.api.matchUrl}`
 
 
   constructor(private http:HttpClient) { }
@@ -29,5 +29,7 @@ export class MatchService {
     return this.http.post<any>(`${this.transferUrl}`,matchDto)
   }
 
-
+  getMatchesBySeasonId(seasonId: number): Observable<MatchDto[]> {
+    return this.http.get<MatchDto[]>(`${this.transferUrl}/season/${seasonId}`);
+  }
 }

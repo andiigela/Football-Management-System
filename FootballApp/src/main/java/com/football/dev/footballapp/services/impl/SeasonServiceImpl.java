@@ -62,26 +62,26 @@ public class SeasonServiceImpl implements SeasonService {
         seasonRepository.save(seasonDb);
     }
 
-//    @Override
-//    public Optional<SeasonDto> getSeasonById(Long id) {
-//        if (id == null || id <= 0) {
-//            throw new IllegalArgumentException("Season id must be a positive non-zero value");
-//        }
-//
-//        Optional<Season> seasonOptional = seasonRepository.findById(id);
-//        if (seasonOptional.isPresent()) {
-//            Season season = seasonOptional.get();
-//
-//            List<Match> matches = matchRepository.findBySeason(season);
-//
-//            SeasonDto seasonDto = seasonDtoMapper.apply(season);
-//            seasonDto.setMatches(matches);
-//
-//            return Optional.of(seasonDto);
-//        } else {
-//            return Optional.empty();
-//        }
-//    }
+    @Override
+    public Optional<SeasonDto> getSeasonById(Long id) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("Season id must be a positive non-zero value");
+        }
+
+        Optional<Season> seasonOptional = seasonRepository.findById(id);
+        if (seasonOptional.isPresent()) {
+            Season season = seasonOptional.get();
+
+            List<Match> matches = matchRepository.findBySeason(season);
+
+            SeasonDto seasonDto = seasonDtoMapper.apply(season);
+            seasonDto.setMatches(matches);
+
+            return Optional.of(seasonDto);
+        } else {
+            return Optional.empty();
+        }
+    }
 
 
     @Override
