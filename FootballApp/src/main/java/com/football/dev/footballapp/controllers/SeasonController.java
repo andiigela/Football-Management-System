@@ -30,21 +30,21 @@ public class SeasonController {
         return ResponseEntity.ok(seasonService.getSeasonById(id).get());
     }
 
-    @GetMapping("/{seasonId}/clubs")
-    public ResponseEntity<List<Club>> getClubsBySeasonId(@PathVariable Long seasonId) {
-        List<Club> clubs = seasonService.getClubsBySeasonId(seasonId);
-        return ResponseEntity.ok(clubs);
-    }
+//    @GetMapping("/{seasonId}/clubs")
+//    public ResponseEntity<List<Club>> getClubsBySeasonId(@PathVariable Long seasonId) {
+//        List<Club> clubs = seasonService.getClubsBySeasonId(seasonId);
+//        return ResponseEntity.ok(clubs);
+//    }
     @PostMapping("/save")
     public ResponseEntity<Void> createSeason(@RequestBody SeasonDto seasonDto) {
         seasonService.saveSeason(seasonDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-    @PostMapping("/{seasonId}/matches")
-    public ResponseEntity<Void> addMatchesToSeason(@PathVariable("seasonId") Long seasonId, @RequestBody List<Long> matchIds) {
-        seasonService.addMatchesToSeason(seasonId, matchIds);
-        return ResponseEntity.ok().build();
-    }
+//    @PostMapping("/{seasonId}/matches")
+//    public ResponseEntity<Void> addMatchesToSeason(@PathVariable("seasonId") Long seasonId, @RequestBody List<Long> matchIds) {
+//        seasonService.addMatchesToSeason(seasonId, matchIds);
+//        return ResponseEntity.ok().build();
+//    }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<Void> updateSeason(@PathVariable("id") Long id, @RequestBody SeasonDto seasonDto) {
@@ -57,10 +57,10 @@ public class SeasonController {
         seasonService.deleteSeason(id);
         return ResponseEntity.ok().build();
     }
-    @DeleteMapping("/{seasonId}/matches/{matchId}")
-    public ResponseEntity<Void> removeMatchFromSeason(@PathVariable Long seasonId, @PathVariable Long matchId) {
-        seasonService.removeMatchFromSeason(seasonId, matchId);
-        return ResponseEntity.ok().build();
-    }
+//    @DeleteMapping("/{seasonId}/matches/{matchId}")
+//    public ResponseEntity<Void> removeMatchFromSeason(@PathVariable Long seasonId, @PathVariable Long matchId) {
+//        seasonService.removeMatchFromSeason(seasonId, matchId);
+//        return ResponseEntity.ok().build();
+//    }
 
 }

@@ -21,9 +21,9 @@ import java.time.LocalDateTime;
 @Setter
 @Where(clause = "is_deleted=false")
 public class Match extends BaseEntity {
-    @OneToOne
+    @ManyToOne
     private Club homeTeamId;
-    @OneToOne
+    @ManyToOne
     private Club awayTeamId;
     private LocalDateTime matchDate;
     @OneToOne
@@ -32,6 +32,6 @@ public class Match extends BaseEntity {
     private Integer homeTeamScore;
     private Integer awayTeamScore;
     @ManyToOne
-    private Season season;
+    private Round round;
 
 }

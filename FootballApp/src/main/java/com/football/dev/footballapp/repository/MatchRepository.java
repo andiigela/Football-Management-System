@@ -9,6 +9,4 @@ import java.util.List;
 
 @Repository
 public interface MatchRepository extends JpaRepository<Match,Long> {
-    List<Match> findBySeason(Season season);
-    List<Match> findBySeasonId(Long seasonId);
 }

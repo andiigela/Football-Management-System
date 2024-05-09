@@ -16,9 +16,9 @@ public interface SeasonService {
     Optional<SeasonDto> getSeasonById(Long id);
     void updateSeason(Long id, SeasonDto seasonDto);
     void deleteSeason(Long id);
-    List<Club> getClubsBySeasonId(Long seasonId);
-    void removeMatchFromSeason(Long seasonId, Long matchId);
-    void addMatchesToSeason(Long seasonId, List<Long> matchIds);
+    //List<Club> getClubsBySeasonId(Long seasonId);
+//    void removeMatchFromSeason(Long seasonId, Long matchId);
+//    void addMatchesToSeason(Long seasonId, List<Long> matchIds);
 
 
 }

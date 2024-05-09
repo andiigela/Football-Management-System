@@ -25,7 +25,7 @@ public class LeagueServiceImpl implements LeagueService {
 
     @Override
     public void insertLeague(LeagueDTO leagueDTO) {
-        leagueRepository.save(new League(leagueDTO.name(),leagueDTO.start_date(),leagueDTO.end_date(),leagueDTO.description()));
+        leagueRepository.save(new League(leagueDTO.name(),leagueDTO.start_date(),leagueDTO.end_date(),leagueDTO.description(), leagueDTO.seasons()));
     }
 
     @Override

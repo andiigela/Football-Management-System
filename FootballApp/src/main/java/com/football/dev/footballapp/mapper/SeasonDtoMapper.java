@@ -1,6 +1,7 @@
 package com.football.dev.footballapp.mapper;
 
 import com.football.dev.footballapp.dto.ClubDto;
+import com.football.dev.footballapp.dto.LeagueDTO;
 import com.football.dev.footballapp.dto.SeasonDto;
 import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.Match;
@@ -16,7 +17,24 @@ public class SeasonDtoMapper implements Function<Season, SeasonDto> {
 
     @Override
     public SeasonDto apply(Season season) {
-        return new SeasonDto(season.getId(), season.getName(), season.getMatches(), season.getIsDeleted());
+        LeagueDTO leagueDTO = null;
+        if (season.getLeague() != null) {
+            leagueDTO = new LeagueDTO(
+                    season.getLeague().getId(),
+                    season.getLeague().getName(),
+                    season.getLeague().getStart_date(),
+                    season.getLeague().getEnd_date(),
+                    season.getLeague().getDescription(),
+                    season.getLeague().getSeasons()
+            );
+        }
+        return new SeasonDto(
+                season.getId(),
+                season.getName(),
+                season.getCurrentSeason(),
+                season.getIsDeleted(),
+                leagueDTO,
+                season.getRounds());
     }
 }
 
