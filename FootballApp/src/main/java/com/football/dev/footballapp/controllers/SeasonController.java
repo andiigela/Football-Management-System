@@ -17,12 +17,9 @@ import java.util.List;
 @RequestMapping("api/seasons")
 public class SeasonController {
     private final SeasonService seasonService;
-    private final RoundService roundService;
 
-    public SeasonController(SeasonService seasonService,
-                            RoundService roundService) {
+    public SeasonController(SeasonService seasonService) {
         this.seasonService = seasonService;
-        this.roundService = roundService;
     }
 
     @GetMapping

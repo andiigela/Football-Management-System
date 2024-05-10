@@ -26,23 +26,17 @@ import java.util.stream.Collectors;
 @Service
 public class SeasonServiceImpl implements SeasonService {
     private final SeasonRepository seasonRepository;
-    private final MatchRepository matchRepository;
     private final LeagueRepository leagueRepository;
-    private final RoundRepository roundRepository;
     private final SeasonDtoMapper seasonDtoMapper;
     private final RoundService roundService;
 
     public SeasonServiceImpl(SeasonRepository seasonRepository,
-                             MatchRepository matchRepository,
                              SeasonDtoMapper seasonDtoMapper,
                              LeagueRepository leagueRepository,
-                             RoundRepository roundRepository,
                              RoundService roundService) {
         this.seasonRepository = seasonRepository;
-        this.matchRepository = matchRepository;
         this.seasonDtoMapper = seasonDtoMapper;
         this.leagueRepository = leagueRepository;
-        this.roundRepository = roundRepository;
         this.roundService = roundService;
     }
     @Override
