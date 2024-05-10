@@ -14,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RoundDto {
+    private Long id;
     private LocalDateTime start_date;
     private LocalDateTime end_date;
     private List<Match> matches;
