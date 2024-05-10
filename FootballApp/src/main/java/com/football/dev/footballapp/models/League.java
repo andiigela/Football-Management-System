@@ -1,5 +1,7 @@
 package com.football.dev.footballapp.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -27,5 +29,6 @@ public class League extends BaseEntity{
     private Date end_date;
     private String description;
     @OneToMany
+    @JsonManagedReference
     private List<Season> seasons = new ArrayList<>();
 }

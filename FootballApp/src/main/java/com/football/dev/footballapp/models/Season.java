@@ -1,5 +1,6 @@
 package com.football.dev.footballapp.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,6 +21,7 @@ public class Season extends BaseEntity{
 
     private Boolean currentSeason =false;
     @ManyToOne
+    @JsonBackReference
     private League league;
 
     @OneToMany(cascade = CascadeType.ALL)
