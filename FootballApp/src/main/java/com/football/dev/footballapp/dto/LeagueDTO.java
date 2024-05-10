@@ -1,9 +1,11 @@
 package com.football.dev.footballapp.dto;
 
 import com.football.dev.footballapp.models.Season;
+import lombok.Setter;
 
 import java.util.Date;
 import java.util.List;
+
 
 public record LeagueDTO( Long id ,
                          String name,
@@ -11,4 +13,5 @@ public record LeagueDTO( Long id ,
                          Date end_date,
                          String description,
                          List<Season> seasons) {
+
 }

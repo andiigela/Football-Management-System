@@ -36,8 +36,6 @@ export class SeasonComponent implements OnInit {
             }
         );
     }
-
-
     editSeason(id: number) {
         this.router.navigate(['/league', this.leagueId, 'seasons', 'edit-season', id]);
     }
@@ -53,5 +51,8 @@ export class SeasonComponent implements OnInit {
                 console.log('Error deleting season:', error);
             }
         );
+    }
+    redirectToCreateSeason(): void {
+        this.router.navigate(['/league', this.leagueId, 'create-season']);
     }
 }

@@ -21,4 +21,9 @@ public class SeasonDto {
     private boolean isDeleted;
     private LeagueDTO league;
     private List<Round> rounds;
+    public SeasonDto(String name, LeagueDTO league) {
+        this.name = name;
+        this.league = league;
+    }
+
 }

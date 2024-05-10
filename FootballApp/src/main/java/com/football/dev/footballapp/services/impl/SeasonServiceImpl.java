@@ -42,8 +42,31 @@ public class SeasonServiceImpl implements SeasonService {
     }
     @Override
     public void saveSeason(SeasonDto seasonDto) {
-        seasonRepository.save(new Season(seasonDto.getName()));
+        if (seasonDto == null || seasonDto.getLeague() == null) {
+            throw new IllegalArgumentException("Season DTO or League information cannot be null");
+        }
+
+        // Retrieve league ID from the SeasonDto
+        Long leagueId = seasonDto.getLeague().id();
+
+        // Retrieve the league from the repository
+        League league = leagueRepository.findById(leagueId)
+                .orElseThrow(() -> new EntityNotFoundException("League not found with id: " + leagueId));
+
+        // Create a new Season entity and set its attributes
+        Season season = new Season();
+        season.setName(seasonDto.getName());
+        season.setLeague(league);
+
+        // Save the season entity
+        seasonRepository.save(season);
+
+        // After saving the season, also associate it with the league
+        league.getSeasons().add(season);
+        leagueRepository.save(league); // Save the league to update the association
     }
+
+
 
     @Override
     public void updateSeason(Long id, SeasonDto seasonDto) {

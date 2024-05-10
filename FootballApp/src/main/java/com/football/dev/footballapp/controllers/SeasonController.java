@@ -1,5 +1,6 @@
 package com.football.dev.footballapp.controllers;
 
+import com.football.dev.footballapp.dto.LeagueDTO;
 import com.football.dev.footballapp.dto.MatchDTO;
 import com.football.dev.footballapp.dto.RoundDto;
 import com.football.dev.footballapp.dto.SeasonDto;
@@ -38,11 +39,15 @@ public class SeasonController {
 //        List<Club> clubs = seasonService.getClubsBySeasonId(seasonId);
 //        return ResponseEntity.ok(clubs);
 //    }
-    @PostMapping("/save")
-    public ResponseEntity<Void> createSeason(@RequestBody SeasonDto seasonDto) {
-        seasonService.saveSeason(seasonDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
+@PostMapping("/save/{leagueId}")
+public ResponseEntity<Void> createSeason(@PathVariable("leagueId") Long leagueId, @RequestBody SeasonDto seasonDto) {
+    SeasonDto updatedSeasonDto = new SeasonDto(seasonDto.getName(), new LeagueDTO(leagueId, null, null, null, null, null));
+    seasonService.saveSeason(updatedSeasonDto);
+    return new ResponseEntity<>(HttpStatus.CREATED);
+}
+
+
+
 //    @PostMapping("/{seasonId}/matches")
 //    public ResponseEntity<Void> addMatchesToSeason(@PathVariable("seasonId") Long seasonId, @RequestBody List<Long> matchIds) {
 //        seasonService.addMatchesToSeason(seasonId, matchIds);

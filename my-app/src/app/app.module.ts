@@ -42,7 +42,7 @@ const routes : Routes = [
   {path: 'players/edit/:id',component:PlayerEditComponent},
   {path: 'league/:id/seasons',component:SeasonComponent},
   { path: 'league/:leagueId/seasons/edit-season/:id', component: EditSeasonComponent },
-  {path: 'create-season',component:CreateSeasonComponent},
+  { path: 'league/:id/create-season', component: CreateSeasonComponent },
   {path: 'league',component:LeagueComponent,canActivate:[AuthGuard2]},
   {path: 'create-league',component:CreateLeagueComponent,canActivate:[AuthGuard2]},
   {path : 'match',component:MatchComponent,canActivate:[AuthGuard2]},

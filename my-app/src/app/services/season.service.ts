@@ -22,12 +22,10 @@ export class SeasonService {
     return this.http.get<SeasonDto>(`${this.baseUrl}/${id}`);
   }
 
-  getClubsBySeasonId(seasonId: number): Observable<ClubDto[]> {
-     return this.http.get<ClubDto[]>(`${this.baseUrl}/${seasonId}/clubs`);
+  createSeason(leagueId: number, season: SeasonDto): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/save/${leagueId}`, season);
   }
-  createSeason(season: SeasonDto): Observable<void> {
-    return this.http.post<void>(`${this.baseUrl}/save`, season);
-  }
+
 
   updateSeason(id: number, season: SeasonDto): Observable<void> {
     return this.http.put<void>(`${this.baseUrl}/update/${id}`, season);
@@ -37,13 +35,6 @@ export class SeasonService {
     return this.http.delete<void>(`${this.baseUrl}/delete/${id}`);
   }
 
-  removeMatchFromSeason(seasonId: number, matchId: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${seasonId}/matches/${matchId}`);
-  }
-
-  addMatchesToSeason(seasonId: number, matchIds: number[]): Observable<void> {
-    return this.http.post<void>(`${this.baseUrl}/${seasonId}/matches`, matchIds);
-  }
 
 
 }
