@@ -42,5 +42,7 @@ export class LeagueComponent implements OnInit{
     this.router.navigate(['/create-league']);
   }
 
-
+  redirectToLeagueSeasons(id: number): void {
+    this.router.navigate(['/league', id, 'seasons']);
+  }
 }

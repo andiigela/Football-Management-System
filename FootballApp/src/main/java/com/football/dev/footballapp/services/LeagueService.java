@@ -2,6 +2,7 @@ package com.football.dev.footballapp.services;
 
 import com.football.dev.footballapp.dto.LeagueDTO;
 import com.football.dev.footballapp.dto.SeasonDto;
+import com.football.dev.footballapp.exceptions.ResourceNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,5 +15,7 @@ public interface LeagueService {
     void deleteLeague(Long id);
     void updateLeague(Long id , LeagueDTO leagueDTO);
     void createSeasonForLeague(Long leagueId, SeasonDto seasonDto);
+    List<SeasonDto> getSeasonsForLeague(Long leagueId) throws ResourceNotFoundException;
+
 
 }

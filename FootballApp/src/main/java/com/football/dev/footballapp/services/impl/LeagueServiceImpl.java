@@ -4,11 +4,13 @@ import com.football.dev.footballapp.dto.LeagueDTO;
 import com.football.dev.footballapp.dto.SeasonDto;
 import com.football.dev.footballapp.exceptions.ResourceNotFoundException;
 import com.football.dev.footballapp.mapper.LeagueDTOMapper;
+import com.football.dev.footballapp.mapper.SeasonDtoMapper;
 import com.football.dev.footballapp.models.League;
 import com.football.dev.footballapp.models.Season;
 import com.football.dev.footballapp.repository.LeagueRepository;
 import com.football.dev.footballapp.repository.SeasonRepository;
 import com.football.dev.footballapp.services.LeagueService;
+import com.football.dev.footballapp.services.SeasonService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +23,16 @@ public class LeagueServiceImpl implements LeagueService {
     private final LeagueRepository leagueRepository;
     private final LeagueDTOMapper leagueDTOMapper;
     private final SeasonRepository seasonRepository;
+    private final SeasonDtoMapper seasonDtoMapper;
 
     public LeagueServiceImpl(LeagueRepository leagueRepository,
                              LeagueDTOMapper leagueDTOMapper,
-                                SeasonRepository seasonRepository) {
+                             SeasonRepository seasonRepository,
+                             SeasonDtoMapper seasonDtoMapper) {
         this.leagueRepository = leagueRepository;
         this.leagueDTOMapper = leagueDTOMapper;
         this.seasonRepository = seasonRepository;
+        this.seasonDtoMapper = seasonDtoMapper;
     }
 
     @Override
@@ -86,5 +91,12 @@ public class LeagueServiceImpl implements LeagueService {
 
         leagueRepository.save(league);
     }
+    @Override
+    public List<SeasonDto> getSeasonsForLeague(Long leagueId) throws ResourceNotFoundException {
+        League league = leagueRepository.findById(leagueId)
+                .orElseThrow(() -> new ResourceNotFoundException("League not found with id: " + leagueId));
 
+        List<Season> seasons = league.getSeasons();
+        return seasons.stream().map(seasonDtoMapper).collect(Collectors.toList());
+    }
 }

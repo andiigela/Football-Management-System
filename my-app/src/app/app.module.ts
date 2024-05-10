@@ -26,6 +26,7 @@ import {NgbPaginationModule} from "@ng-bootstrap/ng-bootstrap";
 import {SeasonComponent} from "./components/season/season.component";
 import {EditSeasonComponent} from "./components/edit-season/edit-season.component";
 import {CreateSeasonComponent} from "./components/create-season/create-season.component";
+import {CreateLeagueComponent} from "./components/create-league/create-league.component";
 
 
 
@@ -39,13 +40,15 @@ const routes : Routes = [
   {path: 'players',component:PlayersListComponent,canActivate: [AuthGuard2]},
   {path: 'create-player',component:CreatePlayerComponent},
   {path: 'players/edit/:id',component:PlayerEditComponent},
-  {path: 'seasons',component:SeasonComponent},
+  {path: 'league/:id/seasons',component:SeasonComponent},
   {path: 'seasons/edit-season/:id',component:EditSeasonComponent},
   {path: 'create-season',component:CreateSeasonComponent},
   {path: 'league',component:LeagueComponent,canActivate:[AuthGuard2]},
+  {path: 'create-league',component:CreateLeagueComponent,canActivate:[AuthGuard2]},
   {path : 'match',component:MatchComponent,canActivate:[AuthGuard2]},
   {path: 'transfer',component:TransferComponent,canActivate:[AuthGuard2]},
   {path: 'update-league/:id', component:UpdateLeagueComponent },
+
 ]
 
 
@@ -68,7 +71,8 @@ const routes : Routes = [
     UpdateLeagueComponent,
     SeasonComponent,
     EditSeasonComponent,
-    CreateSeasonComponent
+    CreateSeasonComponent,
+    CreateLeagueComponent
   ],
   imports: [
     RouterModule.forRoot(routes),

@@ -1,50 +1,37 @@
 import { Component, OnInit } from '@angular/core';
-import { SeasonDto } from "../../common/season-dto";
-import { SeasonService } from "../../services/season.service";
-import {Router} from "@angular/router";
+import { ActivatedRoute } from '@angular/router';
+import { SeasonService } from '../../services/season.service';
+import {LeagueService} from "../../services/league.service";
 
 @Component({
-    selector: 'app-season',
-    templateUrl: './season.component.html',
-    styleUrls: ['./season.component.css']
+  selector: 'app-season',
+  templateUrl: './season.component.html',
+  styleUrls: ['./season.component.css']
 })
 export class SeasonComponent implements OnInit {
-    seasons: SeasonDto[] = [];
 
-    constructor(private seasonService: SeasonService, private router: Router) {}
+  seasons: any[] = []; // Define a seasons array to hold the fetched seasons
+  leagueId!: number; // Define a leagueId variable to hold the current league id
 
-    ngOnInit(): void {
-        this.loadSeasons();
-    }
+  constructor(private route: ActivatedRoute, private leagueService: LeagueService) { }
 
-    loadSeasons() {
-        this.seasonService.getAllSeasons().subscribe(
-            (data: SeasonDto[]) => {
-                this.seasons = data.filter(season => !season.deleted);
-                console.log(this.seasons);
-            },
-            error => {
-                console.log('Error fetching seasons:', error);
-            }
-        );
-    }
-    editSeason(id: number) {
-        this.router.navigate(['seasons/edit-season', id]);
-    }
-    deleteSeason(seasonId: number): void {
-        this.seasonService.deleteSeason(seasonId).subscribe(
-            () => {
-                console.log('Season deleted successfully');
-                // Update seasons array to remove the deleted season
-                this.seasons = this.seasons.filter(season => season.id !== seasonId);
+  ngOnInit(): void {
+    // Retrieve the league id from the route parameters
+    this.route.params.subscribe(params => {
+      this.leagueId = +params['id']; // '+' is used to convert the string parameter to a number
+      // Call a method to fetch seasons for the current league
+      this.fetchSeasonsForLeague(this.leagueId);
+    });
+  }
 
-            },
-            error => {
-                console.log('Error deleting season:', error);
-            }
-        );
-    }
-    navigateToCreateSeason() {
-        this.router.navigate(['/create-season']);
-    }
+  fetchSeasonsForLeague(leagueId: number): void {
+    this.leagueService.getSeasonsForLeague(leagueId).subscribe(
+      seasons => {
+        this.seasons = seasons;
+      },
+      error => {
+        console.error('Error fetching seasons:', error);
+      }
+    );
+  }
 }

@@ -56,4 +56,14 @@ public class LeagueController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    @GetMapping("/{leagueId}/seasons")
+    public ResponseEntity<List<SeasonDto>> getSeasonsForLeague(@PathVariable Long leagueId) {
+        try {
+            List<SeasonDto> seasons = leagueService.getSeasonsForLeague(leagueId);
+            return ResponseEntity.ok(seasons);
+        } catch (ResourceNotFoundException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -85,6 +86,10 @@ public class SeasonServiceImpl implements SeasonService {
     @Override
     public List<SeasonDto> getAllSeasons() {
         List<Season> seasons = seasonRepository.findAll();
+
+        // Sort seasons by insert date, with the newest on top
+        seasons.sort(Comparator.comparing(Season::getInsertDateTime).reversed());
+
         return seasons.stream()
                 .map(season -> {
                     SeasonDto seasonDto = seasonDtoMapper.apply(season);

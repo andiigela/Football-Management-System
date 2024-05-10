@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Observable} from "rxjs";
 import {LeagueDto} from "../common/league-dto";
+import {SeasonDto} from "../common/season-dto";
 
 @Injectable({
   providedIn: 'root'
@@ -29,5 +30,9 @@ export class LeagueService {
 
   editLeague(id: number, leagueDTO: LeagueDto): Observable<any> {
     return this.http.put<any>(`${this.leagueUrl}/${id}`, leagueDTO);
+  }
+
+  getSeasonsForLeague(leagueId: number): Observable<SeasonDto[]> {
+    return this.http.get<SeasonDto[]>(`${this.leagueUrl}/${leagueId}/seasons`);
   }
 }

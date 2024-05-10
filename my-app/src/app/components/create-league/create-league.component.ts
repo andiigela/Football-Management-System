@@ -19,11 +19,11 @@ export class CreateLeagueComponent {
       alert('League created successfully!');
       // Clear the form fields after successful creation
       this.newLeague = new LeagueDto(0, '', new Date(), new Date(), '');
-      // Reload the page to refresh the list of leagues
-      window.location.reload();
+      this.router.navigate(['/league']);
     }, error => {
       // Handle error
-      alert('Failed to create league. Please try again.'); // Show alert for error
+      alert('Failed to create league. Please try again.');
+
     });
   }
 
