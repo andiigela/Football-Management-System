@@ -1,8 +1,11 @@
 package com.football.dev.footballapp.controllers;
 
 import com.football.dev.footballapp.dto.MatchDTO;
+import com.football.dev.footballapp.dto.RoundDto;
 import com.football.dev.footballapp.dto.SeasonDto;
+import com.football.dev.footballapp.exceptions.ResourceNotFoundException;
 import com.football.dev.footballapp.models.Club;
+import com.football.dev.footballapp.services.RoundService;
 import com.football.dev.footballapp.services.SeasonService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +17,12 @@ import java.util.List;
 @RequestMapping("api/seasons")
 public class SeasonController {
     private final SeasonService seasonService;
+    private final RoundService roundService;
 
-    public SeasonController(SeasonService seasonService) {
+    public SeasonController(SeasonService seasonService,
+                            RoundService roundService) {
         this.seasonService = seasonService;
+        this.roundService = roundService;
     }
 
     @GetMapping
@@ -62,5 +68,15 @@ public class SeasonController {
 //        seasonService.removeMatchFromSeason(seasonId, matchId);
 //        return ResponseEntity.ok().build();
 //    }
+
+    @PostMapping("/{seasonId}/rounds")
+    public ResponseEntity<Void> createRoundsForSeason(@PathVariable("seasonId") Long seasonId, @RequestBody RoundDto roundDto) {
+        try {
+           seasonService.createRoundForSeason(seasonId,roundDto);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (ResourceNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
 }

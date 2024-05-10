@@ -1,6 +1,7 @@
 package com.football.dev.footballapp.dto;
 
 import com.football.dev.footballapp.models.Match;
+import com.football.dev.footballapp.models.Season;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,4 +19,5 @@ public class RoundDto {
     private LocalDateTime start_date;
     private LocalDateTime end_date;
     private List<Match> matches;
+    private Season season;
 }

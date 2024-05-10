@@ -1,24 +1,17 @@
 package com.football.dev.footballapp.services;
 
-import com.football.dev.footballapp.dto.ClubDto;
-import com.football.dev.footballapp.dto.MatchDTO;
+import com.football.dev.footballapp.dto.RoundDto;
 import com.football.dev.footballapp.dto.SeasonDto;
-import com.football.dev.footballapp.models.Club;
-import com.football.dev.footballapp.models.Season;
-
+import com.football.dev.footballapp.exceptions.ResourceNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface SeasonService {
     void saveSeason(SeasonDto seasonDto);
-    List<SeasonDto> getAllSeasons();
-    Optional<SeasonDto> getSeasonById(Long id);
     void updateSeason(Long id, SeasonDto seasonDto);
+    Optional<SeasonDto> getSeasonById(Long id);
+    List<SeasonDto> getAllSeasons();
     void deleteSeason(Long id);
-    //List<Club> getClubsBySeasonId(Long seasonId);
-//    void removeMatchFromSeason(Long seasonId, Long matchId);
-//    void addMatchesToSeason(Long seasonId, List<Long> matchIds);
-
-
+    void createRoundForSeason(Long seasonId, RoundDto roundDto) throws ResourceNotFoundException;
 }

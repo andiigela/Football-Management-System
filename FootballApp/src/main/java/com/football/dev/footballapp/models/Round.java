@@ -1,10 +1,7 @@
 package com.football.dev.footballapp.models;
 
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,10 +20,11 @@ import java.util.List;
 public class Round extends BaseEntity{
     private LocalDateTime start_date;
     private LocalDateTime end_date;
-
+    @ManyToOne
+    @JoinColumn(name = "season_id")
+    private Season season;
     @OneToMany(mappedBy = "round", cascade = CascadeType.ALL)
     private List<Match> matches= new ArrayList<>();
-
 
 
 }

@@ -2,6 +2,7 @@ package com.football.dev.footballapp.controllers;
 
 import com.football.dev.footballapp.dto.RoundDto;
 import com.football.dev.footballapp.dto.SeasonDto;
+import com.football.dev.footballapp.exceptions.ResourceNotFoundException;
 import com.football.dev.footballapp.models.Match;
 import com.football.dev.footballapp.services.RoundService;
 import org.springframework.http.HttpStatus;
@@ -26,10 +27,15 @@ public class RoundController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-    @PostMapping("/create")
-    public ResponseEntity<Void> createRound(@RequestBody RoundDto roundDto) {
-        roundService.createRound(roundDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
+//    @PostMapping("/create")
+//    public ResponseEntity<Void> createRound(@RequestParam("seasonId") Long seasonId, @RequestBody RoundDto roundDto) {
+//        try {
+//            roundService.createRound(seasonId, roundDto);
+//            return new ResponseEntity<>(HttpStatus.CREATED);
+//        } catch (ResourceNotFoundException e) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
+
 
 }

@@ -1,13 +1,16 @@
 package com.football.dev.footballapp.services.impl;
 
 import com.football.dev.footballapp.dto.*;
+import com.football.dev.footballapp.exceptions.ResourceNotFoundException;
 import com.football.dev.footballapp.mapper.MatchDTOMapper;
 import com.football.dev.footballapp.mapper.SeasonDtoMapper;
 import com.football.dev.footballapp.models.*;
 import com.football.dev.footballapp.models.enums.Foot;
 import com.football.dev.footballapp.repository.LeagueRepository;
 import com.football.dev.footballapp.repository.MatchRepository;
+import com.football.dev.footballapp.repository.RoundRepository;
 import com.football.dev.footballapp.repository.SeasonRepository;
+import com.football.dev.footballapp.services.RoundService;
 import com.football.dev.footballapp.services.SeasonService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,19 +28,23 @@ public class SeasonServiceImpl implements SeasonService {
     private final SeasonRepository seasonRepository;
     private final MatchRepository matchRepository;
     private final LeagueRepository leagueRepository;
+    private final RoundRepository roundRepository;
     private final SeasonDtoMapper seasonDtoMapper;
-
+    private final RoundService roundService;
 
     public SeasonServiceImpl(SeasonRepository seasonRepository,
                              MatchRepository matchRepository,
                              SeasonDtoMapper seasonDtoMapper,
-                             LeagueRepository leagueRepository) {
+                             LeagueRepository leagueRepository,
+                             RoundRepository roundRepository,
+                             RoundService roundService) {
         this.seasonRepository = seasonRepository;
         this.matchRepository = matchRepository;
         this.seasonDtoMapper = seasonDtoMapper;
         this.leagueRepository = leagueRepository;
+        this.roundRepository = roundRepository;
+        this.roundService = roundService;
     }
-
     @Override
     public void saveSeason(SeasonDto seasonDto) {
         seasonRepository.save(new Season(seasonDto.getName()));
@@ -99,7 +106,6 @@ public class SeasonServiceImpl implements SeasonService {
     }
 
 
-
     @Override
     public void deleteSeason(Long id) {
         Season seasonDb = seasonRepository.findById(id).get();
@@ -153,6 +159,13 @@ public class SeasonServiceImpl implements SeasonService {
 //        // Save the updated matches
 //        matchRepository.saveAll(matches);
 //    }
+@Override
+public void createRoundForSeason(Long seasonId, RoundDto roundDto) throws ResourceNotFoundException {
+    Season season = seasonRepository.findById(seasonId)
+            .orElseThrow(() -> new ResourceNotFoundException("Season not found with id: " + seasonId));
+    roundDto.setSeason(season);
+    roundService.createRound(roundDto);
+}
 
 
 
