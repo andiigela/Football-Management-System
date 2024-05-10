@@ -4,7 +4,8 @@
     <li *ngFor="let season of seasons" class="list-group-item">
       <h5 class="mb-1">Season ID: {{ season.id }}</h5>
       <p class="mb-1">Season Name: {{ season.name }}</p>
-
+      <button (click)="editSeason(season.id)" class="btn btn-primary">Edit Season</button>
+      <button (click)="deleteSeason(season.id)" class="btn btn-danger">Delete Season</button>
     </li>
   </ul>
 </div>

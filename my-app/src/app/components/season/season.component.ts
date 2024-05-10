@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { SeasonService } from '../../services/season.service';
 import {LeagueService} from "../../services/league.service";
 
@@ -10,10 +10,11 @@ import {LeagueService} from "../../services/league.service";
 })
 export class SeasonComponent implements OnInit {
 
-  seasons: any[] = []; // Define a seasons array to hold the fetched seasons
-  leagueId!: number; // Define a leagueId variable to hold the current league id
+  seasons: any[] = [];
+  leagueId!: number;
 
-  constructor(private route: ActivatedRoute, private leagueService: LeagueService) { }
+  constructor(private route: ActivatedRoute, private leagueService: LeagueService,
+              private router: Router, private seasonService: SeasonService) { }
 
   ngOnInit(): void {
     // Retrieve the league id from the route parameters
@@ -24,14 +25,33 @@ export class SeasonComponent implements OnInit {
     });
   }
 
-  fetchSeasonsForLeague(leagueId: number): void {
-    this.leagueService.getSeasonsForLeague(leagueId).subscribe(
-      seasons => {
-        this.seasons = seasons;
-      },
-      error => {
-        console.error('Error fetching seasons:', error);
-      }
-    );
-  }
+    fetchSeasonsForLeague(leagueId: number): void {
+        this.leagueService.getSeasonsForLeague(leagueId).subscribe(
+            seasons => {
+
+                this.seasons = seasons.filter(season => !season.deleted);
+            },
+            error => {
+                console.error('Error fetching seasons:', error);
+            }
+        );
+    }
+
+
+    editSeason(id: number) {
+        this.router.navigate(['/league', this.leagueId, 'seasons', 'edit-season', id]);
+    }
+    deleteSeason(seasonId: number): void {
+        this.seasonService.deleteSeason(seasonId).subscribe(
+            () => {
+                console.log('Season deleted successfully');
+                // Update seasons array to remove the deleted season
+                this.seasons = this.seasons.filter(season => season.id !== seasonId);
+
+            },
+            error => {
+                console.log('Error deleting season:', error);
+            }
+        );
+    }
 }

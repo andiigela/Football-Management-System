@@ -9,7 +9,7 @@ import {Router} from "@angular/router";
   styleUrls: ['./create-season.component.css']
 })
 export class CreateSeasonComponent implements OnInit {
-  season: SeasonDto = new SeasonDto('');
+  season: SeasonDto = new SeasonDto('',0);
 
   constructor(private seasonService: SeasonService, private router: Router) { }
 

@@ -5,25 +5,7 @@
             <label for="seasonName">Season Name:</label>
             <input type="text" class="form-control" id="seasonName" name="seasonName" [(ngModel)]="season.name" required>
         </div>
-        <div class="form-group">
-            <label>Matches in this Season:</label>
-            <ul class="list-group">
-                <li class="list-group-item" *ngFor="let match of season.matches">
-                    {{ match.matchDate | date }} - {{ match.homeTeamId?.name }} vs {{ match.awayTeamId?.name }}
-                    <button type="button" class="btn btn-danger btn-sm float-right" (click)="removeMatch(match)">Remove</button>
-                </li>
-            </ul>
-        </div>
-        <div class="form-group">
-            <label>Add Matches:</label>
-            <ul class="list-group">
-                <li class="list-group-item" *ngFor="let match of matches" [value]="match.id">
-                    {{ match.matchDate | date }} - {{ match.homeTeamId?.name }} vs {{ match.awayTeamId?.name }}
-                    <button type="button" class="btn btn-primary btn-sm mt-2" (click)="addMatchToSeason(match)">Add Match</button>
-                </li>
-            </ul>
 
-        </div>
         <br/>
         <div class="form-row">
             <button type="submit" class="btn btn-primary ml-2">Update Season</button>
