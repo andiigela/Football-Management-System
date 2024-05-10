@@ -94,7 +94,7 @@ public class SeasonServiceImpl implements SeasonService {
             League league = leagueRepository.findBySeasonsContaining(season)
                     .orElseThrow(() -> new EntityNotFoundException("League not found for season with id: " + id));
 
-            LeagueDTO leagueDto = new LeagueDTO(league.getId(), league.getName(), league.getStart_date(), league.getEnd_date(), league.getDescription(), null);
+            LeagueDTO leagueDto = new LeagueDTO(league.getId(), league.getName(), league.getStart_date(), league.getEnd_date(), league.getDescription());
 
             SeasonDto seasonDto = seasonDtoMapper.apply(season);
             seasonDto.setLeague(leagueDto);
@@ -119,7 +119,7 @@ public class SeasonServiceImpl implements SeasonService {
                     League league = leagueRepository.findBySeasonsContaining(season)
                             .orElseThrow(() -> new EntityNotFoundException("League not found"));
 
-                    LeagueDTO leagueDto = new LeagueDTO(league.getId(), league.getName(), league.getStart_date(), league.getEnd_date(), league.getDescription(), null);
+                    LeagueDTO leagueDto = new LeagueDTO(league.getId(), league.getName(), league.getStart_date(), league.getEnd_date(), league.getDescription());
 
                     seasonDto.setLeague(leagueDto);
                     return seasonDto;
@@ -136,59 +136,18 @@ public class SeasonServiceImpl implements SeasonService {
         seasonRepository.save(seasonDb);
     }
 
-//    @Override
-//    public List<Club> getClubsBySeasonId(Long seasonId) {
-//        List<Match> matches = matchRepository.findBySeasonId(seasonId);
-//        List<Club> clubs = new ArrayList<>();
-//        for (Match match : matches) {
-//            if (match.getHomeTeamId() != null) {
-//                clubs.add(match.getHomeTeamId());
-//            }
-//            if (match.getAwayTeamId() != null) {
-//                clubs.add(match.getAwayTeamId());
-//            }
-//        }
-//        return clubs;
-//    }
-//    @Override
-//    public void removeMatchFromSeason(Long seasonId, Long matchId) {
-//        // Find the season by ID
-//        Season season = seasonRepository.findById(seasonId)
-//                .orElseThrow(() -> new EntityNotFoundException("Season not found with id: " + seasonId));
-//
-//        // Find the match by ID
-//        Match match = matchRepository.findById(matchId)
-//                .orElseThrow(() -> new EntityNotFoundException("Match not found with id: " + matchId));
-//
-//        // Remove the match from the season
-//        match.setSeason(null);
-//
-//        // Save the updated season
-//        seasonRepository.save(season);
-//    }
-//    @Override
-//    public void addMatchesToSeason(Long seasonId, List<Long> matchIds) {
-//        // Find the season by ID
-//        Season season = seasonRepository.findById(seasonId)
-//                .orElseThrow(() -> new EntityNotFoundException("Season not found with id: " + seasonId));
-//
-//        // Find all matches by IDs
-//        List<Match> matches = matchRepository.findAllById(matchIds);
-//
-//        // Set the season for each match
-//        matches.forEach(match -> match.setSeason(season));
-//
-//        // Save the updated matches
-//        matchRepository.saveAll(matches);
-//    }
-@Override
-public void createRoundForSeason(Long seasonId, RoundDto roundDto) throws ResourceNotFoundException {
-    Season season = seasonRepository.findById(seasonId)
-            .orElseThrow(() -> new ResourceNotFoundException("Season not found with id: " + seasonId));
-    roundDto.setSeason(season);
-    roundService.createRound(roundDto);
-}
+    @Override
+    public void createRoundForSeason(Long seasonId, RoundDto roundDto) throws ResourceNotFoundException {
+        Season season = seasonRepository.findById(seasonId)
+                .orElseThrow(() -> new ResourceNotFoundException("Season not found with id: " + seasonId));
 
+        Round round = roundService.createRound(roundDto);
 
+        // Add the round to the season
+        season.getRounds().add(round);
+
+        // Save the season to update the association
+        seasonRepository.save(season);
+    }
 
 }

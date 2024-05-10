@@ -40,12 +40,13 @@ public class RoundServiceImpl implements RoundService {
     }
 
     @Override
-    public void createRound(RoundDto roundDto) {
+    public Round createRound(RoundDto roundDto) {
         List<Match> randomMatches = generateRandomMatches();
         Round round = new Round(roundDto.getStart_date(), roundDto.getEnd_date(), roundDto.getSeason(), randomMatches);
         Round savedRound = roundRepository.save(round);
         randomMatches.forEach(match -> match.setRound(savedRound));
         matchRepository.saveAll(randomMatches);
+        return savedRound; // Return the created round
     }
 
     private List<Match> generateRandomMatches() {

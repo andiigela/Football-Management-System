@@ -1,6 +1,7 @@
 package com.football.dev.footballapp.models;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,6 +23,7 @@ public class Round extends BaseEntity{
     private LocalDateTime end_date;
     @ManyToOne
     @JoinColumn(name = "season_id")
+    @JsonBackReference
     private Season season;
     @OneToMany(mappedBy = "round", cascade = CascadeType.ALL)
     private List<Match> matches= new ArrayList<>();

@@ -34,25 +34,12 @@ public class SeasonController {
         return ResponseEntity.ok(seasonService.getSeasonById(id).get());
     }
 
-//    @GetMapping("/{seasonId}/clubs")
-//    public ResponseEntity<List<Club>> getClubsBySeasonId(@PathVariable Long seasonId) {
-//        List<Club> clubs = seasonService.getClubsBySeasonId(seasonId);
-//        return ResponseEntity.ok(clubs);
-//    }
-@PostMapping("/save/{leagueId}")
-public ResponseEntity<Void> createSeason(@PathVariable("leagueId") Long leagueId, @RequestBody SeasonDto seasonDto) {
-    SeasonDto updatedSeasonDto = new SeasonDto(seasonDto.getName(), new LeagueDTO(leagueId, null, null, null, null, null));
-    seasonService.saveSeason(updatedSeasonDto);
-    return new ResponseEntity<>(HttpStatus.CREATED);
-}
-
-
-
-//    @PostMapping("/{seasonId}/matches")
-//    public ResponseEntity<Void> addMatchesToSeason(@PathVariable("seasonId") Long seasonId, @RequestBody List<Long> matchIds) {
-//        seasonService.addMatchesToSeason(seasonId, matchIds);
-//        return ResponseEntity.ok().build();
-//    }
+    @PostMapping("/save/{leagueId}")
+    public ResponseEntity<Void> createSeason(@PathVariable("leagueId") Long leagueId, @RequestBody SeasonDto seasonDto) {
+        SeasonDto updatedSeasonDto = new SeasonDto(seasonDto.getName(), new LeagueDTO(leagueId, null, null, null, null));
+        seasonService.saveSeason(updatedSeasonDto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<Void> updateSeason(@PathVariable("id") Long id, @RequestBody SeasonDto seasonDto) {
@@ -65,12 +52,6 @@ public ResponseEntity<Void> createSeason(@PathVariable("leagueId") Long leagueId
         seasonService.deleteSeason(id);
         return ResponseEntity.ok().build();
     }
-//    @DeleteMapping("/{seasonId}/matches/{matchId}")
-//    public ResponseEntity<Void> removeMatchFromSeason(@PathVariable Long seasonId, @PathVariable Long matchId) {
-//        seasonService.removeMatchFromSeason(seasonId, matchId);
-//        return ResponseEntity.ok().build();
-//    }
-
     @PostMapping("/{seasonId}/rounds")
     public ResponseEntity<Void> createRoundsForSeason(@PathVariable("seasonId") Long seasonId, @RequestBody RoundDto roundDto) {
         try {

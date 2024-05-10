@@ -28,7 +28,15 @@ public class League extends BaseEntity{
     private Date start_date;
     private Date end_date;
     private String description;
-    @OneToMany
-    @JsonManagedReference
+    @OneToMany(mappedBy = "league")
+//    @JsonManagedReference
     private List<Season> seasons = new ArrayList<>();
+
+    public League(String name, Date start_date, Date end_date, String description){
+
+        this.name = name;
+        this.start_date = start_date;
+        this.end_date = end_date;
+        this.description = description;
+    }
 }

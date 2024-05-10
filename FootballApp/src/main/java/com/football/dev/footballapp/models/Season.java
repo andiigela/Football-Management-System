@@ -21,10 +21,10 @@ public class Season extends BaseEntity{
 
     private Boolean currentSeason =false;
     @ManyToOne
-    @JsonBackReference
     private League league;
 
     @OneToMany(cascade = CascadeType.ALL)
+    @JsonBackReference
     private List<Round> rounds = new ArrayList<>();
 
 
