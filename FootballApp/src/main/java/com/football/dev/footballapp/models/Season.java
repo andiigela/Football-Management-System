@@ -17,8 +17,8 @@ import java.util.List;
 @Setter
 public class Season extends BaseEntity{
     private String name;
-    @Column(nullable = true) // Allow null values
-    private Boolean currentSeason;
+
+    private Boolean currentSeason =false;
     @ManyToOne
     private League league;
 

@@ -1,7 +1,10 @@
 package com.football.dev.footballapp.controllers;
 
 import com.football.dev.footballapp.dto.LeagueDTO;
+import com.football.dev.footballapp.dto.SeasonDto;
+import com.football.dev.footballapp.exceptions.ResourceNotFoundException;
 import com.football.dev.footballapp.services.LeagueService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,5 +47,13 @@ public class LeagueController {
              ResponseEntity.notFound().build();
         }
     }
-
+    @PostMapping("/{leagueId}/seasons")
+    public ResponseEntity<Void> createSeasonForLeague(@PathVariable Long leagueId, @RequestBody SeasonDto seasonDto) {
+        try {
+            leagueService.createSeasonForLeague(leagueId, seasonDto);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (ResourceNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

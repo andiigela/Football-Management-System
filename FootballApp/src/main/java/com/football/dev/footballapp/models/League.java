@@ -27,5 +27,5 @@ public class League extends BaseEntity{
     private Date end_date;
     private String description;
     @OneToMany
-    List<Season> seasons = new ArrayList<>();
+    private List<Season> seasons = new ArrayList<>();
 }
