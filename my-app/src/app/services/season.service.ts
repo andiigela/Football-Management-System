@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import {SeasonDto} from "../common/season-dto";
 import {ClubDto} from "../common/club-dto";
 import {MatchDto} from "../common/match-dto";
+import {RoundDto} from "../common/round-dto";
 
 
 @Injectable({
@@ -48,4 +49,9 @@ export class SeasonService {
     let headers = this.getHeaders();
     return this.http.post<void>(`${this.baseUrl}/${seasonId}/rounds`, {}, {headers});
   }
+
+    getRoundsForSeason(seasonId: number): Observable<RoundDto[]> {
+        let headers = this.getHeaders();
+        return this.http.get<RoundDto[]>(`${this.baseUrl}/${seasonId}/rounds`, { headers });
+    }
 }

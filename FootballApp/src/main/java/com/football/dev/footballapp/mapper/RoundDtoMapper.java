@@ -11,6 +11,6 @@ public class RoundDtoMapper implements Function<Round, RoundDto> {
 
     @Override
     public RoundDto apply(Round round) {
-        return new RoundDto(round.getId(),round.getStart_date(), round.getEnd_date(), round.getMatches(), round.getSeason());
+        return new RoundDto(round.getId(),round.getStart_date(), round.getEnd_date());
     }
 }

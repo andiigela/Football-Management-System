@@ -3,6 +3,7 @@ package com.football.dev.footballapp.services.impl;
 import com.football.dev.footballapp.dto.*;
 import com.football.dev.footballapp.exceptions.ResourceNotFoundException;
 import com.football.dev.footballapp.mapper.MatchDTOMapper;
+import com.football.dev.footballapp.mapper.RoundDtoMapper;
 import com.football.dev.footballapp.mapper.SeasonDtoMapper;
 import com.football.dev.footballapp.models.*;
 import com.football.dev.footballapp.models.enums.Foot;
@@ -30,15 +31,17 @@ public class SeasonServiceImpl implements SeasonService {
     private final LeagueRepository leagueRepository;
     private final SeasonDtoMapper seasonDtoMapper;
     private final RoundService roundService;
-
+    private final RoundDtoMapper roundDtoMapper;
     public SeasonServiceImpl(SeasonRepository seasonRepository,
                              SeasonDtoMapper seasonDtoMapper,
                              LeagueRepository leagueRepository,
-                             RoundService roundService) {
+                             RoundService roundService,
+                             RoundDtoMapper roundDtoMapper) {
         this.seasonRepository = seasonRepository;
         this.seasonDtoMapper = seasonDtoMapper;
         this.leagueRepository = leagueRepository;
         this.roundService = roundService;
+        this.roundDtoMapper = roundDtoMapper;
     }
     @Override
     public void saveSeason(SeasonDto seasonDto) {
@@ -143,11 +146,25 @@ public class SeasonServiceImpl implements SeasonService {
 
         Round round = roundService.createRound(roundDto);
 
-        // Add the round to the season
         season.getRounds().add(round);
 
-        // Save the season to update the association
         seasonRepository.save(season);
     }
+
+    @Override
+    public List<RoundDto> getRoundsWithMatchesForSeason(Long seasonId) throws ResourceNotFoundException {
+        Season season = seasonRepository.findById(seasonId)
+                .orElseThrow(() -> new ResourceNotFoundException("Season not found with id: " + seasonId));
+
+        List<RoundDto> roundDtos = new ArrayList<>();
+
+        for (Round round : season.getRounds()) {
+            RoundDto roundDto = roundDtoMapper.apply(round); // Use RoundDtoMapper to map Round to RoundDto
+            roundDtos.add(roundDto);
+        }
+
+        return roundDtos;
+    }
+
 
 }

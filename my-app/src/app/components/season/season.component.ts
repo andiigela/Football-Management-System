@@ -52,17 +52,11 @@ export class SeasonComponent implements OnInit {
             }
         );
     }
-    addRound(seasonId: number): void {
-        this.seasonService.createRoundsForSeason(seasonId).subscribe(
-            () => {
-                console.log('Round created successfully');
-            },
-            error => {
-                console.log('Error creating round:', error);
-            }
-        );
-    }
-    redirectToCreateSeason(): void {
+  addRound(seasonId: number): void {
+    this.router.navigate(['/league', this.leagueId, 'seasons', seasonId, 'rounds']);
+  }
+
+  redirectToCreateSeason(): void {
         this.router.navigate(['/league', this.leagueId, 'create-season']);
     }
 }

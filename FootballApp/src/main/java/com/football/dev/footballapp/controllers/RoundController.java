@@ -37,5 +37,10 @@ public class RoundController {
 //        }
 //    }
 
+    @GetMapping("/{id}/matches")
+    public ResponseEntity<List<Match>> getMatchesForRound(@PathVariable Long id) {
+        List<Match> matches = roundService.getMatchesForRound(id);
+        return ResponseEntity.ok(matches);
+    }
 
 }

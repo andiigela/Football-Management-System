@@ -42,11 +42,11 @@ public class RoundServiceImpl implements RoundService {
     @Override
     public Round createRound(RoundDto roundDto) {
         List<Match> randomMatches = generateRandomMatches();
-        Round round = new Round(roundDto.getStart_date(), roundDto.getEnd_date(), roundDto.getSeason(), randomMatches);
+        Round round = new Round(roundDto.getStart_date(), roundDto.getEnd_date());
         Round savedRound = roundRepository.save(round);
         randomMatches.forEach(match -> match.setRound(savedRound));
         matchRepository.saveAll(randomMatches);
-        return savedRound; // Return the created round
+        return savedRound;
     }
 
     private List<Match> generateRandomMatches() {
@@ -77,13 +77,13 @@ public class RoundServiceImpl implements RoundService {
         return randomMatches;
     }
 
-
-
     private Club getRandomClub() {
         List<Club> clubs = clubRepository.findAll();
         int randomIndex = new Random().nextInt(clubs.size());
         return clubs.get(randomIndex);
     }
-
+    public List<Match> getMatchesForRound(Long roundId) {
+        return matchRepository.findByRoundId(roundId);
+    }
 
 }

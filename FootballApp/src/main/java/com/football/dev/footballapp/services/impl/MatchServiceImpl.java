@@ -22,7 +22,7 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public void insertMatch(MatchDTO matchDTO) {
-        matchRepository.save(new Match(matchDTO.homeTeamId(),matchDTO.awayTeamId(),matchDTO.matchDate(),matchDTO.stadium(),matchDTO.result(),matchDTO.homeTeamScore(),matchDTO.awayTeamScore(), matchDTO.round()));
+        matchRepository.save(new Match(matchDTO.homeTeamId(),matchDTO.awayTeamId(),matchDTO.matchDate(),matchDTO.stadium(),matchDTO.result(),matchDTO.homeTeamScore(),matchDTO.awayTeamScore()));
     }
 
     @Override
@@ -44,7 +44,6 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public void updateMatch(Long id, MatchDTO matchDTO) {
-
         matchRepository.findById(id).ifPresent(dbMatch->{
             dbMatch.setHomeTeamId(matchDTO.homeTeamId());
             dbMatch.setAwayTeamId(matchDTO.awayTeamId());

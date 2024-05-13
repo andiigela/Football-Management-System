@@ -14,4 +14,5 @@ public interface SeasonService {
     List<SeasonDto> getAllSeasons();
     void deleteSeason(Long id);
     void createRoundForSeason(Long seasonId, RoundDto roundDto) throws ResourceNotFoundException;
+    List<RoundDto> getRoundsWithMatchesForSeason(Long seasonId);
 }

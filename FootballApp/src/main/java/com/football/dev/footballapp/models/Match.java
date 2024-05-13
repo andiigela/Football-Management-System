@@ -1,5 +1,6 @@
 package com.football.dev.footballapp.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ser.Serializers;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -34,4 +35,14 @@ public class Match extends BaseEntity {
     @ManyToOne
     private Round round;
 
+
+    public Match(Club homeTeamId, Club awayTeamId, LocalDateTime matchDate, Stadium stadium, String result, Integer homeTeamScore, Integer awayTeamScore) {
+        this.homeTeamId = homeTeamId;
+        this.awayTeamId = awayTeamId;
+        this.matchDate = matchDate;
+        this.stadium = stadium;
+        this.result = result;
+        this.homeTeamScore = homeTeamScore;
+        this.awayTeamScore = awayTeamScore;
+    }
 }

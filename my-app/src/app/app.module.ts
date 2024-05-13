@@ -27,6 +27,7 @@ import {SeasonComponent} from "./components/season/season.component";
 import {EditSeasonComponent} from "./components/edit-season/edit-season.component";
 import {CreateSeasonComponent} from "./components/create-season/create-season.component";
 import {CreateLeagueComponent} from "./components/create-league/create-league.component";
+import {RoundsComponent} from "./components/rounds/rounds.component";
 
 
 
@@ -48,7 +49,7 @@ const routes : Routes = [
   {path : 'match',component:MatchComponent,canActivate:[AuthGuard2]},
   {path: 'transfer',component:TransferComponent,canActivate:[AuthGuard2]},
   {path: 'update-league/:id', component:UpdateLeagueComponent },
-
+    { path: 'league/:leagueId/seasons/:seasonId/rounds', component: RoundsComponent }
 ]
 
 
@@ -72,7 +73,8 @@ const routes : Routes = [
     SeasonComponent,
     EditSeasonComponent,
     CreateSeasonComponent,
-    CreateLeagueComponent
+    CreateLeagueComponent,
+    RoundsComponent
   ],
   imports: [
     RouterModule.forRoot(routes),

@@ -23,8 +23,7 @@ public class Season extends BaseEntity{
     @ManyToOne
     private League league;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JsonBackReference
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "season")
     private List<Round> rounds = new ArrayList<>();
 
 

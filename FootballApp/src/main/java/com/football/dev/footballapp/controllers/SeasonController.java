@@ -61,5 +61,13 @@ public class SeasonController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
+    @GetMapping("/{seasonId}/rounds")
+    public ResponseEntity<List<RoundDto>> getRoundsWithMatchesForSeason(@PathVariable("seasonId") Long seasonId) {
+        try {
+            List<RoundDto> rounds = seasonService.getRoundsWithMatchesForSeason(seasonId);
+            return ResponseEntity.ok(rounds);
+        } catch (ResourceNotFoundException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

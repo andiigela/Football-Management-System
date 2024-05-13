@@ -9,6 +9,6 @@ import java.util.function.Function;
 public class MatchDTOMapper implements Function<Match, MatchDTO> {
     @Override
     public MatchDTO apply(Match match) {
-        return new MatchDTO(match.getId(),match.getHomeTeamId(),match.getAwayTeamId(),match.getMatchDate(),match.getStadium(),match.getResult(), match.getHomeTeamScore(), match.getAwayTeamScore(), match.getRound());
+        return new MatchDTO(match.getId(),match.getHomeTeamId(),match.getAwayTeamId(),match.getMatchDate(),match.getStadium(),match.getResult(), match.getHomeTeamScore(), match.getAwayTeamScore());
     }
 }
