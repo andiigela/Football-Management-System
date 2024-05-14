@@ -16,10 +16,10 @@
         <th scope="col">Home Team</th>
         <th scope="col">Away Team</th>
         <th scope="col">Match Date</th>
-        <th scope="col">Result</th>
         <th scope="col">Home Team Score</th>
         <th scope="col">Away Team Score</th>
-        <th scope="col">Actions</th> <!-- Add Actions column for edit button -->
+        <th scope="col">Result</th>
+        <th scope="col">Actions</th>
       </tr>
       </thead>
       <tbody>
@@ -28,11 +28,11 @@
         <td>{{ match.homeTeamId?.name }}</td>
         <td>{{ match.awayTeamId?.name }}</td>
         <td>{{ match.matchDate | date: 'short' }}</td>
-        <td>{{ match.result }}</td>
         <td>{{ match.homeTeamScore }}</td>
         <td>{{ match.awayTeamScore }}</td>
+        <td>{{ match.result }}</td>
         <td>
-          <button class="btn btn-primary" (click)="redirectToEditMatch(round.id, match.id)">Edit</button> <!-- Add edit button -->
+          <button class="btn btn-primary" (click)="redirectToEditMatch(round.id, match.id)">Update</button> <!-- Add edit button -->
         </td>
       </tr>
       </tbody>
