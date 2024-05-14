@@ -44,7 +44,8 @@ public class Club extends BaseEntity {
 
     // Add other necessary attributes
 
-    public Club(String name, Integer foundedYear, String city, String website) {
+    public Club(Long id, String name, Integer foundedYear, String city, String website) {
+        this.id = id;
         this.name = name;
         this.foundedYear = foundedYear;
         this.city = city;

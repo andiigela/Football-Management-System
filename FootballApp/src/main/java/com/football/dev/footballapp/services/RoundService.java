@@ -12,6 +12,6 @@ import java.util.Optional;
 public interface RoundService {
     Optional<RoundDto> getRoundById(Long id);
     Round createRound(RoundDto roundDto);
-    List<Match> getMatchesForRound(Long roundId);
+    List<MatchDTO> getMatchesByRoundId(Long roundId);
 
 }

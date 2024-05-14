@@ -1,5 +1,7 @@
 package com.football.dev.footballapp.services.impl;
 
+import com.football.dev.footballapp.dto.ClubDto;
+import com.football.dev.footballapp.dto.MatchDTO;
 import com.football.dev.footballapp.dto.RoundDto;
 import com.football.dev.footballapp.mapper.RoundDtoMapper;
 import com.football.dev.footballapp.models.Club;
@@ -12,10 +14,8 @@ import com.football.dev.footballapp.services.RoundService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class RoundServiceImpl implements RoundService {
@@ -82,8 +82,41 @@ public class RoundServiceImpl implements RoundService {
         int randomIndex = new Random().nextInt(clubs.size());
         return clubs.get(randomIndex);
     }
-    public List<Match> getMatchesForRound(Long roundId) {
-        return matchRepository.findByRoundId(roundId);
+    @Override
+    public List<MatchDTO> getMatchesByRoundId(Long roundId) {
+        Optional<Round> roundOptional = roundRepository.findById(roundId);
+        if (roundOptional.isPresent()) {
+            Round round = roundOptional.get();
+            List<Match> matches = matchRepository.findByRound(round);
+            return matches.stream()
+                    .map(match -> {
+                        Club homeTeam = clubRepository.findById(match.getHomeTeamId().getId()).orElse(null);
+                        Club awayTeam = clubRepository.findById(match.getAwayTeamId().getId()).orElse(null);
+
+                        return new MatchDTO(
+                                match.getId(),
+                                new ClubDto(homeTeam != null ? homeTeam.getId() : null,
+                                        homeTeam != null ? homeTeam.getName() : null,
+                                        homeTeam != null ? homeTeam.getFoundedYear() : null,
+                                        homeTeam != null ? homeTeam.getCity() : null,
+                                        homeTeam != null ? homeTeam.getWebsite() : null),
+                                new ClubDto(awayTeam != null ? awayTeam.getId() : null,
+                                        awayTeam != null ? awayTeam.getName() : null,
+                                        awayTeam != null ? awayTeam.getFoundedYear() : null,
+                                        awayTeam != null ? awayTeam.getCity() : null,
+                                        awayTeam != null ? awayTeam.getWebsite() : null),
+                                match.getMatchDate(),
+                                match.getStadium(),
+                                match.getResult(),
+                                match.getHomeTeamScore(),
+                                match.getAwayTeamScore()
+                        );
+                    })
+                    .collect(Collectors.toList());
+        } else {
+            return Collections.emptyList();
+        }
     }
+
 
 }

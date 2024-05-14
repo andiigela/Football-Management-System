@@ -1,5 +1,6 @@
 package com.football.dev.footballapp.controllers;
 
+import com.football.dev.footballapp.dto.MatchDTO;
 import com.football.dev.footballapp.dto.RoundDto;
 import com.football.dev.footballapp.dto.SeasonDto;
 import com.football.dev.footballapp.exceptions.ResourceNotFoundException;
@@ -38,8 +39,8 @@ public class RoundController {
 //    }
 
     @GetMapping("/{id}/matches")
-    public ResponseEntity<List<Match>> getMatchesForRound(@PathVariable Long id) {
-        List<Match> matches = roundService.getMatchesForRound(id);
+    public ResponseEntity<List<MatchDTO>> getMatchesForRound(@PathVariable Long id) {
+        List<MatchDTO> matches = roundService.getMatchesByRoundId(id);
         return ResponseEntity.ok(matches);
     }
 

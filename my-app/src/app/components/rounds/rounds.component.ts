@@ -42,6 +42,7 @@ export class RoundsComponent implements OnInit {
             this.roundsService.getMatchesForRound(round.id).subscribe(
                 matches => {
                     round.matches = matches;
+                    console.log(matches);
                 },
                 error => {
                     console.error(`Error fetching matches for round ${round.id}:`, error);

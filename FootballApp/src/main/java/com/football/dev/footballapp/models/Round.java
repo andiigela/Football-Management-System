@@ -28,6 +28,7 @@ public class Round extends BaseEntity{
     private Season season;
 
     @OneToMany(mappedBy = "round")
+    @JsonIgnore
     private List<Match> matches= new ArrayList<>();
 
     public Round(LocalDateTime start_date, LocalDateTime end_date){

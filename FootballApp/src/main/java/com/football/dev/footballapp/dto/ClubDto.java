@@ -14,9 +14,10 @@ import lombok.*;
 @Getter
 @Setter
 public class ClubDto {
-
+    private Long id;
     private String name;
     private Integer foundedYear;
     private String city;
     private String website;
+
 }

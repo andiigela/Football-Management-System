@@ -1,8 +1,27 @@
-<div *ngFor="let round of rounds; let i = index">
-  <h2>Round {{ i + 1 }}</h2>
-  <ul>
-    <li *ngFor="let match of round.matches">
-      Match ID: {{ match.id }} | Home Team: {{ match.homeTeamId?.name }} | Away Team: {{ match.awayTeamId?.name }}
-    </li>
-  </ul>
+<div *ngFor="let round of rounds" class="my-4">
+  <h2 style="padding-left: 30px;">Round {{ round.id }}</h2>
+  <div class="table-responsive mx-4">
+    <table class="table table-striped">
+      <thead class="thead-dark">
+      <tr>
+        <th scope="col">Match ID</th>
+        <th scope="col">Home Team</th>
+        <th scope="col">Away Team</th>
+        <th scope="col">Result</th>
+        <th scope="col">Home Team Score</th>
+        <th scope="col">Away Team Score</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let match of round.matches">
+        <td>{{ match.id }}</td>
+        <td>{{ match.homeTeamId?.name }}</td>
+        <td>{{ match.awayTeamId?.name }}</td>
+        <td>{{ match.result }}</td>
+        <td>{{ match.homeTeamScore }}</td>
+        <td>{{ match.awayTeamScore }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
