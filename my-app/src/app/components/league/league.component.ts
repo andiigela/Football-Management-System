@@ -11,7 +11,7 @@ import {Router} from "@angular/router";
 export class LeagueComponent implements OnInit{
 
   leagues :LeagueDto[]= [];
-  newLeague: LeagueDto = new LeagueDto(0, '', new Date(), new Date(), ''); // Initialize new league with empty values
+  newLeague: LeagueDto = new LeagueDto(0, '', new Date(), new Date(), '');
 
 
   constructor(private leagueService : LeagueService,private router: Router) {

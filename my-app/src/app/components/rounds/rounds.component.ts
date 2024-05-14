@@ -62,7 +62,6 @@ export class RoundsComponent implements OnInit {
         });
     }
 
-
     checkIfCurrentSeason(seasonId: number): void {
         this.seasonService.getSeasonById(seasonId).subscribe(
             season => {
@@ -81,4 +80,13 @@ export class RoundsComponent implements OnInit {
             console.error('Season ID is undefined or null');
         }
     }
+
+    redirectToEditMatch(roundId: number | undefined, matchId: number): void {
+        if (roundId !== undefined) {
+            this.router.navigate(['/league', 2, 'seasons', this.seasonId, 'rounds', roundId, 'edit-match', matchId]);
+        } else {
+            console.error('Round ID is undefined');
+        }
+    }
+
 }

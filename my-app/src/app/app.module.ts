@@ -43,15 +43,16 @@ const routes : Routes = [
   {path: 'create-player',component:CreatePlayerComponent},
   {path: 'players/edit/:id',component:PlayerEditComponent},
   {path: 'league/:id/seasons',component:SeasonComponent},
-  { path: 'league/:leagueId/seasons/edit-season/:id', component: EditSeasonComponent },
-  { path: 'league/:id/create-season', component: CreateSeasonComponent },
+  {path: 'league/:leagueId/seasons/edit-season/:id', component: EditSeasonComponent },
+  {path: 'league/:id/create-season', component: CreateSeasonComponent },
   {path: 'league',component:LeagueComponent,canActivate:[AuthGuard2]},
   {path: 'create-league',component:CreateLeagueComponent,canActivate:[AuthGuard2]},
   {path : 'match',component:MatchComponent,canActivate:[AuthGuard2]},
   {path: 'transfer',component:TransferComponent,canActivate:[AuthGuard2]},
   {path: 'update-league/:id', component:UpdateLeagueComponent },
-    { path: 'league/:leagueId/seasons/:seasonId/rounds', component: RoundsComponent },
-    { path: 'league/:leagueId/seasons/:seasonId/create-round', component: CreateRoundComponent }
+  {path: 'league/:leagueId/seasons/:seasonId/rounds', component: RoundsComponent },
+  {path: 'league/:leagueId/seasons/:seasonId/create-round', component: CreateRoundComponent },
+  {path: 'league/:leagueId/seasons/:seasonId/rounds/:roundId/edit-match/:matchId', component: MatchComponent },
 
 ]
 @NgModule({

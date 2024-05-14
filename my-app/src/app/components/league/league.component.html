@@ -1,6 +1,8 @@
 <div *ngIf="leagues.length > 0" class="container">
-  <h2>Data from Backend</h2>
-  <button (click)="redirectToCreateLeague()" class="btn btn-primary mt-3">Create League</button>
+  <div class="d-flex justify-content-between align-items-center mb-3" style="margin-top: 30px">
+    <h2 class="mb-0">All Leagues</h2>
+    <button (click)="redirectToCreateLeague()" class="btn btn-primary">Create League</button>
+  </div>
   <div class="row">
     <div *ngFor="let league of leagues" class="col-md-4 mb-3">
       <div class="card">

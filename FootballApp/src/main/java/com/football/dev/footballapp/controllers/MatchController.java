@@ -28,7 +28,7 @@ public class MatchController {
     public void deleteMatch(@PathVariable("id")Long id){
         matchService.deleteMatch(id);
     }
-    @PutMapping
+    @PutMapping("{id}")
     public void editMatch(@PathVariable("id")Long id , @RequestBody MatchDTO matchDTO){
         matchService.updateMatch(id,matchDTO);
     }

@@ -23,7 +23,7 @@ export class MatchService {
     return this.http.delete<MatchDto>(`${this.transferUrl}/${id}`)
   }
   editMatch(id:number,matchDTO:MatchDto):Observable<any>{
-    return this.http.put<any>(`${this.transferUrl}/${id}`,id)
+    return this.http.put<any>(`${this.transferUrl}/${id}`,matchDTO)
   }
   createMatch(matchDto:MatchDto):Observable<any>{
     return this.http.post<any>(`${this.transferUrl}`,matchDto)

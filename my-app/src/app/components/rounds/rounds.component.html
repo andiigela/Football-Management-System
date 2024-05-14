@@ -7,7 +7,7 @@
     <table class="table table-striped">
       <thead class="thead-dark">
       <tr>
-        <th colspan="7" class="text-center" style="background-color: #343a40; color: white;">
+        <th colspan="8" class="text-center" style="background-color: #343a40; color: white;">
           Round #{{ round.id }} : {{ round.start_date | date: 'short' }} - {{ round.end_date | date: 'short' }}
         </th>
       </tr>
@@ -19,6 +19,7 @@
         <th scope="col">Result</th>
         <th scope="col">Home Team Score</th>
         <th scope="col">Away Team Score</th>
+        <th scope="col">Actions</th> <!-- Add Actions column for edit button -->
       </tr>
       </thead>
       <tbody>
@@ -30,6 +31,9 @@
         <td>{{ match.result }}</td>
         <td>{{ match.homeTeamScore }}</td>
         <td>{{ match.awayTeamScore }}</td>
+        <td>
+          <button class="btn btn-primary" (click)="redirectToEditMatch(round.id, match.id)">Edit</button> <!-- Add edit button -->
+        </td>
       </tr>
       </tbody>
     </table>
