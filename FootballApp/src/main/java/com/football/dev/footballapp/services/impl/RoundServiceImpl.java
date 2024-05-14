@@ -16,8 +16,11 @@ import com.football.dev.footballapp.repository.SeasonRepository;
 import com.football.dev.footballapp.services.RoundService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,7 +56,7 @@ public class RoundServiceImpl implements RoundService {
         Round round = new Round(roundDto.getStart_date(), roundDto.getEnd_date());
         round.setSeason(season);
         Round savedRound = roundRepository.save(round);
-        List<Match> randomMatches = generateRandomMatches();
+        List<Match> randomMatches = generateRandomMatches(round);
 
         randomMatches.forEach(match -> {
             match.setRound(savedRound);
@@ -63,10 +66,14 @@ public class RoundServiceImpl implements RoundService {
         return savedRound;
     }
 
-    private List<Match> generateRandomMatches() {
+
+    private List<Match> generateRandomMatches(Round round) {
         List<Match> randomMatches = new ArrayList<>();
         Random random = new Random();
         List<Club> assignedClubs = new ArrayList<>(); // List to keep track of clubs assigned to matches
+        LocalDateTime startDate = round.getStart_date();
+        LocalDateTime endDate = round.getEnd_date();
+
         for (int i = 0; i < 5; i++) {
             Match randomMatch = new Match();
             Club homeTeam;
@@ -77,11 +84,12 @@ public class RoundServiceImpl implements RoundService {
             } while (homeTeam.getId().equals(awayTeam.getId()) || // Ensure home team and away team are different
                     assignedClubs.contains(homeTeam) ||          // Ensure home team is not already assigned
                     assignedClubs.contains(awayTeam));           // Ensure away team is not already assigned
+
             assignedClubs.add(homeTeam); // Mark home team as assigned
             assignedClubs.add(awayTeam); // Mark away team as assigned
             randomMatch.setHomeTeamId(homeTeam);
             randomMatch.setAwayTeamId(awayTeam);
-            randomMatch.setMatchDate(LocalDateTime.now().plusDays(random.nextInt(30))); // Random date within next 30 days
+            randomMatch.setMatchDate(getRandomDateBetween(startDate, endDate, random));
             randomMatch.setStadium(null);
             randomMatch.setResult("Pending");
             randomMatch.setHomeTeamScore(0);
@@ -90,6 +98,14 @@ public class RoundServiceImpl implements RoundService {
         }
         return randomMatches;
     }
+
+    private LocalDateTime getRandomDateBetween(LocalDateTime start, LocalDateTime end, Random random) {
+        long startEpochDay = start.toLocalDate().toEpochDay();
+        long endEpochDay = end.toLocalDate().toEpochDay();
+        long randomEpochDay = ThreadLocalRandom.current().nextLong(startEpochDay, endEpochDay);
+        return LocalDateTime.of(LocalDate.ofEpochDay(randomEpochDay), LocalTime.of(random.nextInt(24), random.nextInt(60)));
+    }
+
 
     private Club getRandomClub() {
         List<Club> clubs = clubRepository.findAll();
