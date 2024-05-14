@@ -55,5 +55,6 @@ public class Player extends BaseEntity {
             return null; // Or throw an exception, depending on your error handling strategy
         }
     }
-
+    @OneToMany(mappedBy = "player")
+    private List<Contract> contracts = new ArrayList<>();
 }

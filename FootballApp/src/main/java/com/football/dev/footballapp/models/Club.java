@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -35,7 +36,7 @@ public class Club extends BaseEntity{
         this.foundedYear = foundedYear;
         this.city = city;
         this.website = website;
-
-
     }
+    @OneToMany(mappedBy = "club")
+    private List<Contract> contracts = new ArrayList<>();
 }
