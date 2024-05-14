@@ -17,6 +17,13 @@ import java.util.Date;
 @Setter
 @Where(clause = "is_deleted=false")
 public class Contract extends BaseEntity{
+    public Contract(LocalDate startDate, LocalDate endDate,Double salary, ContractType contractType,Player player){
+        this.startDate=startDate;
+        this.endDate=endDate;
+        this.salary=salary;
+        this.contractType=contractType;
+        this.player=player;
+    }
     @ManyToOne
     private Player player;
     @ManyToOne
