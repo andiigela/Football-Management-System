@@ -10,9 +10,7 @@ import com.football.dev.footballapp.repository.PlayerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
-
 @Service
 public class ContractServiceImpl implements ContractService {
     private final ContractRepository contractRepository;
@@ -31,6 +29,13 @@ public class ContractServiceImpl implements ContractService {
     }
     @Override
     public Page<InjuryDto> retrieveContracts(Long playerId, int pageNumber, int pageSize) {
+//        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+//        Page<Injury> injuryPage = contractRepository.findContractsByPlayerId(playerId, pageable);
+//        List<InjuryDto> injuryDtos = injuryPage.getContent()
+//                .stream()
+//                .map(injuryDtoMapper)
+//                .collect(Collectors.toList());
+//        return PageableExecutionUtils.getPage(injuryDtos, injuryPage.getPageable(), injuryPage::getTotalPages);
         return null;
     }
     @Override
@@ -40,10 +45,20 @@ public class ContractServiceImpl implements ContractService {
         throw new EntityNotFoundException("Injury not found with ids: playerId: " + playerId + " contractId: " + contractId);
     }
     @Override
-    public void updateContract(ContractDto injuryDto, Long injuryId, Long playerId) {
-
+    public void updateContract(ContractDto contractDto, Long contractId, Long playerId) {
+        contractRepository.findByIdAndPlayerId(contractId,playerId).ifPresent(contractDb -> {
+            contractDb.setStartDate(contractDto.getStartDate());
+            contractDb.setEndDate(contractDto.getEndDate());
+            contractDb.setSalary(contractDto.getSalary());
+            contractDb.setContractType(contractDto.getContractType());
+            contractRepository.save(contractDb);
+        });
     }
     @Override
-    public void deleteContract(Long injuryId, Long playerId) {
+    public void deleteContract(Long contractId, Long playerId) {
+        contractRepository.findByIdAndPlayerId(contractId,playerId).ifPresent(contractDb -> {
+            contractDb.setIsDeleted(true);
+            contractRepository.save(contractDb);
+        });
     }
 }
