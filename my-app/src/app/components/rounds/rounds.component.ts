@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SeasonService } from '../../services/season.service';
 import { RoundDto } from '../../common/round-dto';
-import { MatchDto } from '../../common/match-dto';
-import { RoundsService } from '../../services/rounds.service'; // Import the RoundsService
+import { RoundsService } from '../../services/rounds.service';
+import { MatchDto } from '../../common/match-dto'; // Import MatchDto
 
 @Component({
     selector: 'app-rounds',
@@ -13,10 +13,12 @@ import { RoundsService } from '../../services/rounds.service'; // Import the Rou
 export class RoundsComponent implements OnInit {
     seasonId!: number;
     rounds: RoundDto[] = [];
+    isCurrentSeason: boolean = false;
+
     constructor(private route: ActivatedRoute,
                 private router: Router,
                 private seasonService: SeasonService,
-                private roundsService: RoundsService) { } // Inject the RoundsService
+                private roundsService: RoundsService) { }
 
     ngOnInit(): void {
         this.route.params.subscribe(params => {
@@ -24,8 +26,8 @@ export class RoundsComponent implements OnInit {
             if (!isNaN(paramSeasonId)) {
                 this.seasonId = paramSeasonId;
                 this.fetchRoundsForSeason(this.seasonId);
+                this.checkIfCurrentSeason(this.seasonId);
             } else {
-                // Handle the case when seasonId is not provided or invalid
                 console.error('Invalid or missing seasonId parameter');
             }
         });
@@ -35,7 +37,7 @@ export class RoundsComponent implements OnInit {
         this.seasonService.getRoundsForSeason(seasonId).subscribe(
             rounds => {
                 this.rounds = rounds;
-                this.loadMatchesForRounds(); // Call function to load matches for each round
+                this.loadMatchesForRounds();
             },
             error => {
                 console.error('Error fetching rounds:', error);
@@ -45,7 +47,7 @@ export class RoundsComponent implements OnInit {
 
     loadMatchesForRounds(): void {
         this.rounds.forEach(round => {
-            if (round.id !== undefined) { // Check if round.id is defined
+            if (round.id !== undefined) {
                 this.roundsService.getMatchesForRound(round.id).subscribe(
                     matches => {
                         round.matches = matches;
@@ -60,6 +62,17 @@ export class RoundsComponent implements OnInit {
         });
     }
 
+
+    checkIfCurrentSeason(seasonId: number): void {
+        this.seasonService.getSeasonById(seasonId).subscribe(
+            season => {
+                this.isCurrentSeason = season.currentSeason;
+            },
+            error => {
+                console.error('Error fetching season:', error);
+            }
+        );
+    }
 
     createRound(): void {
         if (this.seasonId) {

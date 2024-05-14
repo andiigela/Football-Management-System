@@ -1,6 +1,7 @@
-<div class="my-4">
+<div class="my-4" *ngIf="isCurrentSeason">
   <button class="btn btn-primary mx-4" (click)="createRound()">Create Round</button>
 </div>
+
 <div *ngFor="let round of rounds" class="my-4">
   <h2 style="padding-left: 30px;">Round {{ round.id }}</h2>
   <div class="table-responsive mx-4">
