@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SeasonService } from '../../services/season.service';
 import { RoundDto } from '../../common/round-dto';
 import { MatchDto } from '../../common/match-dto';
@@ -13,15 +13,21 @@ import { RoundsService } from '../../services/rounds.service'; // Import the Rou
 export class RoundsComponent implements OnInit {
     seasonId!: number;
     rounds: RoundDto[] = [];
-
     constructor(private route: ActivatedRoute,
+                private router: Router,
                 private seasonService: SeasonService,
                 private roundsService: RoundsService) { } // Inject the RoundsService
 
     ngOnInit(): void {
         this.route.params.subscribe(params => {
-            this.seasonId = +params['seasonId'];
-            this.fetchRoundsForSeason(this.seasonId);
+            const paramSeasonId = +params['seasonId'];
+            if (!isNaN(paramSeasonId)) {
+                this.seasonId = paramSeasonId;
+                this.fetchRoundsForSeason(this.seasonId);
+            } else {
+                // Handle the case when seasonId is not provided or invalid
+                console.error('Invalid or missing seasonId parameter');
+            }
         });
     }
 
@@ -39,15 +45,27 @@ export class RoundsComponent implements OnInit {
 
     loadMatchesForRounds(): void {
         this.rounds.forEach(round => {
-            this.roundsService.getMatchesForRound(round.id).subscribe(
-                matches => {
-                    round.matches = matches;
-                    console.log(matches);
-                },
-                error => {
-                    console.error(`Error fetching matches for round ${round.id}:`, error);
-                }
-            );
+            if (round.id !== undefined) { // Check if round.id is defined
+                this.roundsService.getMatchesForRound(round.id).subscribe(
+                    matches => {
+                        round.matches = matches;
+                    },
+                    error => {
+                        console.error(`Error fetching matches for round ${round.id}:`, error);
+                    }
+                );
+            } else {
+                console.error('Round ID is undefined');
+            }
         });
+    }
+
+
+    createRound(): void {
+        if (this.seasonId) {
+            this.router.navigate(['/league', 2, 'seasons', this.seasonId, 'create-round']);
+        } else {
+            console.error('Season ID is undefined or null');
+        }
     }
 }

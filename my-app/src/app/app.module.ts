@@ -28,6 +28,7 @@ import {EditSeasonComponent} from "./components/edit-season/edit-season.componen
 import {CreateSeasonComponent} from "./components/create-season/create-season.component";
 import {CreateLeagueComponent} from "./components/create-league/create-league.component";
 import {RoundsComponent} from "./components/rounds/rounds.component";
+import {CreateRoundComponent} from "./components/create-round/create-round.component";
 
 
 
@@ -49,10 +50,10 @@ const routes : Routes = [
   {path : 'match',component:MatchComponent,canActivate:[AuthGuard2]},
   {path: 'transfer',component:TransferComponent,canActivate:[AuthGuard2]},
   {path: 'update-league/:id', component:UpdateLeagueComponent },
-    { path: 'league/:leagueId/seasons/:seasonId/rounds', component: RoundsComponent }
+    { path: 'league/:leagueId/seasons/:seasonId/rounds', component: RoundsComponent },
+    { path: 'league/:leagueId/seasons/:seasonId/create-round', component: CreateRoundComponent }
+
 ]
-
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -74,7 +75,8 @@ const routes : Routes = [
     EditSeasonComponent,
     CreateSeasonComponent,
     CreateLeagueComponent,
-    RoundsComponent
+    RoundsComponent,
+    CreateRoundComponent
   ],
   imports: [
     RouterModule.forRoot(routes),

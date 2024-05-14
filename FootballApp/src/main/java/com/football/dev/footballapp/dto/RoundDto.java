@@ -16,5 +16,6 @@ public class RoundDto {
     private Long id;
     private LocalDateTime start_date;
     private LocalDateTime end_date;
+    private Long seasonId;
 
 }

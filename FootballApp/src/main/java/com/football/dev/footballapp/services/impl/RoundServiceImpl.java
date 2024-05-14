@@ -3,13 +3,16 @@ package com.football.dev.footballapp.services.impl;
 import com.football.dev.footballapp.dto.ClubDto;
 import com.football.dev.footballapp.dto.MatchDTO;
 import com.football.dev.footballapp.dto.RoundDto;
+import com.football.dev.footballapp.exceptions.ResourceNotFoundException;
 import com.football.dev.footballapp.mapper.RoundDtoMapper;
 import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.Match;
 import com.football.dev.footballapp.models.Round;
+import com.football.dev.footballapp.models.Season;
 import com.football.dev.footballapp.repository.ClubRepository;
 import com.football.dev.footballapp.repository.MatchRepository;
 import com.football.dev.footballapp.repository.RoundRepository;
+import com.football.dev.footballapp.repository.SeasonRepository;
 import com.football.dev.footballapp.services.RoundService;
 import org.springframework.stereotype.Service;
 
@@ -23,15 +26,18 @@ public class RoundServiceImpl implements RoundService {
     private final RoundDtoMapper roundDtoMapper;
     private final ClubRepository clubRepository;
     private final MatchRepository matchRepository;
+    private final SeasonRepository seasonRepository;
 
     public RoundServiceImpl(RoundRepository roundRepository,
                             RoundDtoMapper roundDtoMapper,
                             ClubRepository clubRepository,
-                            MatchRepository matchRepository) {
+                            MatchRepository matchRepository,
+                            SeasonRepository seasonRepository) {
         this.roundRepository = roundRepository;
         this.roundDtoMapper = roundDtoMapper;
         this.clubRepository = clubRepository;
         this.matchRepository = matchRepository;
+        this.seasonRepository = seasonRepository;
     }
 
     @Override
@@ -40,12 +46,20 @@ public class RoundServiceImpl implements RoundService {
     }
 
     @Override
-    public Round createRound(RoundDto roundDto) {
-        List<Match> randomMatches = generateRandomMatches();
+    public Round createRound(Long seasonId, RoundDto roundDto) {
+        Season season = seasonRepository.findById(seasonId)
+                .orElseThrow(() -> new ResourceNotFoundException("Season not found with id: " + seasonId));
+
         Round round = new Round(roundDto.getStart_date(), roundDto.getEnd_date());
+        round.setSeason(season);
         Round savedRound = roundRepository.save(round);
-        randomMatches.forEach(match -> match.setRound(savedRound));
-        matchRepository.saveAll(randomMatches);
+        List<Match> randomMatches = generateRandomMatches();
+
+        randomMatches.forEach(match -> {
+            match.setRound(savedRound);
+            matchRepository.save(match);
+        });
+
         return savedRound;
     }
 

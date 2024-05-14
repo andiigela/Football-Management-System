@@ -1,0 +1,11 @@
+<div class="my-4">
+    <h2 style="padding-left: 30px;">Create New Round</h2>
+    <div style="padding-left: 30px;">
+        <label for="startDate">Start Date:</label>
+        <input type="datetime-local" id="startDate" name="startDate" [(ngModel)]="newRound.start_date">
+        <br>
+        <label for="endDate">End Date:</label>
+        <input type="datetime-local" id="endDate" name="endDate" [(ngModel)]="newRound.end_date">
+    </div>
+    <button class="btn btn-primary mx-4" (click)="createRound()">Create Round</button>
+</div>

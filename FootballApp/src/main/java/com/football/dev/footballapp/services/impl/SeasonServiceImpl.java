@@ -134,7 +134,6 @@ public class SeasonServiceImpl implements SeasonService {
     @Override
     public void deleteSeason(Long id) {
         Season seasonDb = seasonRepository.findById(id).get();
-        if (seasonDb == null) throw new EntityNotFoundException("Season not found with specified id: " + id);
         seasonDb.isDeleted = true;
         seasonRepository.save(seasonDb);
     }
@@ -143,11 +142,8 @@ public class SeasonServiceImpl implements SeasonService {
     public void createRoundForSeason(Long seasonId, RoundDto roundDto) throws ResourceNotFoundException {
         Season season = seasonRepository.findById(seasonId)
                 .orElseThrow(() -> new ResourceNotFoundException("Season not found with id: " + seasonId));
-
-        Round round = roundService.createRound(roundDto);
-
+        Round round = roundService.createRound(seasonId, roundDto);
         season.getRounds().add(round);
-
         seasonRepository.save(season);
     }
 
@@ -159,7 +155,7 @@ public class SeasonServiceImpl implements SeasonService {
         List<RoundDto> roundDtos = new ArrayList<>();
 
         for (Round round : season.getRounds()) {
-            RoundDto roundDto = roundDtoMapper.apply(round); // Use RoundDtoMapper to map Round to RoundDto
+            RoundDto roundDto = roundDtoMapper.apply(round);
             roundDtos.add(roundDto);
         }
 

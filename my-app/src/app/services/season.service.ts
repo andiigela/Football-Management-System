@@ -45,9 +45,9 @@ export class SeasonService {
     return this.http.delete<void>(`${this.baseUrl}/delete/${id}`, {headers});
   }
 
-  createRoundsForSeason(seasonId: number): Observable<void> {
-    let headers = this.getHeaders();
-    return this.http.post<void>(`${this.baseUrl}/${seasonId}/rounds`, {}, {headers});
+  createRoundsForSeason(seasonId: number, roundDto: RoundDto): Observable<void> {
+    const headers = this.getHeaders();
+    return this.http.post<void>(`${this.baseUrl}/${seasonId}/rounds`, roundDto, { headers });
   }
 
     getRoundsForSeason(seasonId: number): Observable<RoundDto[]> {
