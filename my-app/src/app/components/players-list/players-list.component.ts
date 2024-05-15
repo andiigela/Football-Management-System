@@ -2,6 +2,7 @@ import {Component, Injectable, OnInit} from '@angular/core';
 import {PlayerService} from "../../services/player.service";
 import {PlayerDto} from "../../common/player-dto";
 import {Router} from "@angular/router";
+import {PlayerResponseDto} from "../../common/player-response-dto";
 @Component({
   selector: 'app-players-list',
   templateUrl: './players-list.component.html',
@@ -21,6 +22,7 @@ export class PlayersListComponent implements OnInit{
   public getPlayers(){
     this.playerService.retrievePlayers(this.pageNumber-1,this.pageSize).subscribe((response)=>{
       this.playersList = response.content;
+      console.log(this.playersList)
       this.totalElements = response.totalElements;
       this.updatePlayerList(this.playersList) // this.playersList, sepse kemi inicializu 2 rreshta me larte.
     })
@@ -56,5 +58,8 @@ export class PlayersListComponent implements OnInit{
   }
   redirectToPlayerInjuries(playerId: number){
     this.router.navigate([`/players/${playerId}/injuries`]);
+  }
+  redirectToCreatePlayerContract(playerId: number){
+    this.router.navigate([`/players/${playerId}/contracts/create`])
   }
 }

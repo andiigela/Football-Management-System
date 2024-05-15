@@ -9,13 +9,16 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
@@ -23,12 +26,15 @@ public class PlayerServiceImpl implements PlayerService {
     private final ClubRepository clubRepository;
     private final FileUploadService fileUploadService;
     private final Function<PlayerDto, Player> playerDtoToPlayer;
+    private final Function<Player, PlayerDto> playerToPlayerDto;
     public PlayerServiceImpl(PlayerRepository playerRepository,Function<PlayerDto, Player> playerDtoToPlayer,
-                             ClubRepository clubRepository,FileUploadService fileUploadService){
+                             ClubRepository clubRepository,FileUploadService fileUploadService,
+                             Function<Player, PlayerDto> playerToPlayerDto){
         this.playerRepository=playerRepository;
         this.playerDtoToPlayer=playerDtoToPlayer;
         this.clubRepository=clubRepository;
         this.fileUploadService=fileUploadService;
+        this.playerToPlayerDto=playerToPlayerDto;
     }
     @Override
     public void savePlayer(PlayerDto playerDto, MultipartFile file){
@@ -43,12 +49,14 @@ public class PlayerServiceImpl implements PlayerService {
         playerRepository.save(player);
     }
     @Override
-    public Page<Player> retrievePlayers(int pageNumber, int pageSize) {
+    public Page<PlayerDto> retrievePlayers(int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Club clubDb = clubRepository.findClubByUserEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         if(clubDb == null) throw new EntityNotFoundException("User is not authenticated.");
         Page<Player> playersPage = playerRepository.findPlayersByClubAndIsDeletedFalseOrderByInsertDateTimeAsc(clubDb,pageable);
-        return playersPage;
+        List<PlayerDto> playersDtos = playerRepository.findPlayersByClubAndIsDeletedFalseOrderByInsertDateTimeAsc(clubDb,pageable)
+                .stream().map(playerToPlayerDto).collect(Collectors.toList());
+        return PageableExecutionUtils.getPage(playersDtos, playersPage.getPageable(), playersPage::getTotalPages);
     }
     @Override
     public Player getPlayer(Long id) {
