@@ -1,9 +1,7 @@
 package com.football.dev.footballapp.controllers;
 import com.football.dev.footballapp.dto.ContractDto;
 import com.football.dev.footballapp.dto.InjuryDto;
-import com.football.dev.footballapp.dto.PageResponseDto;
 import com.football.dev.footballapp.services.ContractService;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
