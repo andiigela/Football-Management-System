@@ -34,5 +34,8 @@ export class ContractsListComponent implements OnInit {
     this.pageNumber = pageNumber;
     this.getContracts();
   }
+  public redirectToEditContract(contractId: number){
+    this.router.navigate([`/players/${this.currentPlayerId}/contracts/${contractId}/edit`])
+  }
 
 }

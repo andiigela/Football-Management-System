@@ -28,6 +28,7 @@ import {CreateInjuryComponent} from "./components/create-injury/create-injury.co
 import {InjuryEditComponent} from "./components/injury-edit/injury-edit.component";
 import {CreateContractComponent} from "./components/create-contract/create-contract.component";
 import {ContractsListComponent} from "./components/contracts-list/contracts-list.component";
+import {ContractEditComponent} from "./components/contract-edit/contract-edit.component";
 
 
 const routes : Routes = [
@@ -42,6 +43,7 @@ const routes : Routes = [
   {path: 'players/:id/injuries',component:InjuriesListComponent},
   {path: 'players/:id/contracts',component:ContractsListComponent},
   {path: 'players/:id/contracts/create',component:CreateContractComponent},
+  {path: 'players/:id/contracts/:contractId/edit',component:ContractEditComponent},
   {path: 'players',component:PlayersListComponent,canActivate: [AuthGuard2]},
   {path: 'create-player',component:CreatePlayerComponent},
   {path: 'players/edit/:id',component:PlayerEditComponent},
@@ -73,6 +75,7 @@ const routes : Routes = [
     CreateInjuryComponent,
     CreateContractComponent,
     ContractsListComponent,
+    ContractEditComponent,
     InjuryEditComponent
   ],
   imports: [
