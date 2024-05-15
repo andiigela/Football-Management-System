@@ -1,22 +1,28 @@
 package com.football.dev.footballapp.services;
 import com.football.dev.footballapp.dto.ContractDto;
-import com.football.dev.footballapp.dto.InjuryDto;
 import com.football.dev.footballapp.mapper.ContractDtoMapper;
 import com.football.dev.footballapp.models.Contract;
-import com.football.dev.footballapp.models.Injury;
 import com.football.dev.footballapp.models.Player;
 import com.football.dev.footballapp.repository.ContractRepository;
 import com.football.dev.footballapp.repository.PlayerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 @Service
 public class ContractServiceImpl implements ContractService {
     private final ContractRepository contractRepository;
     private final PlayerRepository playerRepository;
-    private final ContractDtoMapper contractDtoMapper;
-    public ContractServiceImpl(ContractRepository contractRepository,PlayerRepository playerRepository,ContractDtoMapper contractDtoMapper){
+    private final Function<Contract,ContractDto> contractDtoMapper;
+    public ContractServiceImpl(ContractRepository contractRepository,PlayerRepository playerRepository,Function<Contract,ContractDto> contractDtoMapper){
         this.contractRepository=contractRepository;
         this.playerRepository=playerRepository;
         this.contractDtoMapper=contractDtoMapper;
@@ -28,15 +34,14 @@ public class ContractServiceImpl implements ContractService {
         contractRepository.save(new Contract(contractDto.getStartDate(),contractDto.getEndDate(), contractDto.getSalary(),contractDto.getContractType(),playerDb));
     }
     @Override
-    public Page<InjuryDto> retrieveContracts(Long playerId, int pageNumber, int pageSize) {
-//        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-//        Page<Injury> injuryPage = contractRepository.findContractsByPlayerId(playerId, pageable);
-//        List<InjuryDto> injuryDtos = injuryPage.getContent()
-//                .stream()
-//                .map(injuryDtoMapper)
-//                .collect(Collectors.toList());
-//        return PageableExecutionUtils.getPage(injuryDtos, injuryPage.getPageable(), injuryPage::getTotalPages);
-        return null;
+    public Page<ContractDto> retrieveContracts(Long playerId, int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<Contract> contractPage = contractRepository.findContractsByPlayerId(playerId, pageable);
+        List<ContractDto> contractDtos = contractPage.getContent()
+                .stream()
+                .map(contractDtoMapper)
+                .collect(Collectors.toList());
+        return PageableExecutionUtils.getPage(contractDtos, contractPage.getPageable(), contractPage::getTotalPages);
     }
     @Override
     public ContractDto getContract(Long playerId, Long contractId) {

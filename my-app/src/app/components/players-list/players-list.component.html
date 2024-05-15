@@ -11,7 +11,8 @@
             <th scope="col">Foot</th>
             <th scope="col">Position</th>
             <th scope="col">Actions</th>
-            <th scope="col">Contracts</th>
+            <th scope="col">Contract Create</th>
+            <th scope="col">All Contracts</th>
             <th scope="col">Injuries</th>
         </tr>
         </thead>
@@ -35,6 +36,9 @@
             </td>
             <td>
               <button class="btn btn-primary" (click)="redirectToCreatePlayerContract(val.id)">Create Contract</button>
+            </td>
+            <td>
+              <button class="btn btn-info" (click)="redirectToCreatePlayerContract(val.id)">Show Contracts</button>
             </td>
             <td>
                 <button class="btn btn-secondary" (click)="redirectToPlayerInjuries(val.id)">Show Injuries</button>
