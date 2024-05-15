@@ -37,5 +37,9 @@ export class ContractsListComponent implements OnInit {
   public redirectToEditContract(contractId: number){
     this.router.navigate([`/players/${this.currentPlayerId}/contracts/${contractId}/edit`])
   }
-
+  deleteContract(contractId: number){
+    this.contractService.deleteContract(this.currentPlayerId,contractId).subscribe(()=>{
+      this.playerContractsList = this.playerContractsList.filter((contract:ContractDto) => contract.id != contractId)
+    });
+  }
 }

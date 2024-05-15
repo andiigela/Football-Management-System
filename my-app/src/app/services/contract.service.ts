@@ -3,7 +3,6 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {ContractDto} from "../common/contract-dto";
 import {PageResponseDto} from "../common/page-response-dto";
-import {InjuryDto} from "../common/injury-dto";
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +31,10 @@ export class ContractService {
   public editContract(playerId: number,contractDto: ContractDto): Observable<any>{
     let headers = this.getHeaders();
     return this.http.put(`${this.contractUrl}/${playerId}/edit/${contractDto.id}`,contractDto,{headers});
+  }
+  public deleteContract(playerId: number,contractId: number): Observable<any>{
+    let headers = this.getHeaders();
+    return this.http.delete(`${this.contractUrl}/${playerId}/delete/${contractId}`,{headers});
   }
 
 }
