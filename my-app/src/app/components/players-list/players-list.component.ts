@@ -62,4 +62,7 @@ export class PlayersListComponent implements OnInit{
   redirectToCreatePlayerContract(playerId: number){
     this.router.navigate([`/players/${playerId}/contracts/create`])
   }
+  redirectToPlayerContracts(playerId: number){
+    this.router.navigate([`/players/${playerId}/contracts`])
+  }
 }

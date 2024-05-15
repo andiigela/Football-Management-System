@@ -27,7 +27,6 @@ export class InjuriesListComponent implements OnInit {
   public getInjuries(){
     this.injuryService.retrieveInjuries(this.currentPlayerId,this.pageNumber-1,this.pageSize).subscribe((response)=>{
       this.playerInjuriesList = response.content;
-      console.log(response.content)
       this.totalElements = response.totalElements;
     })
   }
