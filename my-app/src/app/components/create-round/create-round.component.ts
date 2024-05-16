@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SeasonService } from '../../services/season.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RoundDto } from '../../common/round-dto';
+import {RoundsService} from "../../services/rounds.service";
 
 @Component({
   selector: 'app-create-round',
@@ -19,7 +20,8 @@ export class CreateRoundComponent implements OnInit {
   constructor(
       private seasonService: SeasonService,
       private route: ActivatedRoute,
-      private router: Router
+      private router: Router,
+      private roundService: RoundsService
   ) { }
 
   ngOnInit(): void {
@@ -29,7 +31,7 @@ export class CreateRoundComponent implements OnInit {
   }
 
   createRound(): void {
-    this.seasonService.createRoundsForSeason(this.seasonId, this.newRound).subscribe(
+    this.roundService.createRound(this.seasonId, this.newRound).subscribe(
         () => {
           console.log('Round created successfully');
           // Navigate back to the rounds page

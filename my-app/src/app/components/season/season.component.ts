@@ -40,7 +40,7 @@ export class SeasonComponent implements OnInit {
         this.router.navigate(['/league', this.leagueId, 'seasons', 'edit-season', id]);
     }
     deleteSeason(seasonId: number): void {
-        this.seasonService.deleteSeason(seasonId).subscribe(
+        this.seasonService.deleteSeason(this.leagueId,seasonId).subscribe(
             () => {
                 console.log('Season deleted successfully');
                 // Update seasons array to remove the deleted season

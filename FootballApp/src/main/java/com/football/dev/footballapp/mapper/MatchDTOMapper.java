@@ -18,8 +18,10 @@ public class MatchDTOMapper implements Function<Match, MatchDTO> {
                 match.getId(),
                 homeTeamDto,
                 awayTeamDto,
+//                match.getHomeTeamId(),
+//                match.getAwayTeamId(),
                 match.getMatchDate(),
-                match.getStadium(),
+//                match.getStadium(),
                 match.getResult(),
                 match.getHomeTeamScore(),
                 match.getAwayTeamScore()

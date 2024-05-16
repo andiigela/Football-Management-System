@@ -31,9 +31,10 @@ public class Round extends BaseEntity{
     @JsonIgnore
     private List<Match> matches= new ArrayList<>();
 
-    public Round(LocalDateTime start_date, LocalDateTime end_date){
+    public Round(LocalDateTime start_date, LocalDateTime end_date, Season season){
         this.start_date = start_date;
         this.end_date = end_date;
+        this.season = season;
     }
 
 }

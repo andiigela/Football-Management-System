@@ -19,20 +19,20 @@
         <th scope="col">Home Team Score</th>
         <th scope="col">Away Team Score</th>
         <th scope="col">Result</th>
-        <th scope="col">Actions</th>
+        <th scope="col" *ngIf="isCurrentSeason">Actions</th>
       </tr>
       </thead>
       <tbody>
       <tr *ngFor="let match of round.matches">
         <td>{{ match.id }}</td>
-        <td>{{ match.homeTeamId?.name }}</td>
-        <td>{{ match.awayTeamId?.name }}</td>
+        <td>{{ match.homeTeam.name}}</td>
+        <td>{{ match.awayTeam.name}}</td>
         <td>{{ match.matchDate | date: 'short' }}</td>
         <td>{{ match.homeTeamScore }}</td>
         <td>{{ match.awayTeamScore }}</td>
         <td>{{ match.result }}</td>
-        <td>
-          <button class="btn btn-primary" (click)="redirectToEditMatch(round.id, match.id)">Update</button> <!-- Add edit button -->
+        <td *ngIf="isCurrentSeason"> <!-- Add *ngIf directive here -->
+          <button class="btn btn-primary" (click)="redirectToEditMatch(round.id, match.id)">Update</button>
         </td>
       </tr>
       </tbody>

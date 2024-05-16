@@ -1,57 +1,46 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import {SeasonDto} from "../common/season-dto";
-import {ClubDto} from "../common/club-dto";
-import {MatchDto} from "../common/match-dto";
-import {RoundDto} from "../common/round-dto";
-
+import { SeasonDto } from "../common/season-dto";
+import { PageResponseDto } from "../common/page-response-dto";
 
 @Injectable({
   providedIn: 'root'
 })
 export class SeasonService {
   private baseUrl = 'http://localhost:8080/api/seasons';
+
+  constructor(private http: HttpClient) { }
+
   private getHeaders(): HttpHeaders {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${localStorage.getItem("accessToken")}`
-    })
+    });
     return headers;
   }
-  constructor(private http: HttpClient) { }
 
-  getAllSeasons(): Observable<SeasonDto[]> {
-    let headers = this.getHeaders();
-    return this.http.get<SeasonDto[]>(`${this.baseUrl}`, {headers});
-  }
-
-  getSeasonById(id: number): Observable<SeasonDto> {
-    let headers = this.getHeaders();
-    return this.http.get<SeasonDto>(`${this.baseUrl}/${id}`,{headers});
-  }
-
-  createSeason(leagueId: number, season: SeasonDto): Observable<void> {
-    let headers = this.getHeaders();
-    return this.http.post<void>(`${this.baseUrl}/save/${leagueId}`, season, {headers});
-  }
-
-  updateSeason(id: number, season: SeasonDto): Observable<void> {
-    let headers = this.getHeaders();
-    return this.http.put<void>(`${this.baseUrl}/update/${id}`, season, {headers});
-  }
-
-  deleteSeason(id: number): Observable<void> {
-    let headers = this.getHeaders();
-    return this.http.delete<void>(`${this.baseUrl}/delete/${id}`, {headers});
-  }
-
-  createRoundsForSeason(seasonId: number, roundDto: RoundDto): Observable<void> {
+  createSeason(leagueId: number, seasonDto: SeasonDto): Observable<any> {
     const headers = this.getHeaders();
-    return this.http.post<void>(`${this.baseUrl}/${seasonId}/rounds`, roundDto, { headers });
+    return this.http.post(`${this.baseUrl}/${leagueId}/create`, seasonDto, { headers: headers });
   }
 
-    getRoundsForSeason(seasonId: number): Observable<RoundDto[]> {
-        let headers = this.getHeaders();
-        return this.http.get<RoundDto[]>(`${this.baseUrl}/${seasonId}/rounds`, { headers });
-    }
+  getSeasons(leagueId: number, page: number = 0, size: number = 10): Observable<any> {
+    const headers = this.getHeaders();
+    return this.http.get(`${this.baseUrl}/${leagueId}/?page=${page}&size=${size}`, { headers: headers });
+  }
+
+  getSeason(leagueId: number, seasonId: number): Observable<SeasonDto> {
+    const headers = this.getHeaders();
+    return this.http.get<SeasonDto>(`${this.baseUrl}/${leagueId}/${seasonId}`, { headers: headers });
+  }
+
+  editSeason(leagueId: number, seasonId: number, seasonDto: SeasonDto): Observable<any> {
+    const headers = this.getHeaders();
+    return this.http.put(`${this.baseUrl}/${leagueId}/edit/${seasonId}`, seasonDto, { headers: headers });
+  }
+
+  deleteSeason(leagueId: number, seasonId: number): Observable<any> {
+    const headers = this.getHeaders();
+    return this.http.delete(`${this.baseUrl}/${leagueId}/delete/${seasonId}`, { headers: headers });
+  }
 }

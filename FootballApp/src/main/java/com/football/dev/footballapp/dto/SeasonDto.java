@@ -19,11 +19,13 @@ public class SeasonDto {
     private String name;
     private boolean currentSeason;
     private boolean isDeleted;
-    private LeagueDTO league;
+//    private LeagueDTO league;
 
-    public SeasonDto(String name, LeagueDTO league) {
+    public SeasonDto(Long id, String name, boolean currentSeason) {
+        this.id = id;
         this.name = name;
-        this.league = league;
+        this.currentSeason = currentSeason;
+//        this.league = league;
     }
 
 }

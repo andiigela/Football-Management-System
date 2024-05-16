@@ -15,10 +15,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class MatchDTO{
     private Long id;
-    private ClubDto homeTeamId;
-    private ClubDto awayTeamId;
+    private ClubDto homeTeam;
+    private ClubDto awayTeam;
     private LocalDateTime matchDate;
-    private Stadium stadium;
+//    private Stadium stadium;
     private String result;
     private Integer homeTeamScore;
     private Integer awayTeamScore;

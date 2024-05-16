@@ -17,22 +17,13 @@ public class SeasonDtoMapper implements Function<Season, SeasonDto> {
 
     @Override
     public SeasonDto apply(Season season) {
-        LeagueDTO leagueDTO = null;
-        if (season.getLeague() != null) {
-            leagueDTO = new LeagueDTO(
-                    season.getLeague().getId(),
-                    season.getLeague().getName(),
-                    season.getLeague().getStart_date(),
-                    season.getLeague().getEnd_date(),
-                    season.getLeague().getDescription()
-            );
-        }
         return new SeasonDto(
-                season.getId(),
+                 season.getId(),
                 season.getName(),
-                season.getCurrentSeason(),
-                season.getIsDeleted(),
-                leagueDTO);
+                season.getCurrentSeason());
+//                season.getCurrentSeason(),
+//                season.getIsDeleted(),
+                //season.getLeague());
     }
 }
 

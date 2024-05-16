@@ -12,6 +12,7 @@ import { MatchDto } from '../../common/match-dto';
 })
 export class EditSeasonComponent implements OnInit {
     seasonId!: number;
+    leagueId!: number;
     season!: SeasonDto;
     matches!: MatchDto[];
     selectedMatchIds: number[] = [];
@@ -24,34 +25,36 @@ export class EditSeasonComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        // Retrieve seasonId and leagueId from URL parameters
         this.seasonId = this.route.snapshot.params['id'];
+        this.leagueId = +this.route.snapshot.params['leagueId']; // Convert to number
+
+        // Fetch season details
         this.fetchSeasonDetails();
     }
+
     updateSeason(): void {
-        this.seasonService.updateSeason(this.seasonId, this.season).subscribe(
+        // Update season
+        this.seasonService.editSeason(this.leagueId, this.seasonId, this.season).subscribe(
             () => {
                 console.log('Season updated successfully');
                 this.router.navigate(['/league']);
             },
-            error => {
+            (error: any) => {
                 console.log('Error updating season:', error);
             }
         );
     }
 
-
-
-
     private fetchSeasonDetails(): void {
-        // Fetch season details again after making changes
-        this.seasonService.getSeasonById(this.seasonId).subscribe(
+        // Fetch season details
+        this.seasonService.getSeason(this.leagueId, this.seasonId).subscribe(
             (data: SeasonDto) => {
                 this.season = data;
             },
-            error => {
+            (error: any) => {
                 console.log('Error fetching season:', error);
             }
         );
     }
-
 }

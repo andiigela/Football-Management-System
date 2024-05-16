@@ -3,11 +3,11 @@
     <form (ngSubmit)="editMatch()" class="mt-4">
         <div class="form-group">
             <label for="homeTeam">Home Team:</label>
-            <input type="text" class="form-control" id="homeTeam" name="homeTeam" [value]="match.homeTeamId?.name" disabled>
+            <input type="text" class="form-control" id="homeTeam" name="homeTeam" [value]="match.homeTeam.name" disabled>
         </div>
         <div class="form-group">
             <label for="awayTeam">Away Team:</label>
-            <input type="text" class="form-control" id="awayTeam" name="awayTeam" [value]="match.awayTeamId?.name" disabled>
+            <input type="text" class="form-control" id="awayTeam" name="awayTeam" [value]="match.awayTeam.name" disabled>
         </div>
         <div class="form-group">
             <label for="matchDate">Match Date:</label>

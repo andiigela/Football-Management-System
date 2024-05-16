@@ -2,10 +2,7 @@ package com.football.dev.footballapp.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ser.Serializers;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,14 +14,13 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "matches")
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @Where(clause = "is_deleted=false")
 public class Match extends BaseEntity {
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Club homeTeamId;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Club awayTeamId;
     private LocalDateTime matchDate;
     @OneToOne
@@ -35,14 +31,15 @@ public class Match extends BaseEntity {
     @ManyToOne
     private Round round;
 
-
-    public Match(Club homeTeamId, Club awayTeamId, LocalDateTime matchDate, Stadium stadium, String result, Integer homeTeamScore, Integer awayTeamScore) {
+    public Match(Club homeTeamId, Club awayTeamId, LocalDateTime matchDate,
+                 String result, Integer homeTeamScore,
+                 Integer awayTeamScore, Round round) {
         this.homeTeamId = homeTeamId;
         this.awayTeamId = awayTeamId;
         this.matchDate = matchDate;
-        this.stadium = stadium;
         this.result = result;
         this.homeTeamScore = homeTeamScore;
         this.awayTeamScore = awayTeamScore;
+        this.round = round;
     }
 }

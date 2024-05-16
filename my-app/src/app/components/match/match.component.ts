@@ -13,27 +13,35 @@ export class MatchComponent implements OnInit {
     id!: number;
     match!: MatchDto;
     leagueId!: number;
+    roundId!: number;
     seasonId!: number;
 
     constructor(private route: ActivatedRoute, private router: Router, private matchService: MatchService) { }
 
-    ngOnInit(): void {
-        this.route.params.subscribe(params => {
-            this.id = +params['matchId'];
-            this.leagueId = +params['leagueId'];
-            this.seasonId = +params['seasonId'];
-            this.loadMatchDetails(this.id);
-        });
-    }
+  ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      this.id = +params['matchId'];
+      this.leagueId = +params['leagueId'];
+      this.seasonId = +params['seasonId'];
+      this.roundId = +params['roundId'];
+      this.loadMatchDetails(this.roundId, this.id);
+    });
+  }
 
-    loadMatchDetails(id: number): void {
-        this.matchService.getMatchById(id).subscribe(match => {
-            this.match = match;
-        });
-    }
 
-    editMatch(): void {
-        this.matchService.editMatch(this.id, this.match).subscribe(
+  loadMatchDetails(roundId: number, matchId: number): void {
+    this.matchService.getMatch(roundId, matchId).subscribe(
+      match => {
+        this.match = match;
+      },
+      error => {
+        console.error('Error fetching match:', error);
+      }
+    );
+  }
+
+  editMatch(): void {
+        this.matchService.editMatch(this.roundId, this.id, this.match).subscribe(
             () => {
                 console.log('Match updated successfully');
                 this.router.navigate(['/league', this.leagueId, 'seasons', this.seasonId, 'rounds']);
@@ -43,6 +51,7 @@ export class MatchComponent implements OnInit {
             }
         );
     }
+
 
     formatMatchDate(date: Date): string {
         const options: Intl.DateTimeFormatOptions = {

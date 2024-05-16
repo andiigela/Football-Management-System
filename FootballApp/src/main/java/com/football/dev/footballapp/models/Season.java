@@ -18,17 +18,16 @@ import java.util.List;
 @Setter
 public class Season extends BaseEntity{
     private String name;
-
     private Boolean currentSeason =false;
+
     @ManyToOne
     private League league;
-
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "season")
     private List<Round> rounds = new ArrayList<>();
 
-
-    public Season(String name){
+    public Season(String name, League league){
         this.name = name;
+        this.league = league;
     }
 
 }
