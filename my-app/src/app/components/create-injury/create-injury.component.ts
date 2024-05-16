@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {InjuryService} from "../../services/injury.service";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {InjuryStatus} from "../../enums/injury-status";
 import {PlayerDto} from "../../common/player-dto";
 import {InjuryDto} from "../../common/injury-dto";
 import {ActivatedRoute, Router} from "@angular/router";
+import {DateValidator} from "../../validators/date-validator";
 
 @Component({
   selector: 'app-create-injury',
@@ -19,9 +20,9 @@ export class CreateInjuryComponent implements OnInit{
               private router: Router,
               private activatedRoute: ActivatedRoute) {
     this.injuryForm = this.formBuilder.group({
-      injuryType: [''],
-      injuryDate: [''],
-      expectedRecoveryTime: [''],
+      injuryType: ['',[Validators.required]],
+      injuryDate: ['',[Validators.required,DateValidator.NotValidCreationDate]],
+      expectedRecoveryTime: ['',[Validators.required,DateValidator.NotValidExpectedRecoveryDate]],
       injuryStatus: ['ACTIVE'],
     })
   }
@@ -31,15 +32,19 @@ export class CreateInjuryComponent implements OnInit{
     })
   }
   createInjury(){
-    const formData = this.injuryForm.value;
-    const injuryDto = new InjuryDto(
-        formData.injuryType,
-        formData.injuryDate,
-        formData.expectedRecoveryTime,
-        formData.injuryStatus);
-    this.injuryService.createInjury(this.currentPlayerId,injuryDto).subscribe(()=>{
-      this.router.navigateByUrl(`/players/${this.currentPlayerId}/injuries`)
-    });
+    if(this.injuryForm.valid){
+      const formData = this.injuryForm.value;
+      const injuryDto = new InjuryDto(
+          formData.injuryType,
+          formData.injuryDate,
+          formData.expectedRecoveryTime,
+          formData.injuryStatus);
+      this.injuryService.createInjury(this.currentPlayerId,injuryDto).subscribe(()=>{
+        this.router.navigateByUrl(`/players/${this.currentPlayerId}/injuries`)
+      });
+    } else {
+      this.injuryForm.markAllAsTouched();
+    }
   }
 
 }

@@ -2,9 +2,10 @@ import {Component, OnInit} from '@angular/core';
 import {PlayerService} from "../../services/player.service";
 import {PlayerDto} from "../../common/player-dto";
 import {ActivatedRoute, Router} from "@angular/router";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Foot} from "../../enums/foot";
 import {FootballPosition} from "../../enums/football-position";
+import {ImageFileValidator} from "../../validators/image-file-validator";
 
 @Component({
   selector: 'app-player-edit',
@@ -20,12 +21,13 @@ export class PlayerEditComponent implements OnInit{
   constructor(private playerService: PlayerService,private route: ActivatedRoute,private formBuilder: FormBuilder,
               private router: Router) {
     this.editForm = this.formBuilder.group({
-      name: [''],
-      height: [''],
-      weight: [''],
-      shirtNumber: [''],
+      name: ['',[Validators.required,Validators.pattern('^[a-zA-Z]+$')]],
+      height: ['',[Validators.required]],
+      weight: ['',[Validators.required]],
+      shirtNumber: ['',[Validators.required]],
       preferred_foot: ['LEFT'],
       position: ['GOALKEEPER'],
+      file: [null,[ImageFileValidator.invalidImageType]]
     })
   }
   ngOnInit(): void {
@@ -35,14 +37,19 @@ export class PlayerEditComponent implements OnInit{
     })
   }
   updatePlayer(){
-    const formValue = this.editForm.value
-    let playerEditInfo = new PlayerDto(formValue.name, formValue.height, formValue.weight,
+    if(this.editForm.valid){
+      const formValue = this.editForm.value
+      let playerEditInfo = new PlayerDto(formValue.name, formValue.height, formValue.weight,
         formValue.shirtNumber, formValue.preferred_foot, "");
-    playerEditInfo.id = this.playerEdit.id;
-    this.playerService.updatePlayer(playerEditInfo,this.file)
+      playerEditInfo.id = this.playerEdit.id;
+      this.playerService.updatePlayer(playerEditInfo,this.file)
         .subscribe(()=>{
           this.router.navigate(["/players"])
         });
+    } else {
+      this.editForm.markAllAsTouched();
+    }
+
   }
   getPlayer(playerId: number){
     this.playerService.retrievePlayer(playerId).subscribe((player)=>{
