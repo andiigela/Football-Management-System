@@ -16,6 +16,7 @@ export class UsersComponent implements OnInit {
     pageNumber: number = 1;
     pageSize: number = 5;
     totalElements: number = 0;
+
     constructor(private http: HttpClient, private userService: UserService, private authService: AuthService) { }
 
     ngOnInit(): void {

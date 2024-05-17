@@ -3,7 +3,7 @@
   <table class="table">
     <thead>
     <tr>
-
+      <th scope="col">ID</th>
       <th scope="col">Email</th>
       <th scope="col">Status</th>
       <th scope="col">Actions</th>
@@ -11,6 +11,7 @@
     </thead>
     <tbody>
     <tr *ngFor="let user of users">
+      <td>{{ user.id }}</td>
       <td>{{ user.email }}</td>
       <td>{{ user.enabled ? 'Enabled' : 'Disabled' }}</td>
       <td>
@@ -26,9 +27,9 @@
 <div class="d-flex justify-content-center">
   <!-- Pagination -->
   <ngb-pagination
-    [collectionSize]="totalElements"
-    [(page)]="pageNumber"
-    [pageSize]="pageSize"
-    (pageChange)="onPageChange($event)">
+          [collectionSize]="totalElements"
+          [(page)]="pageNumber"
+          [pageSize]="pageSize"
+          (pageChange)="onPageChange($event)">
   </ngb-pagination>
 </div>

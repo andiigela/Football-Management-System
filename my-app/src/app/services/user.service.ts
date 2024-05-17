@@ -29,8 +29,8 @@ export class UserService {
         return this.http.get<PageResponseDto<UserDTO>>(`${this.apiUrl}?pageNumber=${pageNumber}&pageSize=${pageSize}`, { headers });
     }
 
-    updateUserStatus(userId: number, enabled: boolean): Observable<any> {
-        return this.http.put(`${this.apiUrl}/${userId}/status?enabled=${enabled}`, {});
+    updateUserStatus(userId: number, enabled: boolean): Observable<UserDTO> {
+        return this.http.put<UserDTO>(`${this.apiUrl}/${userId}/status?enabled=${enabled}`, {});
     }
 
     deleteUser(userId: number): Observable<void> {
