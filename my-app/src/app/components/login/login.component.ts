@@ -42,8 +42,7 @@ export class LoginComponent implements OnInit {
 
                     if (isEnabled) {
                         const role = payload.role;
-
-                        if (role === 'ADMIN' || role === 'USER') {
+                        if (role === 'ADMIN_LEAGUE' || role === 'ADMIN_CLUB') {
                             this.authService.setTokens(res.accessToken, res.refreshToken);
                             this.router.navigateByUrl("/dashboard");
                         } else {

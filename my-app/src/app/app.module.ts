@@ -9,8 +9,8 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import {AuthInterceptor} from "./services/auth.interceptor";
 import { LoginstatusComponent } from './components/loginstatus/loginstatus.component';
-import {AuthGuard} from "./services/auth.guard";
-import {AuthGuard2} from "./services/auth2.guard";
+import {AuthGuard} from "./guards/auth.guard";
+import {AuthGuard2} from "./guards/auth2.guard";
 import {RegisterComponent} from "./components/register/register.component";
 import {ProfileComponent} from "./components/profile/profile.component";
 import {UsersComponent} from "./components/users/users.component";
@@ -29,6 +29,7 @@ import {InjuryEditComponent} from "./components/injury-edit/injury-edit.componen
 import {CreateContractComponent} from "./components/create-contract/create-contract.component";
 import {ContractsListComponent} from "./components/contracts-list/contracts-list.component";
 import {ContractEditComponent} from "./components/contract-edit/contract-edit.component";
+import {SuperAdminGuard} from "./guards/super-admin.guard";
 
 
 const routes : Routes = [
@@ -47,10 +48,10 @@ const routes : Routes = [
   {path: 'players',component:PlayersListComponent,canActivate: [AuthGuard2]},
   {path: 'create-player',component:CreatePlayerComponent},
   {path: 'players/edit/:id',component:PlayerEditComponent},
-  // {path: 'league',component:LeagueComponent,canActivate:[AuthGuard2]},
-  // {path : 'match',component:MatchComponent,canActivate:[AuthGuard2]},
-  // {path: 'transfer',component:TransferComponent,canActivate:[AuthGuard2]},
-  // {path: 'update-league/:id', component:UpdateLeagueComponent },
+  {path: 'league',component:LeagueComponent,canActivate:[AuthGuard2,SuperAdminGuard]},
+  {path : 'match',component:MatchComponent,canActivate:[AuthGuard2,SuperAdminGuard]},
+  {path: 'transfer',component:TransferComponent,canActivate:[AuthGuard2,SuperAdminGuard]},
+  {path: 'update-league/:id', component:UpdateLeagueComponent ,canActivate:[SuperAdminGuard]},
 ]
 
 

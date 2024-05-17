@@ -28,7 +28,7 @@ public class InjuriesController {
     }
     @GetMapping("/{playerId}/")
     public ResponseEntity<PageResponseDto<InjuryDto>> getInjuries(@PathVariable("playerId") Long playerId,@RequestParam(defaultValue = "0") int page,
-                                                              @RequestParam(defaultValue = "10") int size) {
+                                                              @RequestParam int size) {
         Page<InjuryDto> injuryDtoPage = injuryService.retrieveInjuries(playerId,page,size);
         PageResponseDto<InjuryDto> responseDto = new PageResponseDto<>(
                 injuryDtoPage.getContent(),

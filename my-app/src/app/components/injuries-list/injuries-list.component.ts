@@ -13,7 +13,7 @@ import {InjuryService} from "../../services/injury.service";
 export class InjuriesListComponent implements OnInit {
   playerInjuriesList: InjuryDto[]=[];
   pageNumber: number = 1;
-  pageSize: number = 10;
+  pageSize: number = 5;
   totalElements: number = 0;
   currentPlayerId: number = 0;
   constructor(private injuryService: InjuryService,private router: Router,private activatedRoute: ActivatedRoute) {
@@ -28,6 +28,7 @@ export class InjuriesListComponent implements OnInit {
     this.injuryService.retrieveInjuries(this.currentPlayerId,this.pageNumber-1,this.pageSize).subscribe((response)=>{
       this.playerInjuriesList = response.content;
       this.totalElements = response.totalElements;
+      console.log(this.totalElements)
     })
   }
   OnPageChange(pageNumber: number){

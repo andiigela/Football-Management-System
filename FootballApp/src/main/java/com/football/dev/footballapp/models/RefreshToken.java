@@ -18,6 +18,7 @@ public class RefreshToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(length = 512)
     private String token;
     private Instant expiryDate;
     @OneToOne
