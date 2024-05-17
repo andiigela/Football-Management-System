@@ -28,18 +28,14 @@ public class SeasonController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     @GetMapping("/{leagueId}/")
-    public ResponseEntity<PageResponseDto<SeasonDto>> getSeasons(@PathVariable("leagueId") Long leagueId,
-                                                                 @RequestParam(defaultValue = "0") int page,
-                                                                 @RequestParam(defaultValue = "10") int size) {
-        Page<SeasonDto> seasonDtoPage = seasonService.retrieveSeasons(leagueId,page,size);
-        PageResponseDto<SeasonDto> responseDto = new PageResponseDto<>(
-                seasonDtoPage.getContent(),
-                seasonDtoPage.getNumber(),
-                seasonDtoPage.getSize(),
-                seasonDtoPage.getTotalElements()
-        );
-        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    public ResponseEntity<Page<SeasonDto>> getSeasons(@PathVariable("leagueId") Long leagueId,
+                                                                 @RequestParam(defaultValue = "0") int pageNumber,
+                                                                 @RequestParam(defaultValue = "2") int pageSize) {
+        Page<SeasonDto> seasonDtoPage = seasonService.retrieveSeasons(leagueId,pageNumber,pageSize);
+        return ResponseEntity.status(HttpStatus.OK).body(seasonDtoPage);
     }
+
+
     @GetMapping("/{leagueId}/{seasonId}")
     public ResponseEntity<SeasonDto> getSeason(@PathVariable("seasonId") Long seasonId,
                                                @PathVariable("leagueId") Long leagueId) {

@@ -11,6 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface SeasonRepository extends JpaRepository<Season, Long> {
-    Page<Season> findSeasonsByLeagueId(Long leagueId, Pageable pageable);
+    Page<Season> findSeasonsByLeagueIdAndIsDeletedFalseOrderByInsertDateTimeDesc(Long leagueId, Pageable pageable);
     Optional<Season> findByIdAndLeagueId(Long seasonId, Long leagueId);
 }

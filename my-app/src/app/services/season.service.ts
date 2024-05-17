@@ -24,9 +24,9 @@ export class SeasonService {
     return this.http.post(`${this.baseUrl}/${leagueId}/create`, seasonDto, { headers: headers });
   }
 
-  getSeasons(leagueId: number, page: number = 0, size: number = 10): Observable<any> {
+  getSeasons(leagueId: number, pageNumber: number, pageSize: number): Observable<PageResponseDto<SeasonDto>> {
     const headers = this.getHeaders();
-    return this.http.get(`${this.baseUrl}/${leagueId}/?page=${page}&size=${size}`, { headers: headers });
+    return this.http.get<PageResponseDto<SeasonDto>>(`${this.baseUrl}/${leagueId}/?pageNumber=${pageNumber}&pageSize=${pageSize}`, { headers: headers });
   }
 
   getSeason(leagueId: number, seasonId: number): Observable<SeasonDto> {

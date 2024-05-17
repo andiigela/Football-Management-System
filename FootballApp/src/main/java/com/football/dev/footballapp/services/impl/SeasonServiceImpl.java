@@ -52,14 +52,15 @@ public class SeasonServiceImpl implements SeasonService {
     }
     @Override
     public Page<SeasonDto> retrieveSeasons(Long leagueId, int pageNumber, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<Season> seasonPage = seasonRepository.findSeasonsByLeagueId(leagueId, pageable);
-        List<SeasonDto> seasonDtos = seasonPage.getContent()
-                .stream()
-//                .filter(season -> season.isDeleted = )
-                .map(seasonDtoMapper)
-                .collect(Collectors.toList());
-        return PageableExecutionUtils.getPage(seasonDtos, seasonPage.getPageable(), seasonPage::getTotalPages);
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+        Page<Season> seasonPage = seasonRepository.findSeasonsByLeagueIdAndIsDeletedFalseOrderByInsertDateTimeDesc(leagueId, pageRequest);
+        Page<SeasonDto> seasonDtos = seasonPage.map(seasonDtoMapper);
+//        List<SeasonDto> seasonDtos = seasonPage.getContent()
+//                .stream()
+//                  .filter(season -> season.isDeleted = )
+//                .map(seasonDtoMapper)
+//                .collect(Collectors.toList());
+        return seasonDtos;
     }
     @Override
     public SeasonDto getSeason(Long seasonId, Long leagueId) {
