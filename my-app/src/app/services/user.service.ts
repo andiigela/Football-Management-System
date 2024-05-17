@@ -4,6 +4,9 @@ import {Observable, throwError} from 'rxjs';
 import { User } from "../common/user";
 import {catchError} from "rxjs/operators";
 import {AuthService} from "./auth.service";
+import {PageResponseDto} from "../common/page-response-dto";
+import {RoundDto} from "../common/round-dto";
+import {UserDTO} from "../common/user-dto";
 
 @Injectable({
     providedIn: 'root'
@@ -21,9 +24,9 @@ export class UserService {
         return headers;
     }
 
-    getUsersWithUserRole(): Observable<User[]> {
+    getUsersWithUserRole(pageNumber: number, pageSize: number): Observable<PageResponseDto<UserDTO>> {
         const headers = this.getHeaders();
-        return this.http.get<User[]>(`${this.apiUrl}`, { headers });
+        return this.http.get<PageResponseDto<UserDTO>>(`${this.apiUrl}?pageNumber=${pageNumber}&pageSize=${pageSize}`, { headers });
     }
 
     updateUserStatus(userId: number, enabled: boolean): Observable<any> {

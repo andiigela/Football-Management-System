@@ -6,6 +6,7 @@ import com.football.dev.footballapp.models.UserEntity;
 import com.football.dev.footballapp.security.JWTGenerator;
 import com.football.dev.footballapp.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,8 +30,10 @@ public class UserController {
     }
     @GetMapping("users")
     @PreAuthorize("hasRole('ADMIN')")
-    public List<UserEntity> getUsersWithUserRole() {
-        return userService.getUsersByRoleAndIsDeleted("USER", false);
+    public ResponseEntity<Page<UserEntityDto>> getUsersWithUserRole(@RequestParam(defaultValue = "0") int pageNumber,
+                                                                 @RequestParam(defaultValue = "3") int pageSize) {
+        Page<UserEntityDto> userEntityDtoPage = userService.getUsersByRoleAndIsDeleted("USER", false, pageNumber, pageSize);
+        return ResponseEntity.status(HttpStatus.OK).body(userEntityDtoPage);
     }
 
     /*public List<UserEntity> getAllUsers(@RequestParam Long currentUserId) {

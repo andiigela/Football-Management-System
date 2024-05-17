@@ -46,9 +46,7 @@ public class UserEntity extends BaseEntity {
     @JsonIgnore
     private RefreshToken refreshToken;
     public UserEntity(String firstName, String lastName, String email, String phone, String country,
-                      Date birthDate, String address, String city,
-                      String postalCode, Gender gender) {
-
+                      Date birthDate, String address, String city, String postalCode, String gender) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -57,7 +55,14 @@ public class UserEntity extends BaseEntity {
         this.birthDate = birthDate;
         this.address = address;
         this.city = city;
-        postal_code = postalCode;
-        this.gender = gender;
+        this.postal_code = postalCode;
+        this.gender = getGenderFromString(gender);
+    }
+    public static Gender getGenderFromString(String gender) {
+        try {
+            return Gender.valueOf(gender.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 }
