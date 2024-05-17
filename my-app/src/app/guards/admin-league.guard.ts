@@ -11,15 +11,15 @@ import {Observable} from 'rxjs';
 import {AuthService} from "../services/auth.service";
 
 @Injectable()
-export class SuperAdminGuard implements CanActivate {
+export class AdminLeagueGuard implements CanActivate {
   constructor(private authService: AuthService,private router: Router) {
   }
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
     const role = this.authService.getRoleFromToken()
-    if(role == "USER"){
-      return this.router.parseUrl("/players")
+    if(role === "ADMIN_LEAGUE"){
+      return true;
     }
-    return true;
+    return this.router.parseUrl("/");
   }
 
 }
