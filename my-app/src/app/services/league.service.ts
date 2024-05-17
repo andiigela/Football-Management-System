@@ -4,6 +4,7 @@ import {environment} from "../../environments/environment";
 import {Observable} from "rxjs";
 import {LeagueDto} from "../common/league-dto";
 import {SeasonDto} from "../common/season-dto";
+import {PageResponseDto} from "../common/page-response-dto";
 
 @Injectable({
   providedIn: 'root'
@@ -11,9 +12,9 @@ import {SeasonDto} from "../common/season-dto";
 export class LeagueService {
   private leagueUrl = `${environment.api.baseUrl + environment.api.leagueUrl}`
   constructor(private http:HttpClient) { }
-  returnAllLeagues(): Observable<LeagueDto[]> {
+  returnAllLeagues(pageNumber: number, pageSize: number):Observable<PageResponseDto<LeagueDto>> {
     console.log(this.leagueUrl)
-    return this.http.get<LeagueDto[]>(`${this.leagueUrl}`);
+    return this.http.get<PageResponseDto<LeagueDto>>(`${this.leagueUrl}?pageNumber=${pageNumber}&pageSize=${pageSize}`);
   }
 
   createLeague(leagueDTO: LeagueDto): Observable<any> {

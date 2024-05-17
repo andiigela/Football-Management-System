@@ -11,6 +11,8 @@ import com.football.dev.footballapp.repository.LeagueRepository;
 import com.football.dev.footballapp.repository.SeasonRepository;
 import com.football.dev.footballapp.services.LeagueService;
 import com.football.dev.footballapp.services.SeasonService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -51,8 +53,11 @@ public class LeagueServiceImpl implements LeagueService {
     }
 
     @Override
-    public List<LeagueDTO> listAllLeagues() {
-        return leagueRepository.findAll().stream().map(leagueDTOMapper).collect(Collectors.toList());
+    public Page<LeagueDTO> listAllLeagues(int pageNumber, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+        Page<League> leaguePage = leagueRepository.findAll(pageRequest);
+        Page<LeagueDTO> leagueDtos = leaguePage.map(leagueDTOMapper);
+        return leagueDtos;
     }
 
     @Override

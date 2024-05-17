@@ -4,6 +4,7 @@ import com.football.dev.footballapp.dto.LeagueDTO;
 import com.football.dev.footballapp.dto.SeasonDto;
 import com.football.dev.footballapp.exceptions.ResourceNotFoundException;
 import com.football.dev.footballapp.services.LeagueService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +22,11 @@ public class LeagueController {
     }
 
     @GetMapping
-    public ResponseEntity<List<LeagueDTO>> returnAllLeagues(){
-        return ResponseEntity.ok(leagueService.listAllLeagues());
+    public ResponseEntity<Page<LeagueDTO>> returnAllLeagues(@RequestParam(defaultValue = "0") int pageNumber,
+                                                            @RequestParam(defaultValue = "2") int pageSize){
+        Page<LeagueDTO> leagueDtoPage = leagueService.listAllLeagues(pageNumber,pageSize);
+        return ResponseEntity.status(HttpStatus.OK).body(leagueDtoPage);
+
     }
     @PostMapping
     public void createLeague(@RequestBody LeagueDTO leagueDTO){
