@@ -62,16 +62,12 @@ public class RoundServiceImpl implements RoundService {
         }
     }
 
-
     @Override
     public Page<RoundDto> retrieveRounds(Long seasonId, int pageNumber, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<Round> roundPage = roundRepository.findRoundsBySeasonIdOrderByInsertDateTimeDesc(seasonId, pageable);
-        List<RoundDto> roundDtos = roundPage.getContent()
-                .stream()
-                .map(roundDtoMapper)
-                .collect(Collectors.toList());
-        return PageableExecutionUtils.getPage(roundDtos, roundPage.getPageable(), roundPage::getTotalPages);
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+        Page<Round> roundPage = roundRepository.findRoundsBySeasonIdOrderByInsertDateTimeDesc(seasonId, pageRequest);
+        Page<RoundDto> roundDtos = roundPage.map(roundDtoMapper);
+        return roundDtos;
     }
     @Override
     public RoundDto getRound(Long roundId,Long seasonId) {

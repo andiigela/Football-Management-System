@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { RoundDto } from '../common/round-dto';
+import {PageResponseDto} from "../common/page-response-dto";
 
 @Injectable({
   providedIn: 'root'
@@ -18,11 +19,12 @@ export class RoundsService {
   }
 
   // Get all rounds for a season with pagination
-  getRounds(seasonId: number, page: number = 0, size: number = 10): Observable<any> {
-    return this.http.get(`${this.baseUrl}/${seasonId}/?page=${page}&size=${size}`);
-  }
+    getRounds(seasonId: number, pageNumber: number, pageSize: number): Observable<PageResponseDto<RoundDto>> {
+        return this.http.get<PageResponseDto<RoundDto>>(`${this.baseUrl}/${seasonId}/?pageNumber=${pageNumber}&pageSize=${pageSize}`); // Adjust page number
+    }
 
-  // Get a round by its ID
+
+    // Get a round by its ID
   getRound(seasonId: number, roundId: number): Observable<any> {
     return this.http.get(`${this.baseUrl}/${seasonId}/${roundId}`);
   }

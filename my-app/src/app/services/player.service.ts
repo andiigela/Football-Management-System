@@ -23,9 +23,9 @@ export class PlayerService {
     formData.append('playerDto', JSON.stringify(playerDto)); // Convert playerDto to JSON string and append
     return this.http.post(`${this.playerUrl}/create`,formData,{headers});
   }
-  public retrievePlayers(pageNumber: number, pageSize: number): Observable<PageResponseDto>{
+  public retrievePlayers(pageNumber: number, pageSize: number): Observable<PageResponseDto<PlayerDto>>{
     let headers = this.getHeaders();
-    return this.http.get<PageResponseDto>(`${this.playerUrl}/?page=${pageNumber}&size=${pageSize}`,{headers});
+    return this.http.get<PageResponseDto<PlayerDto>>(`${this.playerUrl}/?page=${pageNumber}&size=${pageSize}`,{headers});
   }
   public retrievePlayer(id: number): Observable<PlayerDto>{
     let headers = this.getHeaders();

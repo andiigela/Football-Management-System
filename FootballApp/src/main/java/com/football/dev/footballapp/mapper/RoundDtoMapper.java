@@ -6,7 +6,9 @@ import com.football.dev.footballapp.models.Match;
 import com.football.dev.footballapp.models.Round;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 public class RoundDtoMapper implements Function<Round, RoundDto> {
@@ -16,6 +18,10 @@ public class RoundDtoMapper implements Function<Round, RoundDto> {
     }
     @Override
     public RoundDto apply(Round round) {
-        return new RoundDto(round.getId(),round.getStart_date(), round.getEnd_date(), round.getMatches(), matchDtoMapper);
+        List<MatchDTO> matchDTOs = round.getMatches().stream()
+                .map(matchDtoMapper)
+                .collect(Collectors.toList());
+
+        return new RoundDto(round.getId(), round.getStart_date(), round.getEnd_date(), matchDTOs);
     }
 }

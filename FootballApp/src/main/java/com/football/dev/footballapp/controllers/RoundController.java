@@ -29,16 +29,16 @@ public class RoundController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     @GetMapping("/{seasonId}/")
-    public ResponseEntity<PageResponseDto<RoundDto>> getInjuries(@PathVariable("seasonId") Long seasonId, @RequestParam(defaultValue = "0") int page,
-                                                                 @RequestParam(defaultValue = "10") int size) {
-        Page<RoundDto> roundDtoPage = roundService.retrieveRounds(seasonId,page,size);
-        PageResponseDto<RoundDto> responseDto = new PageResponseDto<>(
-                roundDtoPage.getContent(),
-                roundDtoPage.getNumber(),
-                roundDtoPage.getSize(),
-                roundDtoPage.getTotalElements()
-        );
-        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    public ResponseEntity<Page<RoundDto>> getRounds(@PathVariable("seasonId") Long seasonId, @RequestParam(defaultValue = "0") int pageNumber,
+                                                                 @RequestParam(defaultValue = "3") int pageSize) {
+        Page<RoundDto> roundDtoPage = roundService.retrieveRounds(seasonId,pageNumber,pageSize);
+//        PageResponseDto<RoundDto> responseDto = new PageResponseDto<>(
+//                roundDtoPage.getContent(),
+//                roundDtoPage.getNumber(),
+//                roundDtoPage.getSize(),
+//                roundDtoPage.getTotalElements()
+//        );
+        return ResponseEntity.status(HttpStatus.OK).body(roundDtoPage);
     }
     @GetMapping("/{seasonId}/{roundId}")
     public ResponseEntity<RoundDto> getRound(@PathVariable("seasonId") Long seasonId,@PathVariable("roundId") Long roundId) {

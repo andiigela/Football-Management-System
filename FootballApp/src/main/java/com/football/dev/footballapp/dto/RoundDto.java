@@ -1,39 +1,28 @@
 package com.football.dev.footballapp.dto;
 
-
-import com.football.dev.footballapp.models.Match;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
-//@AllArgsConstructor
-@NoArgsConstructor
 public class RoundDto {
     private Long id;
     private LocalDateTime start_date;
     private LocalDateTime end_date;
     private List<MatchDTO> matches;
-    private Function<Match, MatchDTO> matchDtoMapper;
 
-    public RoundDto(Long id, LocalDateTime start_date,
-                    LocalDateTime end_date, List<Match> matches,
-                    Function<Match, MatchDTO> matchDtoMapper) {
+    // Constructors
+    public RoundDto() {}
+
+    public RoundDto(Long id, LocalDateTime start_date, LocalDateTime end_date, List<MatchDTO> matches) {
         this.id = id;
         this.start_date = start_date;
         this.end_date = end_date;
-        this.matches = this.convertMatches(matches, matchDtoMapper);
+        this.matches = matches;
     }
 
-    private List<MatchDTO> convertMatches(List<Match> matches, Function<Match,MatchDTO> matchDtoMapper){
-        if(matches == null) return null;
-        return matches.stream().map(matchDtoMapper).collect(Collectors.toList());
-    }
+    // Getters and setters (omitted for brevity)
 }

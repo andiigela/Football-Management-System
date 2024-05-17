@@ -48,7 +48,6 @@ public class SeasonServiceImpl implements SeasonService {
         if(seasonDto == null) throw new IllegalArgumentException("seasonDto cannot be null");
         League leagueDb = leagueRepository.findById(leagueId).orElseThrow(() -> new EntityNotFoundException("League not found with id: " + leagueId));
         Season season = new Season(seasonDto.getName(), leagueDb);
-
         seasonRepository.save(season);
     }
     @Override
@@ -57,6 +56,7 @@ public class SeasonServiceImpl implements SeasonService {
         Page<Season> seasonPage = seasonRepository.findSeasonsByLeagueId(leagueId, pageable);
         List<SeasonDto> seasonDtos = seasonPage.getContent()
                 .stream()
+//                .filter(season -> season.isDeleted = )
                 .map(seasonDtoMapper)
                 .collect(Collectors.toList());
         return PageableExecutionUtils.getPage(seasonDtos, seasonPage.getPageable(), seasonPage::getTotalPages);
