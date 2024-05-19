@@ -3,23 +3,41 @@
       <div class="form-group">
         <img [src]="playerEdit.imagePath" width="100" height="100"/>
         <br>
-        <input type="file" name="file" (change)="onFileSelected($event)" />
+        <input type="file" name="file" (change)="onFileSelected($event)" formControlName="file" />
+        <div *ngIf="(editForm.get('file')?.errors?.['invalidImageType'])" class="text-danger">
+          Only image files (jpg, jpeg, png, gif) are allowed.
+        </div>
       </div>
         <div class="form-group">
             <label for="name">Name</label>
             <input type="text" class="form-control" formControlName="name" id="name" placeholder="Enter name">
+            <div *ngIf="(editForm.get('name')?.invalid) && (editForm.get('name')?.touched) && (editForm.get('name')?.errors?.['required'])" class="text-danger">
+              Name is required
+            </div>
+            <div *ngIf="editForm.get('name')?.errors?.['pattern']" class="text-danger">
+              Name should contain only letters.
+            </div>
         </div>
         <div class="form-group">
             <label for="height">Height</label>
             <input type="number" class="form-control" formControlName="height" id="height" placeholder="Enter height">
+            <div *ngIf="(editForm.get('height')?.invalid) && (editForm.get('height')?.touched) && (editForm.get('height')?.errors?.['required'])" class="text-danger">
+              Height is required
+            </div>
         </div>
         <div class="form-group">
             <label for="weight">Weight</label>
             <input type="number" class="form-control" formControlName="weight" id="weight" placeholder="Enter weight">
+            <div *ngIf="(editForm.get('weight')?.invalid) && (editForm.get('weight')?.touched) && (editForm.get('weight')?.errors?.['required'])" class="text-danger">
+              Weight is required
+            </div>
         </div>
         <div class="form-group">
             <label for="shirtNumber">Shirt Number</label>
             <input type="number" class="form-control" formControlName="shirtNumber" id="shirtNumber" placeholder="Enter shirt number">
+            <div *ngIf="(editForm.get('shirtNumber')?.invalid) && (editForm.get('shirtNumber')?.touched) && (editForm.get('shirtNumber')?.errors?.['required'])" class="text-danger">
+              Shirt number is required
+            </div>
         </div>
         <div class="form-group">
             <label for="preferred_foot">Preferred Foot</label>

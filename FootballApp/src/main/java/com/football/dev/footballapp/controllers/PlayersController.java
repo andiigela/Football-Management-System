@@ -20,11 +20,9 @@ import java.io.IOException;
 @CrossOrigin("http://localhost:4200")
 public class PlayersController {
     private final PlayerService playerService;
-    private final FileUploadService fileUploadService;
     private final ObjectMapper objectMapper;
-    public PlayersController(PlayerService playerService,ObjectMapper objectMapper,FileUploadService fileUploadService) {
+    public PlayersController(PlayerService playerService,ObjectMapper objectMapper) {
         this.playerService = playerService;
-        this.fileUploadService=fileUploadService;
         this.objectMapper=objectMapper;
     }
 
@@ -40,14 +38,14 @@ public class PlayersController {
         }
     }
     @GetMapping("/")
-    public ResponseEntity<PageResponseDto<Player>> getPlayers(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<PageResponseDto<PlayerDto>> getPlayers(@RequestParam(defaultValue = "0") int page,
                                                               @RequestParam(defaultValue = "10") int size) {
-        Page<Player> playersPage = playerService.retrievePlayers(page,size);
-        PageResponseDto<Player> responseDto = new PageResponseDto<>(
-                playersPage.getContent(),
-                playersPage.getNumber(),
-                playersPage.getSize(),
-                playersPage.getTotalElements()
+        Page<PlayerDto> playersDtoPage = playerService.retrievePlayers(page,size);
+        PageResponseDto<PlayerDto> responseDto = new PageResponseDto<>(
+                playersDtoPage.getContent(),
+                playersDtoPage.getNumber(),
+                playersDtoPage.getSize(),
+                playersDtoPage.getTotalElements()
         );
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }

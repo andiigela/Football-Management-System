@@ -1,0 +1,38 @@
+<div class="container">
+    <form (ngSubmit)="editContract()" [formGroup]="editContractForm">
+        <div class="form-group">
+            <label for="startDate">Contract Start Date</label><br>
+            <input type="date" class="form-control" id="startDate" formControlName="startDate">
+            <div *ngIf="(editContractForm.get('startDate')?.invalid) && (editContractForm.get('startDate')?.touched) && (editContractForm.get('startDate')?.errors?.['required'])" class="text-danger">
+                Start date is required!
+            </div>
+            <div *ngIf="(editContractForm.get('startDate')?.errors?.['NotValidCreationDate'])" class="text-danger">
+                Your start year is older than last year or incorrect year!
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="endDate">Contract End Date</label><br>
+            <input type="date" class="form-control" id="endDate" formControlName="endDate">
+            <div *ngIf="(editContractForm.get('endDate')?.invalid) && (editContractForm.get('endDate')?.touched) && (editContractForm.get('endDate')?.errors?.['required'])" class="text-danger">
+                End date is required!
+            </div>
+            <div *ngIf="(editContractForm.get('endDate')?.errors?.['NotValidExpectedRecoveryDate'])" class="text-danger">
+                Not valid end date, recovery date must not be in the past or incorrect year!
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="salary">Salary</label>
+            <input type="number" class="form-control" formControlName="salary" id="salary" placeholder="Enter Salary">
+            <div *ngIf="(editContractForm.get('salary')?.invalid) && (editContractForm.get('salary')?.touched) && (editContractForm.get('salary')?.errors?.['required'])" class="text-danger">
+                Salary is required!
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="contractType">Contract Type</label>
+            <select class="form-control" id="contractType" formControlName="contractType">
+                <option *ngFor="let contractType of contractTypeList" [value]="contractType">{{ contractType }}</option>
+            </select>
+        </div>
+        <button type="submit" style="margin-top: 10px;" class="btn btn-primary">Edit Contract</button>
+    </form>
+</div>
