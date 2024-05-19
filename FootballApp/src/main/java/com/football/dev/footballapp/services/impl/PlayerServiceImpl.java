@@ -1,7 +1,11 @@
 package com.football.dev.footballapp.services.impl;
 import com.football.dev.footballapp.dto.PlayerDto;
+import com.football.dev.footballapp.dto.RoundDto;
+import com.football.dev.footballapp.mapper.PlayerToDTOMapper;
+import com.football.dev.footballapp.mapper.SeasonDtoMapper;
 import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.Player;
+import com.football.dev.footballapp.models.Round;
 import com.football.dev.footballapp.models.enums.Foot;
 import com.football.dev.footballapp.repository.ClubRepository;
 import com.football.dev.footballapp.repository.PlayerRepository;
@@ -25,12 +29,15 @@ public class PlayerServiceImpl implements PlayerService {
     private final ClubRepository clubRepository;
     private final FileUploadService fileUploadService;
     private final Function<PlayerDto, Player> playerDtoToPlayer;
+    private final PlayerToDTOMapper playerDtoMapper;
+
     public PlayerServiceImpl(PlayerRepository playerRepository,Function<PlayerDto, Player> playerDtoToPlayer,
-                             ClubRepository clubRepository,FileUploadService fileUploadService){
+                             ClubRepository clubRepository,FileUploadService fileUploadService, PlayerToDTOMapper playerDtoMapper){
         this.playerRepository=playerRepository;
         this.playerDtoToPlayer=playerDtoToPlayer;
         this.clubRepository=clubRepository;
         this.fileUploadService=fileUploadService;
+        this.playerDtoMapper = playerDtoMapper;
     }
     @Override
     public void savePlayer(PlayerDto playerDto, MultipartFile file){
@@ -44,13 +51,15 @@ public class PlayerServiceImpl implements PlayerService {
         player.setClub(clubDb);
         playerRepository.save(player);
     }
+
     @Override
-    public Page<Player> retrievePlayers(int pageNumber, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+    public Page<PlayerDto> retrievePlayers(int pageNumber, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
         Club clubDb = clubRepository.findClubByUserEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         if(clubDb == null) throw new EntityNotFoundException("User is not authenticated.");
-        Page<Player> playersPage = playerRepository.findPlayersByClubAndIsDeletedFalseOrderByInsertDateTimeAsc(clubDb,pageable);
-        return playersPage;
+        Page<Player> playersPage = playerRepository.findPlayersByClubAndIsDeletedFalseOrderByInsertDateTimeAsc(clubDb,pageRequest);
+        Page<PlayerDto> playerDtos = playersPage.map(playerDtoMapper);
+        return playerDtos;
     }
     @Override
     public Player getPlayer(Long id) {

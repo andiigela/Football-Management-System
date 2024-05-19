@@ -3,6 +3,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.football.dev.footballapp.dto.PageResponseDto;
 import com.football.dev.footballapp.dto.PlayerDto;
+import com.football.dev.footballapp.dto.SeasonDto;
 import com.football.dev.footballapp.models.Player;
 import com.football.dev.footballapp.services.FileUploadService;
 import com.football.dev.footballapp.services.PlayerService;
@@ -40,17 +41,12 @@ public class PlayersController {
         }
     }
     @GetMapping("/")
-    public ResponseEntity<PageResponseDto<Player>> getPlayers(@RequestParam(defaultValue = "0") int page,
-                                                              @RequestParam(defaultValue = "10") int size) {
-        Page<Player> playersPage = playerService.retrievePlayers(page,size);
-        PageResponseDto<Player> responseDto = new PageResponseDto<>(
-                playersPage.getContent(),
-                playersPage.getNumber(),
-                playersPage.getSize(),
-                playersPage.getTotalElements()
-        );
-        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    public ResponseEntity<Page<PlayerDto>> getPlayers(@RequestParam(defaultValue = "0") int pageNumber,
+                                                              @RequestParam(defaultValue = "10") int pageSize) {
+        Page<PlayerDto> playerDtoPage = playerService.retrievePlayers(pageNumber,pageSize);
+        return ResponseEntity.status(HttpStatus.OK).body(playerDtoPage);
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<Player> getPlayer(@PathVariable("id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(playerService.getPlayer(id));

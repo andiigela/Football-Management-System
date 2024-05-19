@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface PlayerService {
     void savePlayer(PlayerDto playerDto, MultipartFile file);
-    Page<Player> retrievePlayers(int pageNumber, int pageSize);
+    Page<PlayerDto> retrievePlayers(int pageNumber, int pageSize);
     Player getPlayer(Long id);
     void updatePlayer(PlayerDto playerDto, Long id, MultipartFile file);
     void deletePlayer(Long id);
