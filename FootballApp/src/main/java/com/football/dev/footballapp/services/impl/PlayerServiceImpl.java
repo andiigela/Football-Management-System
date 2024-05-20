@@ -1,7 +1,6 @@
 package com.football.dev.footballapp.services.impl;
 import com.football.dev.footballapp.dto.PlayerDto;
 import com.football.dev.footballapp.dto.RoundDto;
-import com.football.dev.footballapp.mapper.PlayerToDTOMapper;
 import com.football.dev.footballapp.mapper.SeasonDtoMapper;
 import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.Player;
@@ -32,26 +31,18 @@ public class PlayerServiceImpl implements PlayerService {
     private final ClubRepository clubRepository;
     private final FileUploadService fileUploadService;
     private final Function<PlayerDto, Player> playerDtoToPlayer;
-<<<<<<< HEAD:FootballApp/src/main/java/com/football/dev/footballapp/services/impl/PlayerServiceImpl.java
-    private final PlayerToDTOMapper playerDtoMapper;
-
-    public PlayerServiceImpl(PlayerRepository playerRepository,Function<PlayerDto, Player> playerDtoToPlayer,
-                             ClubRepository clubRepository,FileUploadService fileUploadService, PlayerToDTOMapper playerDtoMapper){
-=======
     private final Function<Player, PlayerDto> playerToPlayerDto;
+
+
     public PlayerServiceImpl(PlayerRepository playerRepository,Function<PlayerDto, Player> playerDtoToPlayer,
                              ClubRepository clubRepository,FileUploadService fileUploadService,
                              Function<Player, PlayerDto> playerToPlayerDto){
->>>>>>> main:FootballApp/src/main/java/com/football/dev/footballapp/services/PlayerServiceImpl.java
         this.playerRepository=playerRepository;
         this.playerDtoToPlayer=playerDtoToPlayer;
         this.clubRepository=clubRepository;
         this.fileUploadService=fileUploadService;
-<<<<<<< HEAD:FootballApp/src/main/java/com/football/dev/footballapp/services/impl/PlayerServiceImpl.java
-        this.playerDtoMapper = playerDtoMapper;
-=======
         this.playerToPlayerDto=playerToPlayerDto;
->>>>>>> main:FootballApp/src/main/java/com/football/dev/footballapp/services/PlayerServiceImpl.java
+
     }
     @Override
     public void savePlayer(PlayerDto playerDto, MultipartFile file){
@@ -68,22 +59,12 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public Page<PlayerDto> retrievePlayers(int pageNumber, int pageSize) {
-<<<<<<< HEAD:FootballApp/src/main/java/com/football/dev/footballapp/services/impl/PlayerServiceImpl.java
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
         Club clubDb = clubRepository.findClubByUserEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         if(clubDb == null) throw new EntityNotFoundException("User is not authenticated.");
         Page<Player> playersPage = playerRepository.findPlayersByClubAndIsDeletedFalseOrderByInsertDateTimeAsc(clubDb,pageRequest);
-        Page<PlayerDto> playerDtos = playersPage.map(playerDtoMapper);
+        Page<PlayerDto> playerDtos = playersPage.map(playerToPlayerDto);
         return playerDtos;
-=======
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Club clubDb = clubRepository.findClubByUserEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-        if(clubDb == null) throw new EntityNotFoundException("User is not authenticated.");
-        Page<Player> playersPage = playerRepository.findPlayersByClubAndIsDeletedFalseOrderByInsertDateTimeAsc(clubDb,pageable);
-        List<PlayerDto> playersDtos = playerRepository.findPlayersByClubAndIsDeletedFalseOrderByInsertDateTimeAsc(clubDb,pageable)
-                .stream().map(playerToPlayerDto).collect(Collectors.toList());
-        return PageableExecutionUtils.getPage(playersDtos, playersPage.getPageable(), playersPage::getTotalPages);
->>>>>>> main:FootballApp/src/main/java/com/football/dev/footballapp/services/PlayerServiceImpl.java
     }
     @Override
     public Player getPlayer(Long id) {

@@ -29,10 +29,10 @@ public class UserController {
         this.objectMapper=objectMapper;
     }
     @GetMapping("users")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN_LEAGUE')")
     public ResponseEntity<Page<UserEntityDto>> getUsersWithUserRole(@RequestParam(defaultValue = "0") int pageNumber,
                                                                  @RequestParam(defaultValue = "3") int pageSize) {
-        Page<UserEntityDto> userEntityDtoPage = userService.getUsersByRoleAndIsDeleted("USER", false, pageNumber, pageSize);
+        Page<UserEntityDto> userEntityDtoPage = userService.getUsersByRoleAndIsDeleted("ADMIN_CLUB", false, pageNumber, pageSize);
         return ResponseEntity.status(HttpStatus.OK).body(userEntityDtoPage);
     }
 

@@ -39,23 +39,10 @@ public class PlayersController {
         }
     }
     @GetMapping("/")
-<<<<<<< HEAD
     public ResponseEntity<Page<PlayerDto>> getPlayers(@RequestParam(defaultValue = "0") int pageNumber,
                                                               @RequestParam(defaultValue = "10") int pageSize) {
-        Page<PlayerDto> playerDtoPage = playerService.retrievePlayers(pageNumber,pageSize);
+        Page<PlayerDto> playerDtoPage = playerService.retrievePlayers(pageNumber, pageSize);
         return ResponseEntity.status(HttpStatus.OK).body(playerDtoPage);
-=======
-    public ResponseEntity<PageResponseDto<PlayerDto>> getPlayers(@RequestParam(defaultValue = "0") int page,
-                                                              @RequestParam(defaultValue = "10") int size) {
-        Page<PlayerDto> playersDtoPage = playerService.retrievePlayers(page,size);
-        PageResponseDto<PlayerDto> responseDto = new PageResponseDto<>(
-                playersDtoPage.getContent(),
-                playersDtoPage.getNumber(),
-                playersDtoPage.getSize(),
-                playersDtoPage.getTotalElements()
-        );
-        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
->>>>>>> main
     }
 
     @GetMapping("/{id}")
