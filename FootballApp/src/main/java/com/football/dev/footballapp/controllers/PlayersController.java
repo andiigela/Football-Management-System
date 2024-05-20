@@ -6,21 +6,29 @@ import com.football.dev.footballapp.dto.PlayerDto;
 import com.football.dev.footballapp.models.Player;
 import com.football.dev.footballapp.services.FileUploadService;
 import com.football.dev.footballapp.services.PlayerService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.DataInput;
 import java.io.IOException;
+import java.util.Collection;
 
 @RestController
 @RequestMapping("/api/players")
 @CrossOrigin("http://localhost:4200")
+@Slf4j
 public class PlayersController {
     private final PlayerService playerService;
     private final ObjectMapper objectMapper;
+
     public PlayersController(PlayerService playerService,ObjectMapper objectMapper) {
         this.playerService = playerService;
         this.objectMapper=objectMapper;
@@ -41,6 +49,9 @@ public class PlayersController {
     public ResponseEntity<PageResponseDto<PlayerDto>> getPlayers(@RequestParam(defaultValue = "0") int page,
                                                               @RequestParam(defaultValue = "10") int size) {
         Page<PlayerDto> playersDtoPage = playerService.retrievePlayers(page,size);
+        Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        boolean isAdmin = authorities.stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN_CLUB"));
+        log.info("is admin league: " + isAdmin);
         PageResponseDto<PlayerDto> responseDto = new PageResponseDto<>(
                 playersDtoPage.getContent(),
                 playersDtoPage.getNumber(),

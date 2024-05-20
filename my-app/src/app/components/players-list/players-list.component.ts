@@ -1,8 +1,8 @@
-import {Component, Injectable, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {PlayerService} from "../../services/player.service";
 import {PlayerDto} from "../../common/player-dto";
 import {Router} from "@angular/router";
-import {PlayerResponseDto} from "../../common/player-response-dto";
+import {WebSocketService} from "../../services/web-socket.service";
 @Component({
   selector: 'app-players-list',
   templateUrl: './players-list.component.html',
@@ -13,16 +13,15 @@ export class PlayersListComponent implements OnInit{
   pageNumber: number = 1;
   pageSize: number = 10;
   totalElements: number = 0;
-
   constructor(private playerService: PlayerService,private router: Router) {
   }
   ngOnInit(): void {
     this.getPlayers();
   }
+
   public getPlayers(){
     this.playerService.retrievePlayers(this.pageNumber-1,this.pageSize).subscribe((response)=>{
       this.playersList = response.content;
-      console.log(this.playersList)
       this.totalElements = response.totalElements;
       this.updatePlayerList(this.playersList) // this.playersList, sepse kemi inicializu 2 rreshta me larte.
     })
@@ -37,7 +36,8 @@ export class PlayersListComponent implements OnInit{
   deletePlayer(id: number){
     this.playerService.deletePlayer(id)
         .subscribe(()=> {
-          this.playersList = this.playersList.filter(player => player.id != id)
+          this.playersList = this.playersList.filter(player => player.id != id);
+
         })
   }
   updatePlayerList(playersList: PlayerDto[]){

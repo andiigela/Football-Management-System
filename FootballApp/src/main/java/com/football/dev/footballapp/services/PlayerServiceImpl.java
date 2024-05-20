@@ -3,15 +3,14 @@ import com.football.dev.footballapp.dto.PlayerDto;
 import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.Player;
 import com.football.dev.footballapp.models.enums.Foot;
-import com.football.dev.footballapp.repository.ClubRepository;
-import com.football.dev.footballapp.repository.PlayerRepository;
+import com.football.dev.footballapp.repository.jparepository.ClubRepository;
+import com.football.dev.footballapp.repository.jparepository.PlayerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,14 +26,17 @@ public class PlayerServiceImpl implements PlayerService {
     private final FileUploadService fileUploadService;
     private final Function<PlayerDto, Player> playerDtoToPlayer;
     private final Function<Player, PlayerDto> playerToPlayerDto;
+    private final SimpMessagingTemplate simpMessagingTemplate;
+
     public PlayerServiceImpl(PlayerRepository playerRepository,Function<PlayerDto, Player> playerDtoToPlayer,
                              ClubRepository clubRepository,FileUploadService fileUploadService,
-                             Function<Player, PlayerDto> playerToPlayerDto){
+                             Function<Player, PlayerDto> playerToPlayerDto,SimpMessagingTemplate simpMessagingTemplate){
         this.playerRepository=playerRepository;
         this.playerDtoToPlayer=playerDtoToPlayer;
         this.clubRepository=clubRepository;
         this.fileUploadService=fileUploadService;
         this.playerToPlayerDto=playerToPlayerDto;
+        this.simpMessagingTemplate=simpMessagingTemplate;
     }
     @Override
     public void savePlayer(PlayerDto playerDto, MultipartFile file){
@@ -89,9 +91,9 @@ public class PlayerServiceImpl implements PlayerService {
         }
         playerRepository.save(playerDb);
     }
-
     @Override
     public void deletePlayer(Long id) {
+        simpMessagingTemplate.convertAndSend("/topic/playerDeleted",new String("Test 123"));
         Player playerDb = this.getPlayer(id);
         if(playerDb == null) throw new EntityNotFoundException("Player not found with specified id: " + id);
         playerDb.isDeleted = true;
