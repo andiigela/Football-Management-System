@@ -1,12 +1,10 @@
 package com.football.dev.footballapp.services.impl;
 
 import com.football.dev.footballapp.dto.LeagueDTO;
-import com.football.dev.footballapp.exceptions.ResourceNotFoundException;
 import com.football.dev.footballapp.mapper.LeagueDTOMapper;
 import com.football.dev.footballapp.models.League;
-import com.football.dev.footballapp.repository.LeagueRepository;
+import com.football.dev.footballapp.repository.jparepository.LeagueRepository;
 import com.football.dev.footballapp.services.LeagueService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

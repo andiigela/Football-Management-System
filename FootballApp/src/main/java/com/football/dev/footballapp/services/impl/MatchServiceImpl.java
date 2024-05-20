@@ -3,7 +3,7 @@ package com.football.dev.footballapp.services.impl;
 import com.football.dev.footballapp.dto.MatchDTO;
 import com.football.dev.footballapp.mapper.MatchDTOMapper;
 import com.football.dev.footballapp.models.Match;
-import com.football.dev.footballapp.repository.MatchRepository;
+import com.football.dev.footballapp.repository.jparepository.MatchRepository;
 import com.football.dev.footballapp.services.MatchService;
 import org.springframework.stereotype.Service;
 

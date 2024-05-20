@@ -5,10 +5,9 @@ import com.football.dev.footballapp.exceptions.ClubNotFoundException;
 import com.football.dev.footballapp.exceptions.UserNotFoundException;
 import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.UserEntity;
-import com.football.dev.footballapp.repository.ClubRepository;
-import com.football.dev.footballapp.repository.UserRepository;
+import com.football.dev.footballapp.repository.jparepository.ClubRepository;
+import com.football.dev.footballapp.repository.jparepository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

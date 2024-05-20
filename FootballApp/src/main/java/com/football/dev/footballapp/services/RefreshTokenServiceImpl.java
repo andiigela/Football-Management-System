@@ -2,8 +2,8 @@ package com.football.dev.footballapp.services;
 
 import com.football.dev.footballapp.models.RefreshToken;
 import com.football.dev.footballapp.models.UserEntity;
-import com.football.dev.footballapp.repository.RefreshTokenRepository;
-import com.football.dev.footballapp.repository.UserRepository;
+import com.football.dev.footballapp.repository.jparepository.RefreshTokenRepository;
+import com.football.dev.footballapp.repository.jparepository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
