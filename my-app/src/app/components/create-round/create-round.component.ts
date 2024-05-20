@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SeasonService } from '../../services/season.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RoundDto } from '../../common/round-dto';
-import {RoundsService} from "../../services/rounds.service";
+import { RoundsService } from "../../services/rounds.service";
 
 @Component({
   selector: 'app-create-round',
@@ -12,16 +12,16 @@ import {RoundsService} from "../../services/rounds.service";
 export class CreateRoundComponent implements OnInit {
   seasonId!: number;
   newRound: RoundDto = {
-
     start_date: new Date(),
     end_date: new Date()
   };
+  error: string | null = null;
 
   constructor(
-      private seasonService: SeasonService,
-      private route: ActivatedRoute,
-      private router: Router,
-      private roundService: RoundsService
+    private seasonService: SeasonService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private roundService: RoundsService
   ) { }
 
   ngOnInit(): void {
@@ -31,7 +31,8 @@ export class CreateRoundComponent implements OnInit {
   }
 
   createRound(): void {
-    this.roundService.createRound(this.seasonId, this.newRound).subscribe(
+    if (this.isValidDateRange() && this.newRound.start_date && this.newRound.end_date) {
+      this.roundService.createRound(this.seasonId, this.newRound).subscribe(
         () => {
           console.log('Round created successfully');
           // Navigate back to the rounds page
@@ -39,8 +40,15 @@ export class CreateRoundComponent implements OnInit {
         },
         error => {
           console.error('Error creating round:', error);
-          console.log(this.newRound);
+          this.error = 'Error creating round. Please try again.';
         }
-    );
+      );
+    } else {
+      this.error = 'Please select both start and end dates.';
+    }
+  }
+
+  isValidDateRange(): boolean {
+    return new Date(this.newRound.start_date) < new Date(this.newRound.end_date);
   }
 }
