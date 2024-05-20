@@ -31,6 +31,7 @@ import {ContractsListComponent} from "./components/contracts-list/contracts-list
 import {ContractEditComponent} from "./components/contract-edit/contract-edit.component";
 import {AdminLeagueGuard} from "./guards/admin-league.guard";
 import {AdminClubGuard} from "./guards/admin-club.guard";
+import {WebSocketService} from "./services/web-socket.service";
 
 
 const routes : Routes = [
@@ -96,7 +97,8 @@ const routes : Routes = [
     AuthGuard,
     AuthGuard2,
     AdminLeagueGuard,
-    AdminClubGuard
+    AdminClubGuard,
+    WebSocketService
   ],
   bootstrap: [AppComponent]
 })

@@ -1,17 +1,15 @@
 package com.football.dev.footballapp.services;
 
 import com.football.dev.footballapp.dto.UserEntityDto;
-import com.football.dev.footballapp.exceptions.UserNotFoundException;
-import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.UserEntity;
-import com.football.dev.footballapp.repository.UserRepository;
+import com.football.dev.footballapp.repository.jparepository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 
 @Service
@@ -99,5 +97,10 @@ public class UserServiceImpl implements UserService{
     @Override
     public List<UserEntity> getUsersByRoleAndIsDeleted(String role, boolean isDeleted) {
         return userRepository.findByRoleDescriptionAndIsDeleted(role, isDeleted);
+    }
+
+    @Override
+    public UserEntity getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(()->new EntityNotFoundException("User not found with that email"));
     }
 }
