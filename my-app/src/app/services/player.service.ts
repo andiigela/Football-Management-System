@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
-import {map, Observable} from "rxjs";
+import {Observable} from "rxjs";
 import {PlayerDto} from "../common/player-dto";
 import {PageResponseDto} from "../common/page-response-dto";
-
 @Injectable({
   providedIn: 'root'
 })
