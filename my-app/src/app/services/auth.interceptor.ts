@@ -3,7 +3,9 @@ import {
     HttpRequest,
     HttpHandler,
     HttpEvent,
-    HttpInterceptor, HttpErrorResponse, HttpClient
+    HttpInterceptor,
+    HttpErrorResponse,
+    HttpClient
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
@@ -14,6 +16,8 @@ import { Router } from '@angular/router';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
+    private isRefreshing = false;
+
     constructor(
         private http: HttpClient,
         private authService: AuthService,
@@ -23,7 +27,7 @@ export class AuthInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(this.addTokenToRequest(request)).pipe(
             catchError((error: any) => {
-                if (error instanceof HttpErrorResponse && error.status === 401 && this.authService.getRefreshToken()) {
+                if (error instanceof HttpErrorResponse && error.status === 401) {
                     return this.handle401Error(request, next);
                 } else {
                     return throwError(error);
@@ -33,7 +37,7 @@ export class AuthInterceptor implements HttpInterceptor {
     }
 
     private addTokenToRequest(request: HttpRequest<any>): HttpRequest<any> {
-        const accessToken = this.authService.getAccessToken(); // Check local storage for access token
+        const accessToken = this.authService.getAccessToken();
         if (accessToken) {
             return request.clone({
                 setHeaders: {
@@ -45,35 +49,50 @@ export class AuthInterceptor implements HttpInterceptor {
     }
 
     private handle401Error(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        const refreshToken = this.authService.getRefreshToken(); // Using AuthService to retrieve refresh token from local storage
+        if (this.isRefreshing) {
+            // If already refreshing, block other calls until it's done
+            return throwError('Token is already refreshing');
+        }
+
+        const refreshToken = this.authService.getRefreshToken();
         if (!refreshToken) {
-            this.authService.clearTokens(); // Clear tokens if refresh token is not available
-            this.router.navigateByUrl('/login');
+            this.logoutUser();
             return throwError('Refresh token is null');
         }
 
-        const refreshTokenRequestDto = new RefreshTokenRequestDto(refreshToken);
-        return this.http.post('http://localhost:8080/api/auth/refreshToken', refreshTokenRequestDto).pipe(
-            switchMap((response: any) => {
-                if (!response.accessToken) {
-                    // If access token is null, clear tokens and redirect to login
-                    this.authService.clearTokens();
-                    this.router.navigateByUrl('/login');
-                    return throwError('Access token is null');
-                }
-                // Set the new access token in local storage
-                this.authService.setAccessToken(response.accessToken);
-                const clonedRequest = this.addTokenToRequest(request);
-                return next.handle(clonedRequest);
-            }),
-            catchError((error: any) => {
-                if (error instanceof HttpErrorResponse && error.status === 401) {
-                    // If refresh token is expired or invalid, clear tokens and redirect to login
-                    this.authService.clearTokens();
-                    this.router.navigateByUrl('/login');
-                }
-                return throwError(error);
-            })
-        );
+        const accessToken = this.authService.getAccessToken();
+        if (!accessToken || this.authService.isTokenExpired(accessToken)) {
+            // Access token expired, proceed with refreshing
+            this.isRefreshing = true;
+            const refreshTokenRequestDto = new RefreshTokenRequestDto(refreshToken);
+
+            return this.http.post('http://localhost:8080/api/auth/refreshToken', refreshTokenRequestDto).pipe(
+                switchMap((response: any) => {
+                    this.isRefreshing = false;
+                    if (!response.accessToken) {
+                        this.logoutUser();
+                        return throwError('New access token is null');
+                    }
+                    this.authService.setAccessToken(response.accessToken);
+                    const clonedRequest = this.addTokenToRequest(request);
+                    return next.handle(clonedRequest);
+                }),
+                catchError((error: any) => {
+                    this.isRefreshing = false;
+                    this.logoutUser();
+                    return throwError(error);
+                })
+            );
+        } else {
+            // Access token is still valid, logout user
+            this.logoutUser();
+            return throwError('Access token is not expired');
+        }
+    }
+
+
+    private logoutUser(): void {
+        this.authService.clearTokens();
+        this.router.navigateByUrl('/login');
     }
 }
