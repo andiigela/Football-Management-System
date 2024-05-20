@@ -51,4 +51,6 @@ public class Club extends BaseEntity {
         this.city = city;
         this.website = website;
     }
+    @OneToMany(mappedBy = "club")
+    private List<Contract> contracts = new ArrayList<>();
 }

@@ -77,7 +77,7 @@ public class AuthServiceImpl implements AuthService {
         String hashedPassword = passwordEncoder.encode(registerDto.getPassword());
         user.setPassword(hashedPassword);
 
-        Role role = roleRepository.findByDescription("USER")
+        Role role = roleRepository.findByDescription("ADMIN_CLUB")
                 .orElseThrow(() -> new IllegalStateException("Default role not found"));
         user.setRole(role);
         userRepository.save(user);

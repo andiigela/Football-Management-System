@@ -6,6 +6,7 @@ import {PlayerDto} from "../../common/player-dto";
 import {PlayerService} from "../../services/player.service";
 import {Route, Router} from "@angular/router";
 import {RegisterDto} from "../../common/register-dto";
+import {ImageFileValidator} from "../../validators/image-file-validator";
 
 @Component({
   selector: 'app-create-player',
@@ -19,30 +20,35 @@ export class CreatePlayerComponent implements OnInit {
   file: File|null = null;
   constructor(private formBuilder: FormBuilder,private playerService: PlayerService,private router: Router) {
     this.playerForm = this.formBuilder.group({
-      name: [''],
-      height: [''],
-      weight: [''],
-      shirtNumber: [''],
+      name: ['',[Validators.required,Validators.pattern('^[a-zA-Z]+$')]],
+      height: ['',[Validators.required]],
+      weight: ['',[Validators.required]],
+      shirtNumber: ['',[Validators.required]],
       preferred_foot: ['LEFT'],
       position: ['GOALKEEPER'],
+      file: [null,[Validators.required,ImageFileValidator.invalidImageType]]
     })
   }
   ngOnInit(): void {
   }
   public createPlayer(): void {
-    const formData = this.playerForm.value;
-    const playerDto = new PlayerDto(
-      formData.name,
-      formData.height,
-      formData.weight,
-      formData.shirtNumber,
-      formData.preferred_foot,
-      formData.position
-    );
-    if(this.file?.name != ""){
-      this.playerService.createPlayer(playerDto,this.file!).subscribe(()=>{
+    if(this.playerForm.valid){
+      const formData = this.playerForm.value;
+      const playerDto = new PlayerDto(
+        formData.name,
+        formData.height,
+        formData.weight,
+        formData.shirtNumber,
+        formData.preferred_foot,
+        formData.position
+      );
+      if(this.file?.name != ""){
+        this.playerService.createPlayer(playerDto,this.file!).subscribe(()=>{
           this.router.navigateByUrl("/dashboard")
-      },(err)=>{console.log(err)});
+        },(err)=>{console.log(err)});
+      }
+    } else {
+      this.playerForm.markAllAsTouched();
     }
   }
   onFileSelected(event: any){

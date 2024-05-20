@@ -49,7 +49,7 @@ public class LeagueServiceImpl implements LeagueService {
 
     @Override
     public Optional<LeagueDTO> selectLeagueById(Long id) {
-        return  leagueRepository.findAll().stream().filter(l->l.getId().equals(id)).map(leagueDTOMapper).findAny();
+        return leagueRepository.findAll().stream().filter(l->l.getId().equals(id)).map(leagueDTOMapper).findAny();
     }
 
     @Override
@@ -67,7 +67,6 @@ public class LeagueServiceImpl implements LeagueService {
         league.setName(league.getName() + " - " + league.getId());
         leagueRepository.save(league);
     }
-
     @Override
     public void updateLeague(Long id, LeagueDTO leagueDTO) {
 

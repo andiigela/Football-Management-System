@@ -9,6 +9,5 @@ import java.util.Optional;
 public interface TransferService {
     void makeTransfer(TransferDTO transferDto);
     List<TransferDTO> listTransfers();
-
     void editTransfer(Long id , TransferDTO transferDTO);
 }

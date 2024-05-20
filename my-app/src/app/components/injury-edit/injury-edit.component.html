@@ -1,0 +1,38 @@
+<div class="container">
+  <form (ngSubmit)="editInjury()" [formGroup]="injuryForm">
+    <div class="form-group">
+      <label for="injuryType">Injury Type Name</label>
+      <input type="text" class="form-control" formControlName="injuryType" id="injuryType" placeholder="Enter Injury Type">
+      <div *ngIf="(injuryForm.get('injuryType')?.invalid) && (injuryForm.get('injuryType')?.touched) && (injuryForm.get('injuryType')?.errors?.['required'])" class="text-danger">
+        Injury type is required!
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="injuryDate">Injury Date</label><br>
+      <input type="date" class="form-control" id="injuryDate" formControlName="injuryDate">
+      <div *ngIf="(injuryForm.get('injuryDate')?.invalid) && (injuryForm.get('injuryDate')?.touched) && (injuryForm.get('injuryDate')?.errors?.['required'])" class="text-danger">
+        Injury date is required!
+      </div>
+      <div *ngIf="(injuryForm.get('injuryDate')?.errors?.['NotValidCreationDate'])" class="text-danger">
+        Your year is older than last year or incorrect year!
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="expectedRecoveryTime">Expected Recovery Time</label><br>
+      <input type="date" class="form-control" id="expectedRecoveryTime" formControlName="expectedRecoveryTime">
+      <div *ngIf="(injuryForm.get('expectedRecoveryTime')?.invalid) && (injuryForm.get('expectedRecoveryTime')?.touched) && (injuryForm.get('expectedRecoveryTime')?.errors?.['required'])" class="text-danger">
+        Expected recovery date is required!
+      </div>
+      <div *ngIf="(injuryForm.get('expectedRecoveryTime')?.errors?.['NotValidExpectedRecoveryDate'])" class="text-danger">
+        Not valid expected recovery date, recovery date must not be in the past or incorrect year!
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="injuryStatus">Preferred Foot</label>
+      <select class="form-control" id="injuryStatus" formControlName="injuryStatus">
+        <option *ngFor="let injuryStatus of injuryStatusList" [value]="injuryStatus">{{ injuryStatus }}</option>
+      </select>
+    </div>
+    <button type="submit" style="margin-top: 10px;" class="btn btn-primary">Edit Injury</button>
+  </form>
+</div>
