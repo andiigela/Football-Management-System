@@ -28,4 +28,7 @@ export class AppComponent implements OnInit {
   logout(): void {
     this.authService.logout();
   }
+  get userId(): number | null {
+    return this.authService.getUserIdFromToken();
+  }
 }

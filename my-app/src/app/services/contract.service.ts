@@ -20,9 +20,9 @@ export class ContractService {
     const headers = this.getHeaders()
     return this.http.post(`${this.contractUrl}/${playerId}/create`,contractDto,{headers})
   }
-  public retrieveContracts(playerId: number,pageNumber: number, pageSize: number): Observable<PageResponseDto>{
+  public retrieveContracts(playerId: number,pageNumber: number, pageSize: number): Observable<PageResponseDto<ContractDto>>{
     let headers = this.getHeaders();
-    return this.http.get<PageResponseDto>(`${this.contractUrl}/${playerId}/?page=${pageNumber}&size=${pageSize}`,{headers});
+    return this.http.get<PageResponseDto<ContractDto>>(`${this.contractUrl}/${playerId}/?page=${pageNumber}&size=${pageSize}`,{headers});
   }
   public retrieveContract(playerId: number,contractId: number): Observable<any>{
     let headers = this.getHeaders();

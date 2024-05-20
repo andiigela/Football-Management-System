@@ -3,6 +3,7 @@ import { UserService } from '../../services/user.service';
 import { HttpClient } from "@angular/common/http";
 import { AuthService } from "../../services/auth.service";
 import { User } from "../../common/user";
+import {UserDTO} from "../../common/user-dto";
 
 @Component({
     selector: 'app-users',
@@ -10,8 +11,11 @@ import { User } from "../../common/user";
     styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit {
-    users: User[] = [];
+    users: UserDTO[] = [];
     currentUserId: number | null = null;
+    pageNumber: number = 1;
+    pageSize: number = 5;
+    totalElements: number = 0;
 
     constructor(private http: HttpClient, private userService: UserService, private authService: AuthService) { }
 
@@ -25,16 +29,22 @@ export class UsersComponent implements OnInit {
     }
 
     loadUsers(): void {
-        this.userService.getUsersWithUserRole().subscribe(
-            (users: User[]) => {
-                this.users = users;
+        this.userService.getUsersWithUserRole(this.pageNumber-1, this.pageSize).subscribe(
+            (response) => {
+              this.users = response.content;
+              this.totalElements = response.totalElements;
             },
             (error: any) => {
                 console.error('Error loading users:', error);
             }
         );
     }
+  onPageChange(pageNumber: number): void {
+    console.log('Page change to:', pageNumber);
+    this.pageNumber = pageNumber;
+    this.loadUsers();
 
+  }
     updateUserStatus(userId: number, enabled: boolean): void {
         this.userService.updateUserStatus(userId, enabled).subscribe(
             () => {

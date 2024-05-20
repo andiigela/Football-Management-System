@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {map, Observable} from "rxjs";
 import {PlayerDto} from "../common/player-dto";
 import {PageResponseDto} from "../common/page-response-dto";
+import {SeasonDto} from "../common/season-dto";
 
 @Injectable({
   providedIn: 'root'
@@ -23,9 +24,9 @@ export class PlayerService {
     formData.append('playerDto', JSON.stringify(playerDto)); // Convert playerDto to JSON string and append
     return this.http.post(`${this.playerUrl}/create`,formData,{headers});
   }
-  public retrievePlayers(pageNumber: number, pageSize: number): Observable<PageResponseDto>{
+  public retrievePlayers(pageNumber: number, pageSize: number): Observable<PageResponseDto<PlayerDto>>{
     let headers = this.getHeaders();
-    return this.http.get<PageResponseDto>(`${this.playerUrl}/?page=${pageNumber}&size=${pageSize}`,{headers});
+    return this.http.get<PageResponseDto<PlayerDto>>(`${this.playerUrl}/?pageNumber=${pageNumber}&pageSize=${pageSize}`,{headers});
   }
   public retrievePlayer(id: number): Observable<PlayerDto>{
     let headers = this.getHeaders();

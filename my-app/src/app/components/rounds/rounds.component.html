@@ -1,0 +1,52 @@
+<div class="my-4" *ngIf="isCurrentSeason">
+  <button class="btn btn-primary mx-4" (click)="createRound()">Create Round</button>
+</div>
+
+<div *ngFor="let round of rounds" class="my-4">
+  <div class="table-responsive mx-4">
+    <table class="table table-striped">
+      <thead class="thead-dark">
+      <tr>
+        <th colspan="8" class="text-center" style="background-color: #343a40; color: white;">
+          Round #{{ round.id }} : {{ round.start_date | date: 'short' }} - {{ round.end_date | date: 'short' }}
+        </th>
+      </tr>
+      <tr>
+        <th scope="col">Match ID</th>
+        <th scope="col">Home Team</th>
+        <th scope="col">Away Team</th>
+        <th scope="col">Match Date</th>
+        <th scope="col">Home Team Score</th>
+        <th scope="col">Away Team Score</th>
+        <th scope="col">Result</th>
+        <th scope="col" *ngIf="isCurrentSeason">Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let match of round.matches">
+        <td>{{ match.id }}</td>
+        <td>{{ match.homeTeam.name}}</td>
+        <td>{{ match.awayTeam.name}}</td>
+        <td>{{ match.matchDate | date: 'short' }}</td>
+        <td>{{ match.homeTeamScore }}</td>
+        <td>{{ match.awayTeamScore }}</td>
+        <td>{{ match.result }}</td>
+        <td *ngIf="isCurrentSeason">
+          <button class="btn btn-primary" (click)="redirectToEditMatch(round.id, match.id)">Update</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+<div class="d-flex justify-content-center">
+  <!-- Pagination -->
+  <ngb-pagination
+    [collectionSize]="totalElements"
+    [(page)]="pageNumber"
+    [pageSize]="pageSize"
+    (pageChange)="onPageChange($event)">
+  </ngb-pagination>
+</div>
+

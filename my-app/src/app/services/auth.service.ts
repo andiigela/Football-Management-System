@@ -105,4 +105,5 @@ export class AuthService {
     getUserEmail(): Observable<string | null> {
         return this.currentUserEmail.asObservable();
     }
+
 }

@@ -14,8 +14,8 @@ public class UserEntityDTOMapper implements Function<UserEntityDto, UserEntity> 
         return new UserEntity(userEntityDto.firstName(),
                 userEntityDto.lastName(),userEntityDto.email(),
                 userEntityDto.phone(), userEntityDto.country(),
-                userEntityDto.birthDate(),
-                userEntityDto.profile_picture(),userEntityDto.address(),
-                userEntityDto.city(),userEntityDto.postal_code(), userEntityDto.gender());
+                userEntityDto.birthDate(),userEntityDto.address(),
+                userEntityDto.city(),userEntityDto.postal_code(), userEntityDto.gender(),
+                userEntityDto.enabled());
     }
 }

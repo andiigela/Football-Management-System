@@ -2,16 +2,25 @@ package com.football.dev.footballapp.dto;
 
 import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.Stadium;
-import jakarta.persistence.OneToOne;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-public record MatchDTO(Long id ,
-                        Club homeTeamId,
-                        Club awayTeamId,
-                        LocalDateTime matchDate,
-                        Stadium stadium,
-                        String result,
-                        Integer homeTeamScore,
-                        Integer awayTeamScore) {
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class MatchDTO{
+    private Long id;
+    private ClubDto homeTeam;
+    private ClubDto awayTeam;
+    private LocalDateTime matchDate;
+//    private Stadium stadium;
+    private String result;
+    private Integer homeTeamScore;
+    private Integer awayTeamScore;
+
 }

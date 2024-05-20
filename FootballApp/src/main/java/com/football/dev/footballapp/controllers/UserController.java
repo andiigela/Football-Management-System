@@ -1,20 +1,18 @@
 package com.football.dev.footballapp.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.football.dev.footballapp.dto.UserEntityDto;
-import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.UserEntity;
 import com.football.dev.footballapp.security.JWTGenerator;
 import com.football.dev.footballapp.services.UserService;
-import com.football.dev.footballapp.services.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/")
@@ -22,16 +20,20 @@ import java.util.stream.Collectors;
 public class UserController {
     private final UserService userService;
     private final JWTGenerator jwtGenerator;
+    private final ObjectMapper objectMapper;
 
 
-    public UserController(UserService userService, JWTGenerator jwtGenerator){
+    public UserController(UserService userService, JWTGenerator jwtGenerator,ObjectMapper objectMapper){
         this.userService=userService;
         this.jwtGenerator = jwtGenerator;
+        this.objectMapper=objectMapper;
     }
     @GetMapping("users")
-    @PreAuthorize("hasRole('ADMIN')")
-    public List<UserEntity> getUsersWithUserRole() {
-        return userService.getUsersByRoleAndIsDeleted("USER", false);
+    @PreAuthorize("hasRole('ADMIN_LEAGUE')")
+    public ResponseEntity<Page<UserEntityDto>> getUsersWithUserRole(@RequestParam(defaultValue = "0") int pageNumber,
+                                                                 @RequestParam(defaultValue = "3") int pageSize) {
+        Page<UserEntityDto> userEntityDtoPage = userService.getUsersByRoleAndIsDeleted("ADMIN_CLUB", false, pageNumber, pageSize);
+        return ResponseEntity.status(HttpStatus.OK).body(userEntityDtoPage);
     }
 
     /*public List<UserEntity> getAllUsers(@RequestParam Long currentUserId) {
@@ -69,6 +71,8 @@ public class UserController {
         userService.updateUser(userId, updatedUserDto);
         return ResponseEntity.ok().build();
     }
+
+
     @GetMapping("users/{userId}")
     public UserEntity getUserProfile(@PathVariable Long userId) {
         return userService.getUserProfile(userId);

@@ -1,40 +1,32 @@
-<div *ngIf="leagues.length > 0">
-  <h2>Data from Backend</h2>
-  <div class="card-container">
-    <div *ngFor="let league of leagues" class="card">
-      <div class="card-content">
-        <h3>{{ league.name }}</h3>
-        <p>Start Date: {{ league.start_date | date }}</p>
-        <p>End Date: {{ league.end_date | date }}</p>
-        <p>Description: {{ league.description }}</p>
-      </div>
-      <div class="card-actions">
-        <button (click)="updateLeague(league)" class="btn-update">Update</button>
-        <button (click)="deleteLeague(league.id)" class="btn-delete">Delete</button>
+<div *ngIf="leagues.length > 0" class="container">
+  <div class="d-flex justify-content-between align-items-center mb-3" style="margin-top: 30px">
+    <h2 class="mb-0">All Leagues</h2>
+    <button (click)="redirectToCreateLeague()" class="btn btn-primary">Create League</button>
+  </div>
+  <div class="row">
+    <div *ngFor="let league of leagues" class="col-md-4 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">{{ league.name }}</h3>
+          <p class="card-text">Start Date: {{ league.start_date | date }}</p>
+          <p class="card-text">End Date: {{ league.end_date | date }}</p>
+          <p class="card-text">Description: {{ league.description }}</p>
+        </div>
+        <div class="card-footer">
+          <button (click)="updateLeague(league)" class="btn btn-primary mr-2">Update</button>
+          <button (click)="deleteLeague(league.id)" class="btn btn-danger">Delete</button>
+          <button (click)="redirectToLeagueSeasons(league.id)" class="btn btn-secondary">Seasons</button>
+        </div>
       </div>
     </div>
   </div>
 </div>
-
-<div>
-  <h2>Create New League</h2>
-  <form (submit)="createLeague()">
-    <div>
-      <label for="newName">Name:</label>
-      <input type="text" id="newName" name="newName" [(ngModel)]="newLeague.name" required>
-    </div>
-    <div>
-      <label for="newStartDate">Start Date:</label>
-      <input type="date" id="newStartDate" name="newStartDate" [(ngModel)]="newLeague.start_date" required>
-    </div>
-    <div>
-      <label for="newEndDate">End Date:</label>
-      <input type="date" id="newEndDate" name="newEndDate" [(ngModel)]="newLeague.end_date" required>
-    </div>
-    <div>
-      <label for="newDescription">Description:</label>
-      <textarea id="newDescription" name="newDescription" [(ngModel)]="newLeague.description" required></textarea>
-    </div>
-    <button type="submit">Create</button>
-  </form>
+<div class="d-flex justify-content-center">
+  <!-- Pagination -->
+  <ngb-pagination
+          [collectionSize]="totalElements"
+          [(page)]="pageNumber"
+          [pageSize]="pageSize"
+          (pageChange)="onPageChange($event)">
+  </ngb-pagination>
 </div>

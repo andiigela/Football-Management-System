@@ -1,4 +1,4 @@
-package com.football.dev.footballapp.services;
+package com.football.dev.footballapp.services.impl;
 
 import com.football.dev.footballapp.dto.*;
 import com.football.dev.footballapp.mapper.UserEntityDTOMapper;
@@ -10,6 +10,8 @@ import com.football.dev.footballapp.repository.ClubRepository;
 import com.football.dev.footballapp.repository.RoleRepository;
 import com.football.dev.footballapp.repository.UserRepository;
 import com.football.dev.footballapp.security.JWTGenerator;
+import com.football.dev.footballapp.services.AuthService;
+import com.football.dev.footballapp.services.RefreshTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
