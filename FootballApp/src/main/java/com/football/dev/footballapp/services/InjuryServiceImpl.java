@@ -1,6 +1,8 @@
 package com.football.dev.footballapp.services;
+import com.football.dev.footballapp.dto.ContractDto;
 import com.football.dev.footballapp.dto.InjuryDto;
 import com.football.dev.footballapp.mapper.InjuryDtoMapper;
+import com.football.dev.footballapp.models.Contract;
 import com.football.dev.footballapp.models.Injury;
 import com.football.dev.footballapp.models.League;
 import com.football.dev.footballapp.models.Player;
@@ -35,13 +37,10 @@ public class InjuryServiceImpl implements InjuryService{
     }
     @Override
     public Page<InjuryDto> retrieveInjuries(Long playerId, int pageNumber, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<Injury> injuryPage = injuryRepository.findInjuriesByPlayerId(playerId, pageable);
-        List<InjuryDto> injuryDtos = injuryPage.getContent()
-                .stream()
-                .map(injuryDtoMapper)
-                .collect(Collectors.toList());
-        return PageableExecutionUtils.getPage(injuryDtos, injuryPage.getPageable(), injuryPage::getTotalPages);
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+        Page<Injury> injuryPage = injuryRepository.findInjuriesByPlayerId(playerId, pageRequest);
+        Page<InjuryDto> injuryDtos = injuryPage.map(injuryDtoMapper);
+        return injuryDtos;
     }
     @Override
     public InjuryDto getInjury(Long injuryId,Long playerId) {

@@ -2,6 +2,7 @@ package com.football.dev.footballapp.controllers;
 import com.football.dev.footballapp.dto.ContractDto;
 import com.football.dev.footballapp.dto.InjuryDto;
 import com.football.dev.footballapp.dto.PageResponseDto;
+import com.football.dev.footballapp.dto.SeasonDto;
 import com.football.dev.footballapp.services.ContractService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -20,17 +21,12 @@ public class ContractsController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     @GetMapping("/{playerId}/")
-    public ResponseEntity<PageResponseDto<ContractDto>> getContracts(@PathVariable("playerId") Long playerId, @RequestParam(defaultValue = "0") int page,
-                                                                     @RequestParam(defaultValue = "10") int size) {
-        Page<ContractDto> contractDtoPage = contractService.retrieveContracts(playerId,page,size);
-        PageResponseDto<ContractDto> responseDto = new PageResponseDto<>(
-                contractDtoPage.getContent(),
-                contractDtoPage.getNumber(),
-                contractDtoPage.getSize(),
-                contractDtoPage.getTotalElements()
-        );
-        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    public ResponseEntity<Page<ContractDto>> getContracts(@PathVariable("playerId") Long playerId, @RequestParam(defaultValue = "0") int pageNumber,
+                                                                     @RequestParam(defaultValue = "10") int pageSize) {
+        Page<ContractDto> contractDtoPage = contractService.retrieveContracts(playerId,pageNumber,pageSize);
+        return ResponseEntity.status(HttpStatus.OK).body(contractDtoPage);
     }
+
     @GetMapping("/{playerId}/{contractId}")
     public ResponseEntity<ContractDto> getContract(@PathVariable("playerId") Long playerId,@PathVariable("contractId") Long contractId) {
         return ResponseEntity.status(HttpStatus.OK).body(contractService.getContract(playerId,contractId));

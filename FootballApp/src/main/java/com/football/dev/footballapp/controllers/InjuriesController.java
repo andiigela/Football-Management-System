@@ -1,5 +1,6 @@
 package com.football.dev.footballapp.controllers;
 
+import com.football.dev.footballapp.dto.ContractDto;
 import com.football.dev.footballapp.dto.InjuryDto;
 import com.football.dev.footballapp.dto.PageResponseDto;
 import com.football.dev.footballapp.dto.PlayerDto;
@@ -27,16 +28,10 @@ public class InjuriesController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     @GetMapping("/{playerId}/")
-    public ResponseEntity<PageResponseDto<InjuryDto>> getInjuries(@PathVariable("playerId") Long playerId,@RequestParam(defaultValue = "0") int page,
-                                                              @RequestParam int size) {
-        Page<InjuryDto> injuryDtoPage = injuryService.retrieveInjuries(playerId,page,size);
-        PageResponseDto<InjuryDto> responseDto = new PageResponseDto<>(
-                injuryDtoPage.getContent(),
-                injuryDtoPage.getNumber(),
-                injuryDtoPage.getSize(),
-                injuryDtoPage.getTotalElements()
-        );
-        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    public ResponseEntity<Page<InjuryDto>> getInjuries(@PathVariable("playerId") Long playerId,@RequestParam(defaultValue = "0") int pageNumber,
+                                                              @RequestParam int pageSize) {
+        Page<InjuryDto> injuryDtoPage = injuryService.retrieveInjuries(playerId,pageNumber,pageSize);
+        return ResponseEntity.status(HttpStatus.OK).body(injuryDtoPage);
     }
     @GetMapping("/{playerId}/{injuryId}")
     public ResponseEntity<InjuryDto> getInjury(@PathVariable("playerId") Long playerId,@PathVariable("injuryId") Long injuryId) {
