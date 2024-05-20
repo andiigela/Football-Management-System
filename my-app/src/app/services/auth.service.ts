@@ -13,12 +13,17 @@ export class AuthService {
     isAuthenticated = new BehaviorSubject<boolean>(false);
     private readonly refreshTokenKey = 'refreshToken';
     private readonly accessTokenKey = 'accessToken';
+    private readonly accessTokenExpiryKey = 'accessTokenExpiry';
     currentUserEmail = new BehaviorSubject<string | null>(null);
     currentClubId = new BehaviorSubject<number | null>(null);
 
     constructor(private httpClient: HttpClient, private router: Router) {
         // Check authentication status on application startup
         this.checkIsAuthenticated();
+        this.checkTokenExpiration();
+        setInterval(() => {
+            this.checkTokenExpiration();
+        }, 60000);
     }
 
     loginUser(user: LoginDto): Observable<any> {
@@ -76,12 +81,19 @@ export class AuthService {
         localStorage.removeItem(this.refreshTokenKey);
     }
 
+    private checkTokenExpiration(): void {
+        const accessToken: string | null = localStorage.getItem(this.accessTokenKey);
+        if (accessToken && this.isTokenExpired(accessToken)) {
+           this.clearTokens();
+            this.logout();
+        }
+    }
+
+
     setAccessToken(accessToken: string): void {
         localStorage.setItem(this.accessTokenKey, accessToken);
         console.log('Access token updated'); // Add a log to indicate the update
     }
-
-
     getRoleFromToken(): string | null {
         const accessToken: string | null = this.getAccessToken();
         if (!accessToken) return null;
