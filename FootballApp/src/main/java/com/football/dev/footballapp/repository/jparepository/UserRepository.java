@@ -13,4 +13,5 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     List<UserEntity> findAll();
     List<UserEntity> findByRoleDescription(String role);
     List<UserEntity> findByRoleDescriptionAndIsDeleted(String role, boolean isDeleted);
+    List<UserEntity> findUserEntitiesByRoleDescription(String description);
 }

@@ -14,4 +14,11 @@ public class Notification {
     private String id;
     private Long userId;
     private String description;
+    public Notification(String id, String description){
+        this.id=id;
+        this.description=description;
+    }
+    public Notification(String description){
+        this.description=description;
+    }
 }
