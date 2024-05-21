@@ -11,6 +11,7 @@ export class WebSocketService {
   private stompClient:any;
   private messageSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private serverUrl = 'http://localhost:8080/our-websocket';
+  private notificationCount :BehaviorSubject<number> = new BehaviorSubject<number>(0);
   constructor() {
   }
   connect(){
@@ -41,5 +42,12 @@ export class WebSocketService {
       'Authorization': `Bearer ${localStorage.getItem("accessToken")}`
     })
     return headers;
+  }
+  incrementNotificationCount(): void{
+    const currentCount = this.notificationCount.getValue();
+    this.notificationCount.next(currentCount + 1);
+  }
+  getNotificationCount(): Observable<number> {
+    return this.notificationCount.asObservable();
   }
 }
