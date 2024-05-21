@@ -1,6 +1,8 @@
 package com.football.dev.footballapp.services;
+import com.football.dev.footballapp.dto.NotificationDto;
 import com.football.dev.footballapp.dto.PlayerDto;
 import com.football.dev.footballapp.models.Club;
+import com.football.dev.footballapp.models.Notification;
 import com.football.dev.footballapp.models.Player;
 import com.football.dev.footballapp.models.enums.Foot;
 import com.football.dev.footballapp.repository.jparepository.ClubRepository;
@@ -27,16 +29,19 @@ public class PlayerServiceImpl implements PlayerService {
     private final Function<PlayerDto, Player> playerDtoToPlayer;
     private final Function<Player, PlayerDto> playerToPlayerDto;
     private final SimpMessagingTemplate simpMessagingTemplate;
+    private final NotificationService notificationService;
 
     public PlayerServiceImpl(PlayerRepository playerRepository,Function<PlayerDto, Player> playerDtoToPlayer,
                              ClubRepository clubRepository,FileUploadService fileUploadService,
-                             Function<Player, PlayerDto> playerToPlayerDto,SimpMessagingTemplate simpMessagingTemplate){
+                             Function<Player, PlayerDto> playerToPlayerDto,SimpMessagingTemplate simpMessagingTemplate,
+                             NotificationService notificationService){
         this.playerRepository=playerRepository;
         this.playerDtoToPlayer=playerDtoToPlayer;
         this.clubRepository=clubRepository;
         this.fileUploadService=fileUploadService;
         this.playerToPlayerDto=playerToPlayerDto;
         this.simpMessagingTemplate=simpMessagingTemplate;
+        this.notificationService=notificationService;
     }
     @Override
     public void savePlayer(PlayerDto playerDto, MultipartFile file){
@@ -93,11 +98,13 @@ public class PlayerServiceImpl implements PlayerService {
     }
     @Override
     public void deletePlayer(Long id) {
-        simpMessagingTemplate.convertAndSend("/topic/playerDeleted",new String("Test 123"));
         Player playerDb = this.getPlayer(id);
         if(playerDb == null) throw new EntityNotFoundException("Player not found with specified id: " + id);
         playerDb.isDeleted = true;
         playerRepository.save(playerDb);
+        String message = "Player with id: " + id + " is deleted!";
+        notificationService.createNotification(message);
+        simpMessagingTemplate.convertAndSend("/topic/playerDeleted",message);
     }
 
 }

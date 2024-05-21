@@ -32,6 +32,9 @@ import {ContractEditComponent} from "./components/contract-edit/contract-edit.co
 import {AdminLeagueGuard} from "./guards/admin-league.guard";
 import {AdminClubGuard} from "./guards/admin-club.guard";
 import {WebSocketService} from "./services/web-socket.service";
+import {FaIconComponent} from "@fortawesome/angular-fontawesome";
+import {NotificationStatusComponent} from "./components/notification-status/notification-status.component";
+import {NotificationsListComponent} from "./components/notifications-list/notifications-list.component";
 
 
 const routes : Routes = [
@@ -48,6 +51,7 @@ const routes : Routes = [
   {path: 'players/:id/contracts/create',component:CreateContractComponent,canActivate: [AdminClubGuard]},
   {path: 'players/:id/contracts/:contractId/edit',component:ContractEditComponent,canActivate: [AdminClubGuard]},
   {path: 'players',component:PlayersListComponent,canActivate: [AdminClubGuard]},
+  {path: 'notifications',component:NotificationsListComponent},
   {path: 'create-player',component:CreatePlayerComponent,canActivate: [AdminClubGuard]},
   {path: 'players/edit/:id',component:PlayerEditComponent,canActivate: [AdminClubGuard]},
   {path: 'league',component:LeagueComponent,canActivate:[AuthGuard2,AdminLeagueGuard]},
@@ -77,17 +81,19 @@ const routes : Routes = [
     CreateContractComponent,
     ContractsListComponent,
     ContractEditComponent,
-    InjuryEditComponent
+    InjuryEditComponent,
+    NotificationStatusComponent,
+    NotificationsListComponent
   ],
-  imports: [
-    RouterModule.forRoot(routes),
-    BrowserModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    FormsModule,
-    NgbPaginationModule,
-
-  ],
+    imports: [
+        RouterModule.forRoot(routes),
+        BrowserModule,
+        HttpClientModule,
+        ReactiveFormsModule,
+        FormsModule,
+        NgbPaginationModule,
+        FaIconComponent,
+    ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
