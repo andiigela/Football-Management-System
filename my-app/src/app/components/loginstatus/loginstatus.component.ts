@@ -1,5 +1,6 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import { AuthService } from "../../services/auth.service";
+import {WebSocketService} from "../../services/web-socket.service";
 
 @Component({
   selector: 'app-loginstatus',
@@ -9,22 +10,24 @@ import { AuthService } from "../../services/auth.service";
 export class LoginstatusComponent implements OnInit {
   isAuthenticated: boolean = false;
 
-  constructor(private authService: AuthService, private cdr: ChangeDetectorRef) {}
+  constructor(private authService: AuthService, private cdr: ChangeDetectorRef,
+              private webSocketService: WebSocketService) {}
 
   ngOnInit(): void {
     this.getAuthenticationStatus();
   }
 
-    getAuthenticationStatus(): void {
-        this.authService.isAuthenticated.subscribe((res: boolean) => {
-            console.log('Authentication status changed:', res);
-            this.isAuthenticated = res;
-        });
-    }
+  getAuthenticationStatus(): void {
+      this.authService.isAuthenticated.subscribe((res: boolean) => {
+          console.log('Authentication status changed:', res);
+          this.isAuthenticated = res;
+      });
+  }
 
 
     logOut(): void {
     this.authService.logout();
         this.cdr.detectChanges();
+        this.webSocketService.disconnect();
     }
 }

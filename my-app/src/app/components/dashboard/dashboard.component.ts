@@ -6,18 +6,6 @@ import {WebSocketService} from "../../services/web-socket.service";
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnInit,OnDestroy{
-  constructor(private webSocket: WebSocketService) {
-  }
-  ngOnDestroy(): void {
-    this.webSocket.disconnect();
-  }
-  ngOnInit(): void {
-    this.webSocket.connect();
-    this.webSocket.getMessages().subscribe(message =>{
-      console.log("Message: " + message)
-    })
-  }
-
+export class DashboardComponent {
 
 }
