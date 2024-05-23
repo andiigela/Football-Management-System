@@ -7,6 +7,6 @@ import java.util.function.Function;
 public class NotificationDtoMapper implements Function<Notification, NotificationDto> {
     @Override
     public NotificationDto apply(Notification notification) {
-        return new NotificationDto(notification.getId(),notification.getDescription());
+        return new NotificationDto(notification.getId(),notification.getPlayerId(),notification.getDescription());
     }
 }
