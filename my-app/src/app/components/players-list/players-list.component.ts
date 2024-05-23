@@ -34,7 +34,7 @@ export class PlayersListComponent implements OnInit{
     this.router.navigate(['/players/edit/',id])
   }
   deletePlayer(id: number){
-    this.playerService.deletePlayer(id)
+    this.playerService.sendDeletePlayerPermission(id)
         .subscribe(()=> {
           this.playersList = this.playersList.filter(player => player.id != id);
 

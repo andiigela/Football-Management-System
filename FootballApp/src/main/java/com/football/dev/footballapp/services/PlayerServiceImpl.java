@@ -97,14 +97,20 @@ public class PlayerServiceImpl implements PlayerService {
         playerRepository.save(playerDb);
     }
     @Override
+    public void sendDeletePlayerPermission(Long id) {
+        Player playerDb = this.getPlayer(id);
+        if(playerDb == null) throw new EntityNotFoundException("Player not found with specified id: " + id);
+        String message = "Club " + playerDb.getClub().getName()
+                + " needs permission to delete player: " + playerDb.getName() + " with id: " + playerDb.getId();
+        notificationService.createPlayerDeletePermissionNotification(new Notification(id,message));
+        simpMessagingTemplate.convertAndSend("/topic/playerDeleted",message);
+    }
+    @Override
     public void deletePlayer(Long id) {
         Player playerDb = this.getPlayer(id);
         if(playerDb == null) throw new EntityNotFoundException("Player not found with specified id: " + id);
         playerDb.isDeleted = true;
         playerRepository.save(playerDb);
-        String message = "Player with id: " + id + " is deleted!";
-        notificationService.createNotification(message);
-        simpMessagingTemplate.convertAndSend("/topic/playerDeleted",message);
     }
 
 }

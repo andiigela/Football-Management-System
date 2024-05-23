@@ -39,7 +39,11 @@ export class PlayerService {
     formData.append("playerDto",JSON.stringify(playerDto));
     return this.http.post(`${this.playerUrl}/edit/${playerDto.id}`,formData,{headers});
   }
-  public deletePlayer(id: number): Observable<any>{
+  public sendDeletePlayerPermission(id: number): Observable<any>{
+    let headers = this.getHeaders();
+    return this.http.post(`${this.playerUrl}/delete/permission/${id}`,{headers})
+  }
+  public acceptDeletePlayerPermission(id: number): Observable<any>{
     let headers = this.getHeaders();
     return this.http.delete(`${this.playerUrl}/delete/${id}`,{headers})
   }

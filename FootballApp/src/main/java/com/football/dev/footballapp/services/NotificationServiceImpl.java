@@ -43,4 +43,15 @@ public class NotificationServiceImpl implements NotificationService{
                 .orElseThrow(() -> new EntityNotFoundException("Notifications not found with userId: " + userId))
                 .stream().map(notificationDtoMapper).collect(Collectors.toList());
     }
+    @Override
+    public void createPlayerDeletePermissionNotification(Notification notificationParam) {
+        List<UserEntity> adminLeagueUserEntities = userRepository.findUserEntitiesByRoleDescription("ADMIN_LEAGUE");
+        if(adminLeagueUserEntities.isEmpty() || adminLeagueUserEntities == null) throw new NullPointerException("adminLeagueUserEntities is null or empty");
+        adminLeagueUserEntities.forEach(user -> {
+            notificationParam.setUserId(user.getId());
+            user.setNotificationsNumber(user.getNotificationsNumber()+1);
+            notificationRepository.save(notificationParam);
+            userRepository.save(user);
+        });
+    }
 }

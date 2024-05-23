@@ -75,6 +75,11 @@ public class PlayersController {
         }
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+    @PostMapping("/delete/permission/{id}")
+    public ResponseEntity<String> sendPlayerDeletePermission(@PathVariable("id") Long id){
+        playerService.sendDeletePlayerPermission(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deletePlayer(@PathVariable("id") Long id){
         playerService.deletePlayer(id);
