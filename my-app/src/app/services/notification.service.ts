@@ -20,4 +20,8 @@ export class NotificationService {
     let headers = this.getHeaders();
     return this.http.get(`${this.notificationUrl}/`,{headers});
   }
+  public retrieveNotificationsCount(): Observable<any>{
+    let headers = this.getHeaders();
+    return this.http.get(`${this.notificationUrl}/counts`,{headers});
+  }
 }

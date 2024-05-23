@@ -67,6 +67,7 @@ public class AuthServiceImpl implements AuthService {
 
         UserEntity user = new UserEntity();
         user.setEmail(registerDto.getEmail());
+        user.setNotificationsNumber(0L);
 
         String hashedPassword = passwordEncoder.encode(registerDto.getPassword());
         user.setPassword(hashedPassword);

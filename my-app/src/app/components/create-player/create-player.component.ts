@@ -26,7 +26,7 @@ export class CreatePlayerComponent implements OnInit {
       shirtNumber: ['',[Validators.required]],
       preferred_foot: ['LEFT'],
       position: ['GOALKEEPER'],
-      file: [null,[Validators.required,ImageFileValidator.invalidImageType]]
+      file: [null]
     })
   }
   ngOnInit(): void {

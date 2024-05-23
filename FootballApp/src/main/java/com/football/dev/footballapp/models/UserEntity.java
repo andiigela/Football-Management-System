@@ -60,4 +60,5 @@ public class UserEntity extends BaseEntity {
         postal_code = postalCode;
         this.gender = gender;
     }
+    private Long notificationsNumber=0L;
 }

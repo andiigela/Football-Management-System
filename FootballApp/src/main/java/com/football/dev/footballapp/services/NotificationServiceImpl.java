@@ -29,11 +29,16 @@ public class NotificationServiceImpl implements NotificationService{
         adminLeagueUserEntities.forEach(user -> {
             Notification notification = new Notification(message);
             notification.setUserId(user.getId());
+            user.setNotificationsNumber(user.getNotificationsNumber()+1);
             notificationRepository.save(notification);
+            userRepository.save(user);
         });
     }
     @Override
     public List<NotificationDto> getNotificationsByUser(Long userId) {
+        UserEntity userDb = userRepository.findById(userId).orElseThrow(()-> new EntityNotFoundException("User not found with id: " + userId));
+        userDb.setNotificationsNumber(0L);
+        userRepository.save(userDb);
         return notificationRepository.findNotificationsByUserId(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Notifications not found with userId: " + userId))
                 .stream().map(notificationDtoMapper).collect(Collectors.toList());

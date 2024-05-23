@@ -23,4 +23,10 @@ public class NotificationsController {
         List<NotificationDto> notificationDtoList = this.notificationService.getNotificationsByUser(userEntity.getId());
         return ResponseEntity.status(HttpStatus.OK).body(notificationDtoList);
     }
+    @GetMapping("/counts")
+    public ResponseEntity<Long> getNotificationCount() {
+        UserEntity userEntity = authenticationHelperService.getUserEntityFromAuthentication();
+        Long notificationCount = userEntity.getNotificationsNumber();
+        return ResponseEntity.ok(notificationCount);
+    }
 }
