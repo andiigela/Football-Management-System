@@ -9,4 +9,5 @@ public interface NotificationService {
     void createNotification(String message);
     void createPlayerDeletePermissionNotification(Notification notification);
     List<NotificationDto> getNotificationsByUser(Long userId);
+    List<NotificationDto> getNotificationsSentFromCurrentUser();
 }

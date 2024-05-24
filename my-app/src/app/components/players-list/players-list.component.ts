@@ -3,6 +3,9 @@ import {PlayerService} from "../../services/player.service";
 import {PlayerDto} from "../../common/player-dto";
 import {Router} from "@angular/router";
 import {WebSocketService} from "../../services/web-socket.service";
+import {NotificationService} from "../../services/notification.service";
+import {NotificationDto} from "../../common/notification-dto";
+import {PlayerIdDto} from "../../common/player-id-dto";
 @Component({
   selector: 'app-players-list',
   templateUrl: './players-list.component.html',
@@ -13,7 +16,7 @@ export class PlayersListComponent implements OnInit{
   pageNumber: number = 1;
   pageSize: number = 10;
   totalElements: number = 0;
-  constructor(private playerService: PlayerService,private router: Router) {
+  constructor(private playerService: PlayerService,private router: Router,private notificationService: NotificationService) {
   }
   ngOnInit(): void {
     this.getPlayers();
@@ -24,6 +27,12 @@ export class PlayersListComponent implements OnInit{
       this.playersList = response.content;
       this.totalElements = response.totalElements;
       this.updatePlayerList(this.playersList) // this.playersList, sepse kemi inicializu 2 rreshta me larte.
+      this.notificationService.retrieveNotificationsSentFromCurrentUser().subscribe((notifications: NotificationDto[]) => {
+        this.playersList = this.playersList.map((playerDto: PlayerDto) => {
+          playerDto.permissionSent = notifications.some((notificationDto: NotificationDto) => notificationDto.playerId==playerDto.id);
+          return playerDto;
+        })
+      })
     })
   }
   OnPageChange(pageNumber: number){

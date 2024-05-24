@@ -17,22 +17,13 @@ export class NotificationsListComponent implements OnInit{
   ngOnInit(): void {
     this.playerService.getDeletedPlayerIds().subscribe((ids: PlayerIdDto[]) => {
       this.deletedPlayerIds = ids;
-
-      // Retrieve notifications and update their permissions
       this.notificationService.retrieveNotifications().subscribe(notifications => {
         this.notificationsList = notifications;
         this.notificationsList.forEach(notification => this.updateNotificationPermission(notification));
       });
     });
   }
-  // protected giveDeletePlayerPermission(notificationDto: NotificationDto){
-  //   this.playerService.acceptDeletePlayerPermission(notificationDto.playerId).subscribe(data=>{
-  //     console.log("Accepted Deleted player:  " + data);
-  //     this.updateNotificationPermission(notificationDto);
-  //   });
-  // }
   private updateNotificationPermission(notificationDto: NotificationDto): void {
-    // Check if the notification's playerId is in the list of deleted player IDs
     if (this.deletedPlayerIds.some(playerIdDto => playerIdDto.id === notificationDto.playerId)) {
       notificationDto.permissionGiven = true;
     }

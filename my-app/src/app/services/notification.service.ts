@@ -24,4 +24,8 @@ export class NotificationService {
     let headers = this.getHeaders();
     return this.http.get(`${this.notificationUrl}/counts`,{headers});
   }
+  public retrieveNotificationsSentFromCurrentUser(): Observable<any>{
+    let headers = this.getHeaders();
+    return this.http.get(`${this.notificationUrl}/from/currentuser`,{headers});
+  }
 }
