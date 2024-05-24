@@ -1,6 +1,6 @@
 package com.football.dev.footballapp.services;
-import com.football.dev.footballapp.dto.NotificationDto;
 import com.football.dev.footballapp.dto.PlayerDto;
+import com.football.dev.footballapp.dto.PlayerIdDto;
 import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.Notification;
 import com.football.dev.footballapp.models.Player;
@@ -68,14 +68,14 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public Player getPlayer(Long id) {
         if (id == null || id <= 0) throw new IllegalArgumentException("Player id must be a positive non-zero value");
-        return playerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + id));
+        return playerRepository.findByIdAndIsDeletedFalse(id).orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + id));
     }
     @Override
     public void updatePlayer(PlayerDto playerDto, Long id, MultipartFile file) {
         if (playerDto == null) {
             return;
         }
-        Player playerDb = playerRepository.findById(id)
+        Player playerDb = playerRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + id));
         if (file != null && !file.isEmpty()) {
             // A new file is provided, handle file upload
@@ -111,6 +111,10 @@ public class PlayerServiceImpl implements PlayerService {
         if(playerDb == null) throw new EntityNotFoundException("Player not found with specified id: " + id);
         playerDb.isDeleted = true;
         playerRepository.save(playerDb);
+    }
+    @Override
+    public List<PlayerIdDto> deletedPlayers() {
+        return playerRepository.findPlayersByIsDeleted(true).stream().map(player -> new PlayerIdDto(player.getId())).collect(Collectors.toList());
     }
 
 }

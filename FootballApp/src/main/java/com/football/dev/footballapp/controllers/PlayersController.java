@@ -3,6 +3,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.football.dev.footballapp.dto.PageResponseDto;
 import com.football.dev.footballapp.dto.PlayerDto;
+import com.football.dev.footballapp.dto.PlayerIdDto;
 import com.football.dev.footballapp.models.Player;
 import com.football.dev.footballapp.services.FileUploadService;
 import com.football.dev.footballapp.services.PlayerService;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.DataInput;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/players")
@@ -84,5 +86,9 @@ public class PlayersController {
     public ResponseEntity<String> deletePlayer(@PathVariable("id") Long id){
         playerService.deletePlayer(id);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+    @GetMapping("/deleted")
+    public ResponseEntity<List<PlayerIdDto>> deletedPlayers(){
+        return ResponseEntity.status(HttpStatus.OK).body(playerService.deletedPlayers());
     }
 }
