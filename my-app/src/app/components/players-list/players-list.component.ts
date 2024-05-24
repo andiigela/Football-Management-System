@@ -36,8 +36,7 @@ export class PlayersListComponent implements OnInit{
   deletePlayer(id: number){
     this.playerService.sendDeletePlayerPermission(id)
         .subscribe(()=> {
-          this.playersList = this.playersList.filter(player => player.id != id);
-
+          // this.playersList = this.playersList.filter(player => player.id != id);
         })
   }
   updatePlayerList(playersList: PlayerDto[]){

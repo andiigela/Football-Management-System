@@ -51,5 +51,9 @@ export class PlayerService {
     let headers = this.getHeaders();
     return this.http.get(`http://localhost:8080/images/${imagePath}`,{headers,responseType: 'blob'});
   }
+  public getDeletedPlayerIds(): Observable<any>{
+    let headers = this.getHeaders();
+    return this.http.get(`${this.playerUrl}/deleted`,{headers});
+  }
 }
 
