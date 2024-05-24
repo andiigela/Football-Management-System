@@ -1,5 +1,6 @@
 package com.football.dev.footballapp.controllers;
 import com.football.dev.footballapp.dto.NotificationDto;
+import com.football.dev.footballapp.dto.PlayerIdDto;
 import com.football.dev.footballapp.models.UserEntity;
 import com.football.dev.footballapp.services.AuthenticationHelperService;
 import com.football.dev.footballapp.services.NotificationService;
@@ -28,5 +29,9 @@ public class NotificationsController {
         UserEntity userEntity = authenticationHelperService.getUserEntityFromAuthentication();
         Long notificationCount = userEntity.getNotificationsNumber();
         return ResponseEntity.ok(notificationCount);
+    }
+    @GetMapping("/from/currentuser") // Notifications sent by this user
+    public ResponseEntity<List<NotificationDto>> getNotificationsSentFromLoggedInUser(){
+        return ResponseEntity.status(HttpStatus.OK).body(notificationService.getNotificationsSentFromCurrentUser());
     }
 }

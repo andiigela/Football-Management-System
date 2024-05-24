@@ -12,7 +12,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Notification {
     @Id
     private String id;
-    private Long userId;
+    private Long toUserId;
+    private Long fromUserId;
     private String description;
     private Long playerId;
     public Notification(String description){
