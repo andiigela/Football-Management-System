@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 public class PlayerDto {
-    private Function<Contract,ContractDto> contractDtoMapper;
+//    private Function<Contract,ContractDto> contractDtoMapper;
     private Long id;
     private String name;
     private Double height;
