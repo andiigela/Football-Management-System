@@ -5,6 +5,7 @@ import com.football.dev.footballapp.models.UserEntity;
 import com.football.dev.footballapp.repository.jparepository.UserRepository;
 import com.football.dev.footballapp.repository.mongorepository.NotificationRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +19,10 @@ public class NotificationServiceImpl implements NotificationService{
     private final Function<Notification,NotificationDto> notificationDtoMapper;
     private final UserRepository userRepository;
     private final AuthenticationHelperService authenticationHelperService;
+
     public NotificationServiceImpl(NotificationRepository notificationRepository,Function<Notification,
-            NotificationDto> notificationDtoMapper,UserRepository userRepository,AuthenticationHelperService authenticationHelperService){
+            NotificationDto> notificationDtoMapper,UserRepository userRepository
+            , AuthenticationHelperService authenticationHelperService){
         this.notificationRepository=notificationRepository;
         this.notificationDtoMapper=notificationDtoMapper;
         this.userRepository=userRepository;
@@ -62,12 +65,5 @@ public class NotificationServiceImpl implements NotificationService{
             notificationRepository.save(notificationParam);
             userRepository.save(user);
         });
-    }
-    @Override
-    public List<NotificationDto> getNotificationsSentFromCurrentUser() {
-        UserEntity currentUser = authenticationHelperService.getUserEntityFromAuthentication();
-        return notificationRepository.findNotificationsByFromUserId(currentUser.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Sent notifications not found with userId: " + currentUser.getId()))
-                .stream().map(notificationDtoMapper).collect(Collectors.toList());
     }
 }

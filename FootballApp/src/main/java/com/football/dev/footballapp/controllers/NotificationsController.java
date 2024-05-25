@@ -30,8 +30,4 @@ public class NotificationsController {
         Long notificationCount = userEntity.getNotificationsNumber();
         return ResponseEntity.ok(notificationCount);
     }
-    @GetMapping("/from/currentuser") // Notifications sent by this user
-    public ResponseEntity<List<NotificationDto>> getNotificationsSentFromLoggedInUser(){
-        return ResponseEntity.status(HttpStatus.OK).body(notificationService.getNotificationsSentFromCurrentUser());
-    }
 }
