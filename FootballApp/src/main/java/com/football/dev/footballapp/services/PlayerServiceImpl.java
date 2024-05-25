@@ -1,12 +1,15 @@
 package com.football.dev.footballapp.services;
 import com.football.dev.footballapp.dto.PlayerDto;
 import com.football.dev.footballapp.dto.PlayerIdDto;
+import com.football.dev.footballapp.exceptions.UserNotFoundException;
 import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.Notification;
 import com.football.dev.footballapp.models.Player;
+import com.football.dev.footballapp.models.UserEntity;
 import com.football.dev.footballapp.models.enums.Foot;
 import com.football.dev.footballapp.repository.jparepository.ClubRepository;
 import com.football.dev.footballapp.repository.jparepository.PlayerRepository;
+import com.football.dev.footballapp.repository.mongorepository.NotificationRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,11 +19,9 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
 @Service
 public class PlayerServiceImpl implements PlayerService {
     private final PlayerRepository playerRepository;
@@ -30,11 +31,13 @@ public class PlayerServiceImpl implements PlayerService {
     private final Function<Player, PlayerDto> playerToPlayerDto;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final NotificationService notificationService;
-
+    private final NotificationRepository notificationRepository;
+    private final AuthenticationHelperService authenticationHelperService;
     public PlayerServiceImpl(PlayerRepository playerRepository,Function<PlayerDto, Player> playerDtoToPlayer,
                              ClubRepository clubRepository,FileUploadService fileUploadService,
                              Function<Player, PlayerDto> playerToPlayerDto,SimpMessagingTemplate simpMessagingTemplate,
-                             NotificationService notificationService){
+                             NotificationService notificationService,NotificationRepository notificationRepository,
+                             AuthenticationHelperService authenticationHelperService){
         this.playerRepository=playerRepository;
         this.playerDtoToPlayer=playerDtoToPlayer;
         this.clubRepository=clubRepository;
@@ -42,6 +45,8 @@ public class PlayerServiceImpl implements PlayerService {
         this.playerToPlayerDto=playerToPlayerDto;
         this.simpMessagingTemplate=simpMessagingTemplate;
         this.notificationService=notificationService;
+        this.notificationRepository=notificationRepository;
+        this.authenticationHelperService=authenticationHelperService;
     }
     @Override
     public void savePlayer(PlayerDto playerDto, MultipartFile file){
@@ -104,6 +109,9 @@ public class PlayerServiceImpl implements PlayerService {
                 + " needs permission to delete player: " + playerDb.getName() + " with id: " + playerDb.getId();
         notificationService.createPlayerDeletePermissionNotification(new Notification(id,message));
         simpMessagingTemplate.convertAndSend("/topic/playerDeleted",message);
+        UserEntity currentLoggedInUser = this.authenticationHelperService.getUserEntityFromAuthentication();
+        List<PlayerIdDto> notificationsSentFromCurrentUser = this.getPlayerIdsWhoAskedPermissionFromCurrentUser();
+        this.simpMessagingTemplate.convertAndSend(("/topic/askedpermission/" + currentLoggedInUser.getId()),notificationsSentFromCurrentUser);
     }
     @Override
     public void deletePlayer(Long id) {
@@ -115,6 +123,14 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public List<PlayerIdDto> deletedPlayers() {
         return playerRepository.findPlayersByIsDeleted(true).stream().map(player -> new PlayerIdDto(player.getId())).collect(Collectors.toList());
+    }
+    @Override
+    public List<PlayerIdDto> getPlayerIdsWhoAskedPermissionFromCurrentUser() {
+        UserEntity currentUser = authenticationHelperService.getUserEntityFromAuthentication();
+        if(currentUser == null) throw new UserNotFoundException("User not found");
+        return notificationRepository.findNotificationsByFromUserId(currentUser.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Sent notifications not found with userId: " + currentUser.getId()))
+                .stream().map(notification -> new PlayerIdDto(notification.getPlayerId())).collect(Collectors.toList());
     }
 
 }

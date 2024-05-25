@@ -15,4 +15,5 @@ public interface PlayerService {
     void deletePlayer(Long id);
     void sendDeletePlayerPermission(Long id);
     List<PlayerIdDto> deletedPlayers();
+    List<PlayerIdDto> getPlayerIdsWhoAskedPermissionFromCurrentUser();
 }

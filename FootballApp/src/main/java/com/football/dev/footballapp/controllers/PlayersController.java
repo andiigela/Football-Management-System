@@ -91,4 +91,8 @@ public class PlayersController {
     public ResponseEntity<List<PlayerIdDto>> deletedPlayers(){
         return ResponseEntity.status(HttpStatus.OK).body(playerService.deletedPlayers());
     }
+    @GetMapping("/askedpermission/currentuser") // Current user player ids that sent notifications
+    public ResponseEntity<List<PlayerIdDto>> getPlayerIdsOfCurrentUserAskedPermission(){
+        return ResponseEntity.status(HttpStatus.OK).body(playerService.getPlayerIdsWhoAskedPermissionFromCurrentUser());
+    }
 }
