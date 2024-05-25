@@ -55,5 +55,9 @@ export class PlayerService {
     let headers = this.getHeaders();
     return this.http.get(`${this.playerUrl}/deleted`,{headers});
   }
+  public getPlayerIdsWhoAskedPermissionFromCurrentUser(): Observable<any>{
+    let headers = this.getHeaders();
+    return this.http.get(`${this.playerUrl}/askedpermission/currentuser`,{headers});
+  }
 }
 

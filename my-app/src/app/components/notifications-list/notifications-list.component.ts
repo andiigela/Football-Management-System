@@ -30,7 +30,6 @@ export class NotificationsListComponent implements OnInit{
   }
     giveDeletePlayerPermission(notificationDto: NotificationDto): void {
       this.playerService.acceptDeletePlayerPermission(notificationDto.playerId).subscribe(data => {
-        console.log("Accepted Deleted player: " + data);
         notificationDto.permissionGiven = true;
     });
   }

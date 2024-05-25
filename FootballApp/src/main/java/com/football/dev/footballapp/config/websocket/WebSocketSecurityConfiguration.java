@@ -19,8 +19,10 @@ public class WebSocketSecurityConfiguration extends AbstractSecurityWebSocketMes
         messages
                 .nullDestMatcher().authenticated()
                 .simpDestMatchers("/app/playerDeleted").hasRole("ADMIN_CLUB")
+                .simpDestMatchers("/app/askedpermission/**").hasRole("ADMIN_CLUB")
                 .simpSubscribeDestMatchers("/topic/playerDeleted").hasRole("ADMIN_LEAGUE")
-                .anyMessage().permitAll();
+                .simpSubscribeDestMatchers("/topic/askedpermission/**").hasRole("ADMIN_CLUB")
+                .anyMessage().authenticated();
     }
     @Override
     protected boolean sameOriginDisabled() {
