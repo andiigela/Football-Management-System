@@ -12,11 +12,12 @@ import {WebSocketService} from "./services/web-socket.service";
 export class AppComponent implements OnInit {
   title = 'my-app';
   userEmail: string | null = null;
+  private connectionId: string = "notification";
   constructor(public authService: AuthService,private webSocketService: WebSocketService) {}
   ngOnInit(): void {
     this.authService.isAuthenticated.subscribe(val => {
       if(val == true){
-        this.webSocketService.connect();
+        this.webSocketService.connect("/topic/playerDeleted",this.connectionId);
       }
     })
 

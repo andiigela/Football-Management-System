@@ -9,7 +9,7 @@ import {WebSocketService} from "../../services/web-socket.service";
 })
 export class LoginstatusComponent implements OnInit {
   isAuthenticated: boolean = false;
-
+  private connectionId: string = "notification";
   constructor(private authService: AuthService, private cdr: ChangeDetectorRef,
               private webSocketService: WebSocketService) {}
 
@@ -28,6 +28,6 @@ export class LoginstatusComponent implements OnInit {
     logOut(): void {
     this.authService.logout();
         this.cdr.detectChanges();
-        this.webSocketService.disconnect();
+        this.webSocketService.disconnect(this.connectionId);
     }
 }

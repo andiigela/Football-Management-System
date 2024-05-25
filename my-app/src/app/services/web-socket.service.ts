@@ -8,34 +8,37 @@ import {HttpHeaders} from "@angular/common/http";
   providedIn: 'root'
 })
 export class WebSocketService {
-  private stompClient:any;
-  private messageSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  private stompClient: {[key: string]: any} = {};
+  private messageSubject: { [key: string]: BehaviorSubject<string> } = {};
   private serverUrl = 'http://localhost:8080/our-websocket';
   private notificationCount :BehaviorSubject<number> = new BehaviorSubject<number>(0);
   constructor() {
   }
-  connect(){
+  connect(topicUrl: string,connectionId: string){
     const headers = this.getHeaders();
     const socket = new SockJS(this.serverUrl);
 
-    this.stompClient = Stomp.over(socket);
+    this.stompClient[connectionId] = Stomp.over(socket);
     var headers2 = {
       'Authorization': headers.get('Authorization')
     }
-    this.stompClient.connect(headers2, () => {
-      this.stompClient.subscribe('/topic/playerDeleted', (message: any) => {
-        this.messageSubject.next(message.body);
+    this.messageSubject[connectionId] = new BehaviorSubject<string>('');
+    this.stompClient[connectionId].connect(headers2, () => {
+      this.stompClient[connectionId].subscribe(topicUrl, (message: any) => {
+        this.messageSubject[connectionId].next(message.body);
       });
     });
   }
-  disconnect() {
-    if (this.stompClient !== null) {
-      this.stompClient.disconnect();
+  disconnect(connectionId: string) {
+    if (this.stompClient[connectionId] !== null) {
+      this.stompClient[connectionId].disconnect();
+      delete this.stompClient[connectionId];
+      delete this.messageSubject[connectionId];
     }
     console.log("-Disconnected-")
   }
-  getMessages(): Observable<any> {
-    return this.messageSubject.asObservable();
+  getMessages(connectionId: string): Observable<any> {
+    return this.messageSubject[connectionId].asObservable();
   }
   private getHeaders(): HttpHeaders {
     const headers = new HttpHeaders({

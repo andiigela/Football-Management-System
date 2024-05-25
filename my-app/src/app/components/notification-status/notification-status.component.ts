@@ -12,10 +12,11 @@ import {NotificationService} from "../../services/notification.service";
 export class NotificationStatusComponent implements OnInit {
   protected readonly faBell = faBell;
   protected countNotification: number = 0;
+  private connectionId: string = "notification";
   constructor(private webSocketService: WebSocketService,private notificationService: NotificationService,private route: Router) {
   }
   ngOnInit(): void {
-    this.webSocketService.getMessages().subscribe(notification => {
+    this.webSocketService.getMessages(this.connectionId).subscribe(notification => {
       if(notification){
         console.log("Message: " + notification);
         this.webSocketService.incrementNotificationCount();
