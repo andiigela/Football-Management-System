@@ -30,7 +30,6 @@ export class PlayersListComponent implements OnInit, OnDestroy{
   }
   ngOnInit(): void {
     this.webSocketService.connect(("/topic/askedpermission/"+this.authService.getUserIdFromToken()),this.connectionId);
-    this.subscribeToSentNotifications();
     this.getPlayers();
   }
   private subscribeToRetrievedAskedPermissionPlayersFromApi(){
@@ -77,6 +76,7 @@ export class PlayersListComponent implements OnInit, OnDestroy{
   deletePlayer(id: number){
     this.playerService.sendDeletePlayerPermission(id)
         .subscribe(()=> {
+          this.subscribeToSentNotifications();
         })
   }
   updatePlayerList(playersList: PlayerDto[]){
