@@ -18,8 +18,9 @@ export class PlayersListComponent implements OnInit, OnDestroy{
   pageSize: number = 10;
   totalElements: number = 0;
   private connectionId: string = "playeraskedpermission";
-  notificationsSentFromCurrentUser: PlayerIdDto[]=[];
-  playersWhoSentNotificationsFetched = false;
+  playersWhoAskedPermission: PlayerIdDto[]=[];
+  playerWhoAskedPermission: PlayerIdDto|null=null;
+
   constructor(private playerService: PlayerService,private router: Router,
               private webSocketService: WebSocketService,
               private authService: AuthService) {
@@ -34,19 +35,17 @@ export class PlayersListComponent implements OnInit, OnDestroy{
   }
   private subscribeToRetrievedAskedPermissionPlayersFromApi(){
     this.playerService.getPlayerIdsWhoAskedPermissionFromCurrentUser().subscribe((playerIds: PlayerIdDto[])=>{
-      this.playersList = this.playersList.map((playerDto: PlayerDto) => {
-        playerDto.permissionSent = playerIds.some((playerId: PlayerIdDto) => playerId.id == playerDto.id)
-        return playerDto;
-      })
+      this.playersWhoAskedPermission=playerIds;
+      this.updatePlayersListWithNotifications();
     })
   }
   private subscribeToSentNotifications(): void {
     this.webSocketService.getMessages(this.connectionId).subscribe((data: any[]) => {
       if(data.length > 0){
         if (typeof data === 'string') {
-          this.notificationsSentFromCurrentUser = JSON.parse(data);
-          this.playersWhoSentNotificationsFetched=true;
-          console.log("Parsed notifications: ", this.notificationsSentFromCurrentUser);
+          this.playerWhoAskedPermission = JSON.parse(data);
+          this.playersWhoAskedPermission.push(this.playerWhoAskedPermission!);
+          console.log("Parsed notification: ", this.playerWhoAskedPermission);
           this.updatePlayersListWithNotifications();
         }
       }
@@ -54,7 +53,7 @@ export class PlayersListComponent implements OnInit, OnDestroy{
   }
   private updatePlayersListWithNotifications(): void {
     this.playersList = this.playersList.map((playerDto: PlayerDto) => {
-      playerDto.permissionSent = this.notificationsSentFromCurrentUser
+      playerDto.permissionSent = this.playersWhoAskedPermission
           .some((playerIdDto: PlayerIdDto) => playerIdDto.id === playerDto.id
       );
       return playerDto;
@@ -78,7 +77,6 @@ export class PlayersListComponent implements OnInit, OnDestroy{
   deletePlayer(id: number){
     this.playerService.sendDeletePlayerPermission(id)
         .subscribe(()=> {
-          // this.playersList = this.playersList.filter(player => player.id != id);
         })
   }
   updatePlayerList(playersList: PlayerDto[]){

@@ -110,8 +110,8 @@ public class PlayerServiceImpl implements PlayerService {
         notificationService.createPlayerDeletePermissionNotification(new Notification(id,message));
         simpMessagingTemplate.convertAndSend("/topic/playerDeleted",message);
         UserEntity currentLoggedInUser = this.authenticationHelperService.getUserEntityFromAuthentication();
-        List<PlayerIdDto> notificationsSentFromCurrentUser = this.getPlayerIdsWhoAskedPermissionFromCurrentUser();
-        this.simpMessagingTemplate.convertAndSend(("/topic/askedpermission/" + currentLoggedInUser.getId()),notificationsSentFromCurrentUser);
+        PlayerIdDto playerWhoAskedPermission = new PlayerIdDto(playerDb.getId());
+        this.simpMessagingTemplate.convertAndSend(("/topic/askedpermission/" + currentLoggedInUser.getId()),playerWhoAskedPermission);
     }
     @Override
     public void deletePlayer(Long id) {
