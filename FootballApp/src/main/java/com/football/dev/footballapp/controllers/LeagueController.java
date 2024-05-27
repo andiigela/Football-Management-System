@@ -6,9 +6,7 @@ import com.football.dev.footballapp.dto.LeagueDTO;
 import com.football.dev.footballapp.dto.SeasonDto;
 import com.football.dev.footballapp.exceptions.ResourceNotFoundException;
 import com.football.dev.footballapp.models.ES.LeagueES;
-import com.football.dev.footballapp.services.ElasticSearchService;
 import com.football.dev.footballapp.services.LeagueService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +23,6 @@ import java.util.Optional;
 public class LeagueController {
     private final LeagueService leagueService;
 
-    @Autowired
-    private ElasticSearchService elasticSearchService;
     public LeagueController(LeagueService leagueService) {
         this.leagueService = leagueService;
     }
@@ -80,20 +76,16 @@ public class LeagueController {
         }
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<LeagueES>> searchLeaguesByName(@RequestParam String name) {
-        List<LeagueES> leagues = leagueService.searchLeaguesByName(name);
-        return new ResponseEntity<>(leagues, HttpStatus.OK);
-    }
+
     @GetMapping("/matchAll")
     public String matchAll() throws IOException {
-        SearchResponse<Map> searchResponse =  elasticSearchService.matchAllServices();
+        SearchResponse<Map> searchResponse =  leagueService.matchAllServices();
         System.out.println(searchResponse.hits().hits().toString());
         return searchResponse.hits().hits().toString();
     }
     @GetMapping("/matchAllLeagues")
-    public List<LeagueES> matchAllProducts() throws IOException {
-        SearchResponse<LeagueES> searchResponse =  elasticSearchService.matchAllLeagueServices();
+    public List<LeagueES> matchAllLeagues() throws IOException {
+        SearchResponse<LeagueES> searchResponse =  leagueService.matchAllLeagueServices();
         System.out.println(searchResponse.hits().hits().toString());
 
         List<Hit<LeagueES>> listOfHits= searchResponse.hits().hits();
@@ -106,7 +98,7 @@ public class LeagueController {
 
     @GetMapping("/matchAllLeagues/{fieldValue}")
     public List<LeagueES> matchAllLeaguesWithName(@PathVariable String fieldValue) throws IOException {
-        SearchResponse<LeagueES> searchResponse =  elasticSearchService.matchProductsWithName(fieldValue);
+        SearchResponse<LeagueES> searchResponse =  leagueService.matchLeaguesWithName(fieldValue);
         System.out.println(searchResponse.hits().hits().toString());
 
         List<Hit<LeagueES>> listOfHits= searchResponse.hits().hits();

@@ -1,5 +1,8 @@
 package com.football.dev.footballapp.services.impl;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
 import com.football.dev.footballapp.dto.LeagueDTO;
 import com.football.dev.footballapp.dto.SeasonDto;
 import com.football.dev.footballapp.exceptions.ResourceNotFoundException;
@@ -11,12 +14,17 @@ import com.football.dev.footballapp.repository.esrepository.LeagueRepositoryES;
 import com.football.dev.footballapp.repository.jparepository.LeagueRepository;
 import com.football.dev.footballapp.repository.jparepository.SeasonRepository;
 import com.football.dev.footballapp.services.LeagueService;
+import com.football.dev.footballapp.util.ElasticSearchUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,14 +34,17 @@ public class LeagueServiceImpl implements LeagueService {
     private final LeagueRepositoryES leagueRepositoryES;
     private final LeagueDTOMapper leagueDTOMapper;
 
+    private ElasticsearchClient elasticsearchClient;
     public LeagueServiceImpl(LeagueRepository leagueRepository,
                              SeasonRepository seasonRepository,
                              LeagueRepositoryES leagueRepositoryES,
-                             LeagueDTOMapper leagueDTOMapper) {
+                             LeagueDTOMapper leagueDTOMapper,
+                             ElasticsearchClient elasticsearchClient) {
         this.leagueRepository = leagueRepository;
         this.seasonRepository = seasonRepository;
         this.leagueRepositoryES = leagueRepositoryES;
         this.leagueDTOMapper = leagueDTOMapper;
+        this.elasticsearchClient = elasticsearchClient;
     }
 
     @Override
@@ -109,10 +120,28 @@ public class LeagueServiceImpl implements LeagueService {
                 .collect(Collectors.toList());
     }
 
+//ES
     @Override
-    public List<LeagueES> searchLeaguesByName(String name) {
-        return leagueRepositoryES.findByName(name);
+    public SearchResponse<Map> matchAllServices() throws IOException {
+        Supplier<Query> supplier  = ElasticSearchUtil.supplier();
+        SearchResponse<Map> searchResponse = elasticsearchClient.search(s->s.query(supplier.get()),Map.class);
+        System.out.println("elasticsearch query is "+supplier.get().toString());
+        return searchResponse;
     }
 
+    @Override
+    public SearchResponse<LeagueES> matchAllLeagueServices() throws IOException{
+        Supplier<Query> supplier  = ElasticSearchUtil.supplier();
+        SearchResponse<LeagueES> searchResponse = elasticsearchClient.search(s->s.index("league").query(supplier.get()),LeagueES.class);
+        System.out.println("elasticsearch query is "+supplier.get().toString());
+        return searchResponse;
+    }
 
+    @Override
+    public SearchResponse<LeagueES> matchLeaguesWithName(String fieldValue) throws IOException{
+        Supplier<Query> supplier  = ElasticSearchUtil.supplierWithNameField(fieldValue);
+        SearchResponse<LeagueES> searchResponse = elasticsearchClient.search(s->s.index("league").query(supplier.get()),LeagueES.class);
+        System.out.println("elasticsearch query is "+supplier.get().toString());
+        return searchResponse;
+    }
 }
