@@ -108,7 +108,7 @@ public class PlayerServiceImpl implements PlayerService {
         String message = "Club " + playerDb.getClub().getName()
                 + " needs permission to delete player: " + playerDb.getName() + " with id: " + playerDb.getId();
         notificationService.createPlayerDeletePermissionNotification(new Notification(id,message));
-        simpMessagingTemplate.convertAndSend("/topic/playerDeleted",message);
+        simpMessagingTemplate.convertAndSend("/topic/notifications/askedpermission",message);
         UserEntity currentLoggedInUser = this.authenticationHelperService.getUserEntityFromAuthentication();
         PlayerIdDto playerWhoAskedPermission = new PlayerIdDto(playerDb.getId());
         this.simpMessagingTemplate.convertAndSend(("/topic/askedpermission/" + currentLoggedInUser.getId()),playerWhoAskedPermission);

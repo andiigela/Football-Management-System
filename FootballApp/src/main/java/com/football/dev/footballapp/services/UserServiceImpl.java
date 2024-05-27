@@ -1,6 +1,7 @@
 package com.football.dev.footballapp.services;
 
 import com.football.dev.footballapp.dto.UserEntityDto;
+import com.football.dev.footballapp.exceptions.UserNotFoundException;
 import com.football.dev.footballapp.models.UserEntity;
 import com.football.dev.footballapp.repository.jparepository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -16,7 +17,8 @@ import java.util.function.Function;
 public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final Function<UserEntityDto, UserEntity> userEntityDtoToUserEntity;
-    public UserServiceImpl(UserRepository userRepository, Function<UserEntityDto, UserEntity> userEntityDtoToUserEntity){
+    public UserServiceImpl(UserRepository userRepository, Function<UserEntityDto,
+            UserEntity> userEntityDtoToUserEntity){
         this.userRepository=userRepository;
         this.userEntityDtoToUserEntity = userEntityDtoToUserEntity;
     }
@@ -83,7 +85,6 @@ public class UserServiceImpl implements UserService{
         userToUpdate.setCity(updatedUserDto.city());
         userToUpdate.setPostal_code(updatedUserDto.postal_code());
         userToUpdate.setGender(updatedUserDto.gender());
-
         userRepository.save(userToUpdate);
     }
 
