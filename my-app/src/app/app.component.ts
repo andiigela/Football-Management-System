@@ -3,6 +3,7 @@ import { AuthService } from './services/auth.service';
 import { Observable, of } from 'rxjs';
 import {faBell} from "@fortawesome/free-solid-svg-icons";
 import {WebSocketService} from "./services/web-socket.service";
+import {SharedNotificationService} from "./services/shared-notification.service";
 
 @Component({
   selector: 'app-root',
@@ -13,14 +14,14 @@ export class AppComponent implements OnInit {
   title = 'my-app';
   userEmail: string | null = null;
   private connectionId: string = "notification";
-  constructor(public authService: AuthService,private webSocketService: WebSocketService) {}
+  constructor(public authService: AuthService,private webSocketService: WebSocketService,private sharedNotification: SharedNotificationService) {}
   ngOnInit(): void {
     this.authService.isAuthenticated.subscribe(val => {
       if(val == true){
-        this.webSocketService.connect("/topic/playerDeleted",this.connectionId);
+        // this.sharedNotification.fetchNotificationCountsFromApi();
+        this.webSocketService.connect("/topic/notifications/askedpermission",this.connectionId);
       }
     })
-
     this.authService.getUserEmail().subscribe(email => {
       this.userEmail = email;
     });
@@ -37,6 +38,4 @@ export class AppComponent implements OnInit {
   logout(): void {
     this.authService.logout();
   }
-
-  protected readonly faBell = faBell;
 }
