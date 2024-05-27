@@ -1,7 +1,12 @@
-<div *ngIf="leagues.length > 0" class="container">
+<div class="container">
   <div class="d-flex justify-content-between align-items-center mb-3" style="margin-top: 30px">
     <h2 class="mb-0">All Leagues</h2>
-    <button (click)="redirectToCreateLeague()" class="btn btn-primary">Create League</button>
+    <div class="input-group" style="width: 300px;">
+      <input type="text" class="form-control" placeholder="Search leagues..." [(ngModel)]="searchQuery">
+      <div class="input-group-append">
+        <button class="btn btn-primary" type="button" (click)="searchLeagues()">Search</button>
+      </div>
+    </div>
   </div>
   <div class="row">
     <div *ngFor="let league of leagues" class="col-md-4 mb-3">
@@ -21,12 +26,11 @@
     </div>
   </div>
 </div>
-<div class="d-flex justify-content-center">
-  <!-- Pagination -->
+<div class="d-flex justify-content-center mt-3">
   <ngb-pagination
-          [collectionSize]="totalElements"
-          [(page)]="pageNumber"
-          [pageSize]="pageSize"
-          (pageChange)="onPageChange($event)">
+    [collectionSize]="totalElements"
+    [(page)]="pageNumber"
+    [pageSize]="pageSize"
+    (pageChange)="onPageChange($event)">
   </ngb-pagination>
 </div>

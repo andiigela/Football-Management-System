@@ -36,4 +36,11 @@ export class LeagueService {
   getSeasonsForLeague(leagueId: number): Observable<SeasonDto[]> {
     return this.http.get<SeasonDto[]>(`${this.leagueUrl}/${leagueId}/seasons`);
   }
+  matchAllLeagues(): Observable<LeagueDto[]> {
+    return this.http.get<LeagueDto[]>(`${this.leagueUrl}/matchAllLeagues`);
+  }
+
+  searchLeaguesByName(name: string): Observable<LeagueDto[]> {
+    return this.http.get<LeagueDto[]>(`${this.leagueUrl}/matchAllLeagues/${name}`);
+  }
 }

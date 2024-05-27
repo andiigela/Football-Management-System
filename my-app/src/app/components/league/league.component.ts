@@ -15,6 +15,8 @@ export class LeagueComponent implements OnInit{
   pageNumber: number = 1;
   pageSize: number = 1;
   totalElements: number = 0;
+  searchQuery: string = '';
+
 
   constructor(private leagueService : LeagueService,private router: Router) {
   }
@@ -56,5 +58,23 @@ export class LeagueComponent implements OnInit{
 
   redirectToLeagueSeasons(id: number): void {
     this.router.navigate(['/league', id, 'seasons']);
+  }
+  searchLeagues(): void {
+    if (this.searchQuery.trim() !== '') {
+      this.leagueService.searchLeaguesByName(this.searchQuery).subscribe(
+        response => {
+          this.leagues = response;
+          // Reset pagination
+          this.pageNumber = 1;
+          this.totalElements = this.leagues.length;
+        },
+        error => {
+          console.error('Error searching leagues:', error);
+        }
+      );
+    } else {
+      // If search query is empty, fetch all leagues
+      this.findAllLeagues();
+    }
   }
 }
