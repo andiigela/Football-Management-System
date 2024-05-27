@@ -1,39 +1,42 @@
 package com.football.dev.footballapp.services.impl;
 
 import com.football.dev.footballapp.dto.*;
-import com.football.dev.footballapp.mapper.UserEntityDTOMapper;
 import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.RefreshToken;
 import com.football.dev.footballapp.models.Role;
 import com.football.dev.footballapp.models.UserEntity;
-import com.football.dev.footballapp.repository.ClubRepository;
-import com.football.dev.footballapp.repository.RoleRepository;
-import com.football.dev.footballapp.repository.UserRepository;
+import com.football.dev.footballapp.repository.esrepository.ClubRepositoryES;
+import com.football.dev.footballapp.repository.jparepository.ClubRepository;
+import com.football.dev.footballapp.repository.jparepository.RoleRepository;
+import com.football.dev.footballapp.repository.jparepository.UserRepository;
 import com.football.dev.footballapp.security.JWTGenerator;
 import com.football.dev.footballapp.services.AuthService;
 import com.football.dev.footballapp.services.RefreshTokenService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.Collections;
 
 @Service
 public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final ClubRepository clubRepository;
+    private final ClubRepositoryES clubRepositoryES;
+
     private final JWTGenerator jwtGenerator;
     private final AuthenticationManager authenticationManager;
     private final RefreshTokenService refreshTokenService;
     private final  PasswordEncoder passwordEncoder;
-
-    public AuthServiceImpl(UserRepository userRepository, RoleRepository roleRepository, ClubRepository clubRepository, JWTGenerator jwtGenerator, AuthenticationManager authenticationManager, RefreshTokenService refreshTokenService, PasswordEncoder passwordEncoder) {
+    public AuthServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
+                           ClubRepository clubRepository, JWTGenerator jwtGenerator,
+                           AuthenticationManager authenticationManager,
+                           RefreshTokenService refreshTokenService, PasswordEncoder passwordEncoder,
+                           ClubRepositoryES clubRepositoryES) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.clubRepository = clubRepository;
@@ -41,6 +44,7 @@ public class AuthServiceImpl implements AuthService {
         this.authenticationManager = authenticationManager;
         this.refreshTokenService = refreshTokenService;
         this.passwordEncoder = passwordEncoder;
+        this.clubRepositoryES = clubRepositoryES;
     }
 
     @Override
@@ -85,6 +89,7 @@ public class AuthServiceImpl implements AuthService {
         club.setName(registerDto.getClubName());
         club.setUser(user);
         clubRepository.save(club);
+        clubRepositoryES.save(club);
     }
 
     @Override

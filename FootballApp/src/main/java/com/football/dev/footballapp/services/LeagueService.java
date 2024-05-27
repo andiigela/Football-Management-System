@@ -3,6 +3,8 @@ package com.football.dev.footballapp.services;
 import com.football.dev.footballapp.dto.LeagueDTO;
 import com.football.dev.footballapp.dto.SeasonDto;
 import com.football.dev.footballapp.exceptions.ResourceNotFoundException;
+import com.football.dev.footballapp.models.ES.LeagueES;
+import com.football.dev.footballapp.models.League;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -18,5 +20,5 @@ public interface LeagueService {
     void createSeasonForLeague(Long leagueId, SeasonDto seasonDto);
     List<SeasonDto> getSeasonsForLeague(Long leagueId) throws ResourceNotFoundException;
 
-
+    List<LeagueES> searchLeaguesByName(String name);
 }

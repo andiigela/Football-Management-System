@@ -1,29 +1,21 @@
 package com.football.dev.footballapp.services.impl;
 import com.football.dev.footballapp.dto.PlayerDto;
-import com.football.dev.footballapp.dto.RoundDto;
-import com.football.dev.footballapp.mapper.SeasonDtoMapper;
 import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.Player;
-import com.football.dev.footballapp.models.Round;
 import com.football.dev.footballapp.models.enums.Foot;
-import com.football.dev.footballapp.repository.ClubRepository;
-import com.football.dev.footballapp.repository.PlayerRepository;
+import com.football.dev.footballapp.repository.jparepository.ClubRepository;
+import com.football.dev.footballapp.repository.jparepository.PlayerRepository;
 import com.football.dev.footballapp.services.FileUploadService;
 import com.football.dev.footballapp.services.PlayerService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.support.PageableExecutionUtils;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {

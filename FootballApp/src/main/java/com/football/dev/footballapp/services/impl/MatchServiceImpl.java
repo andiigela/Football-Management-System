@@ -1,13 +1,12 @@
 package com.football.dev.footballapp.services.impl;
 
 import com.football.dev.footballapp.dto.MatchDTO;
-import com.football.dev.footballapp.dto.RoundDto;
 import com.football.dev.footballapp.mapper.MatchDTOMapper;
 import com.football.dev.footballapp.models.*;
-import com.football.dev.footballapp.repository.ClubRepository;
-import com.football.dev.footballapp.repository.MatchRepository;
-import com.football.dev.footballapp.repository.RoundRepository;
-import com.football.dev.footballapp.repository.StadiumRepository;
+import com.football.dev.footballapp.repository.jparepository.ClubRepository;
+import com.football.dev.footballapp.repository.jparepository.MatchRepository;
+import com.football.dev.footballapp.repository.jparepository.RoundRepository;
+import com.football.dev.footballapp.repository.jparepository.StadiumRepository;
 import com.football.dev.footballapp.services.MatchService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
@@ -16,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

@@ -27,5 +27,8 @@ public class SeasonDto {
         this.currentSeason = currentSeason;
 //        this.league = league;
     }
+    public SeasonDto(String name) {
+        this.name = name;
 
+    }
 }

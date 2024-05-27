@@ -3,7 +3,7 @@ package com.football.dev.footballapp.services.impl;
 import com.football.dev.footballapp.dto.TransferDTO;
 import com.football.dev.footballapp.mapper.TransferDTOMapper;
 import com.football.dev.footballapp.models.Transfer;
-import com.football.dev.footballapp.repository.TransferRepository;
+import com.football.dev.footballapp.repository.jparepository.TransferRepository;
 import com.football.dev.footballapp.services.TransferService;
 import org.springframework.stereotype.Service;
 

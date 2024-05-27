@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Where(clause = "is_deleted=false")
+@Document(indexName = "club")
 public class Club extends BaseEntity {
 
     private String name;

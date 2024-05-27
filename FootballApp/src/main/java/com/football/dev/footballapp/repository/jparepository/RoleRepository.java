@@ -1,4 +1,4 @@
-package com.football.dev.footballapp.repository;
+package com.football.dev.footballapp.repository.jparepository;
 
 import com.football.dev.footballapp.models.Role;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -81,6 +81,24 @@
             <version>0.0.20131108.vaadin1</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+        </dependency>
+
+        <!-- Elasticsearch REST High Level Client -->
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-high-level-client</artifactId>
+            <version>7.17.2</version> <!-- Update to the latest version if needed -->
+        </dependency>
+
+        <!-- Elasticsearch Transport Client (Optional) -->
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-client</artifactId>
+            <version>7.17.2</version> <!-- Update to the latest version if needed -->
+        </dependency>
     </dependencies>
 
     <build>
@@ -99,5 +117,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

@@ -1,16 +1,22 @@
 package com.football.dev.footballapp.services.impl;
 
 import com.football.dev.footballapp.dto.UserEntityDto;
-import com.football.dev.footballapp.exceptions.UserNotFoundException;
 import com.football.dev.footballapp.mapper.UserEntityToDTOMapper;
-import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.UserEntity;
+
 import com.football.dev.footballapp.models.enums.Gender;
-import com.football.dev.footballapp.repository.UserRepository;
+import com.football.dev.footballapp.repository.esrepository.UserRepositoryES;
+import com.football.dev.footballapp.repository.jparepository.UserRepository;
 import com.football.dev.footballapp.services.FileUploadService;
 import com.football.dev.footballapp.services.UserService;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -27,12 +33,15 @@ public class UserServiceImpl implements UserService {
     private final Function<UserEntityDto, UserEntity> userEntityDtoToUserEntity;
     private final FileUploadService fileUploadService;
     private final UserEntityToDTOMapper userEntityMapper;
+    private final UserRepositoryES userRepositoryES;
     public UserServiceImpl(UserRepository userRepository, Function<UserEntityDto, UserEntity> userEntityDtoToUserEntity,
-            FileUploadService fileUploadService, UserEntityToDTOMapper userEntityMapper){
+            FileUploadService fileUploadService, UserEntityToDTOMapper userEntityMapper,
+                           UserRepositoryES userRepositoryES){
         this.userRepository=userRepository;
         this.userEntityDtoToUserEntity = userEntityDtoToUserEntity;
         this.fileUploadService=fileUploadService;
         this.userEntityMapper = userEntityMapper;
+        this.userRepositoryES = userRepositoryES;
     }
     public List<UserEntity> getAllUsers() {
         return userRepository.findAll();
@@ -73,7 +82,6 @@ public class UserServiceImpl implements UserService {
             userEntity.setEmail(loggedInUserEmail);
             userEntity.setPassword(loggedInUser.getPassword());
             userEntity.setRole(loggedInUser.getRole());
-
             userRepository.save(userEntity);
         } catch (Exception e) {
             e.printStackTrace();
