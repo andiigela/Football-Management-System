@@ -45,11 +45,4 @@ export class WebSocketService {
     })
     return headers;
   }
-  // incrementNotificationCount(): void{
-  //   const currentCount = this.notificationCount.getValue();
-  //   this.notificationCount.next(currentCount + 1);
-  // }
-  // getNotificationCount(): Observable<number> {
-  //   return this.notificationCount.asObservable();
-  // }
 }

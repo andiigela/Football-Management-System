@@ -39,6 +39,7 @@ import {AdminLeagueGuard} from "./guards/admin-league.guard";
 import {AdminClubGuard} from "./guards/admin-club.guard";
 import {NotificationStatusComponent} from "./components/notification-status/notification-status.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
+import {NotificationsListComponent} from "./components/notifications-list/notifications-list.component";
 
 
 const routes : Routes = [
@@ -54,6 +55,7 @@ const routes : Routes = [
   {path: 'league/:id/seasons',component:SeasonComponent},
   {path: 'league/:leagueId/seasons/edit-season/:id', component: EditSeasonComponent },
   {path: 'league/:id/create-season', component: CreateSeasonComponent },
+  {path: 'notifications',component:NotificationsListComponent},
   {path: 'league',component:LeagueComponent,canActivate:[AuthGuard2,AdminLeagueGuard]},
   {path: 'create-league',component:CreateLeagueComponent,canActivate:[AuthGuard2]},
   {path : 'match',component:MatchComponent,canActivate:[AuthGuard2,AdminLeagueGuard]},
@@ -98,7 +100,8 @@ const routes : Routes = [
     ContractsListComponent,
     ContractEditComponent,
     InjuryEditComponent,
-    NotificationStatusComponent
+    NotificationStatusComponent,
+    NotificationsListComponent
   ],
   imports: [
     RouterModule.forRoot(routes),

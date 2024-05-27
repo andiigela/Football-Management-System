@@ -28,7 +28,6 @@ export class LoginComponent implements OnInit {
             })
         });
     }
-
     loginButton(): void {
         this.loginFormGroup.markAllAsTouched();
         const email: string = this.loginFormGroup.controls['login'].get('email')?.value;
@@ -47,7 +46,7 @@ export class LoginComponent implements OnInit {
                         if (role === 'ADMIN_LEAGUE' || role === 'ADMIN_CLUB') {
                             this.authService.setTokens(res.accessToken, res.refreshToken);
                             this.router.navigateByUrl("/dashboard");
-                            this.sharedNotificationService.readNotificationsFromWebSocket();
+                            // this.sharedNotificationService.readNotificationsFromWebSocket();
                         } else {
                           console.log("Unknown role:", role);
                         }

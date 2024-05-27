@@ -3,8 +3,6 @@ import {PlayerService} from "../../services/player.service";
 import {PlayerDto} from "../../common/player-dto";
 import {Router} from "@angular/router";
 import {WebSocketService} from "../../services/web-socket.service";
-import {NotificationService} from "../../services/notification.service";
-import {NotificationDto} from "../../common/notification-dto";
 import {PlayerIdDto} from "../../common/player-id-dto";
 import {AuthService} from "../../services/auth.service";
 @Component({
@@ -15,7 +13,7 @@ import {AuthService} from "../../services/auth.service";
 export class PlayersListComponent implements OnInit, OnDestroy{
   playersList: PlayerDto[]=[];
   pageNumber: number = 1;
-  pageSize: number = 5;
+  pageSize: number = 10;
   totalElements: number = 0;
   private connectionId: string = "playeraskedpermission";
   playersWhoAskedPermission: PlayerIdDto[]=[];
@@ -54,7 +52,7 @@ export class PlayersListComponent implements OnInit, OnDestroy{
     this.playersList = this.playersList.map((playerDto: PlayerDto) => {
       playerDto.permissionSent = this.playersWhoAskedPermission
           .some((playerIdDto: PlayerIdDto) => playerIdDto.id === playerDto.id
-      );
+          );
       return playerDto;
     });
   }
@@ -85,13 +83,13 @@ export class PlayersListComponent implements OnInit, OnDestroy{
   getPlayerImageUrl(playerDto: PlayerDto):void {
     if (playerDto.imagePath) {
       this.playerService.getImageUrl(playerDto.imagePath).subscribe((blob: Blob) => {
-          const imageUrl = URL.createObjectURL(blob);
-          playerDto.imagePath = imageUrl;
-        },
-        error => {
-          console.error(`Error fetching image for player: ${playerDto.name}`, error);
-          playerDto.imagePath = ''; // Set default image path
-        }
+            const imageUrl = URL.createObjectURL(blob);
+            playerDto.imagePath = imageUrl;
+          },
+          error => {
+            console.error(`Error fetching image for player: ${playerDto.name}`, error);
+            playerDto.imagePath = ''; // Set default image path
+          }
       );
     }
   }

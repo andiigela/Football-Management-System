@@ -14,11 +14,10 @@ export class AppComponent implements OnInit {
   title = 'my-app';
   userEmail: string | null = null;
   private connectionId: string = "notification";
-  constructor(public authService: AuthService,private webSocketService: WebSocketService,private sharedNotification: SharedNotificationService) {}
+  constructor(public authService: AuthService,private webSocketService: WebSocketService) {}
   ngOnInit(): void {
     this.authService.isAuthenticated.subscribe(val => {
       if(val == true){
-        // this.sharedNotification.fetchNotificationCountsFromApi();
         this.webSocketService.connect("/topic/notifications/askedpermission",this.connectionId);
       }
     })
@@ -34,7 +33,6 @@ export class AppComponent implements OnInit {
     const userRole = this.authService.getRoleFromToken();
     return of(userRole === 'ADMIN_CLUB');
   }
-
   logout(): void {
     this.authService.logout();
   }

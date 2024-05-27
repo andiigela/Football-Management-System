@@ -36,11 +36,11 @@
                 <button class="btn btn-danger" *ngIf="val.permissionSent" disabled (click)="deletePlayer(val.id)">Waiting for Permission</button>
             </td>
             <td>
-              <button class="btn btn-primary" (click)="redirectToCreatePlayerContract(val.id)" *ngIf="val.contracts?.length == 0">Create Contract</button>
-              <button class="btn btn-primary" (click)="redirectToCreatePlayerContract(val.id)" *ngIf="val.contracts?.length! > 0" disabled>Create Contract</button>
+                <button class="btn btn-primary" (click)="redirectToCreatePlayerContract(val.id)" *ngIf="val.contracts?.length == 0">Create Contract</button>
+                <button class="btn btn-primary" (click)="redirectToCreatePlayerContract(val.id)" *ngIf="val.contracts?.length! > 0" disabled>Create Contract</button>
             </td>
             <td>
-              <button class="btn btn-info" (click)="redirectToPlayerContracts(val.id)">Show Contracts</button>
+                <button class="btn btn-info" (click)="redirectToPlayerContracts(val.id)">Show Contracts</button>
             </td>
             <td>
                 <button class="btn btn-secondary" (click)="redirectToPlayerInjuries(val.id)">Show Injuries</button>
@@ -51,7 +51,7 @@
     </table>
     <div class="d-flex justify-content-center">
         <ngb-pagination [page]="pageNumber"
-                        [pageSize]="pageSize"
+                        [pageSize]="10"
                         [collectionSize]="totalElements"
                         [maxSize]="5"
                         (pageChange)="OnPageChange($event)"
