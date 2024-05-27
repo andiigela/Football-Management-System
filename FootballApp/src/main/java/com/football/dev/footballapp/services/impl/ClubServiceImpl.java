@@ -1,21 +1,17 @@
 package com.football.dev.footballapp.services.impl;
-
 import com.football.dev.footballapp.dto.ClubDto;
 import com.football.dev.footballapp.exceptions.ClubNotFoundException;
 import com.football.dev.footballapp.exceptions.UserNotFoundException;
 import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.UserEntity;
-import com.football.dev.footballapp.repository.ClubRepository;
-import com.football.dev.footballapp.repository.UserRepository;
+import com.football.dev.footballapp.repository.jparepository.ClubRepository;
+import com.football.dev.footballapp.repository.jparepository.UserRepository;
 import com.football.dev.footballapp.services.ClubService;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-
 @Service
 public class ClubServiceImpl implements ClubService {
 

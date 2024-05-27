@@ -1,34 +1,15 @@
 package com.football.dev.footballapp.services.impl;
-
 import com.football.dev.footballapp.dto.*;
-import com.football.dev.footballapp.exceptions.ResourceNotFoundException;
-import com.football.dev.footballapp.mapper.MatchDTOMapper;
-import com.football.dev.footballapp.mapper.RoundDtoMapper;
 import com.football.dev.footballapp.mapper.SeasonDtoMapper;
 import com.football.dev.footballapp.models.*;
-import com.football.dev.footballapp.models.enums.Foot;
-import com.football.dev.footballapp.repository.LeagueRepository;
-import com.football.dev.footballapp.repository.MatchRepository;
-import com.football.dev.footballapp.repository.RoundRepository;
-import com.football.dev.footballapp.repository.SeasonRepository;
-import com.football.dev.footballapp.services.RoundService;
+import com.football.dev.footballapp.repository.jparepository.SeasonRepository;
+import com.football.dev.footballapp.repository.jparepository.LeagueRepository;
 import com.football.dev.footballapp.services.SeasonService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.support.PageableExecutionUtils;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 @Service
 public class SeasonServiceImpl implements SeasonService {
     private final SeasonRepository seasonRepository;

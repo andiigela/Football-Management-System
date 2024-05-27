@@ -1,11 +1,6 @@
 package com.football.dev.footballapp.controllers;
 import com.football.dev.footballapp.dto.NotificationDto;
-import com.football.dev.footballapp.dto.PlayerIdDto;
-import com.football.dev.footballapp.dto.UserNotificationsCountDto;
-import com.football.dev.footballapp.models.UserEntity;
-import com.football.dev.footballapp.services.AuthenticationHelperService;
 import com.football.dev.footballapp.services.NotificationService;
-import com.football.dev.footballapp.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

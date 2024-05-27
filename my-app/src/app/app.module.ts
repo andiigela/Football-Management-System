@@ -37,6 +37,8 @@ import {ContractsListComponent} from "./components/contracts-list/contracts-list
 import {ContractEditComponent} from "./components/contract-edit/contract-edit.component";
 import {AdminLeagueGuard} from "./guards/admin-league.guard";
 import {AdminClubGuard} from "./guards/admin-club.guard";
+import {NotificationStatusComponent} from "./components/notification-status/notification-status.component";
+import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 
 
 const routes : Routes = [
@@ -46,17 +48,17 @@ const routes : Routes = [
   {path: 'dashboard',component:DashboardComponent,canActivate: [AuthGuard2]},
   {path: 'dashboard/users',component:UsersComponent,canActivate: [AuthGuard2,AdminLeagueGuard]},
   {path: 'club', component:ClubComponent,canActivate: [AuthGuard2]},
-    {path: 'players',component:PlayersListComponent,canActivate: [AdminClubGuard]},
-    {path: 'create-player',component:CreatePlayerComponent,canActivate: [AdminClubGuard]},
-    {path: 'players/edit/:id',component:PlayerEditComponent,canActivate: [AdminClubGuard]},
+  {path: 'players',component:PlayersListComponent,canActivate: [AdminClubGuard]},
+  {path: 'create-player',component:CreatePlayerComponent,canActivate: [AdminClubGuard]},
+  {path: 'players/edit/:id',component:PlayerEditComponent,canActivate: [AdminClubGuard]},
   {path: 'league/:id/seasons',component:SeasonComponent},
   {path: 'league/:leagueId/seasons/edit-season/:id', component: EditSeasonComponent },
   {path: 'league/:id/create-season', component: CreateSeasonComponent },
-    {path: 'league',component:LeagueComponent,canActivate:[AuthGuard2,AdminLeagueGuard]},
+  {path: 'league',component:LeagueComponent,canActivate:[AuthGuard2,AdminLeagueGuard]},
   {path: 'create-league',component:CreateLeagueComponent,canActivate:[AuthGuard2]},
-    {path : 'match',component:MatchComponent,canActivate:[AuthGuard2,AdminLeagueGuard]},
-    {path: 'transfer',component:TransferComponent,canActivate:[AuthGuard2,AdminLeagueGuard]},
-    {path: 'update-league/:id', component:UpdateLeagueComponent ,canActivate:[AdminLeagueGuard]},
+  {path : 'match',component:MatchComponent,canActivate:[AuthGuard2,AdminLeagueGuard]},
+  {path: 'transfer',component:TransferComponent,canActivate:[AuthGuard2,AdminLeagueGuard]},
+  {path: 'update-league/:id', component:UpdateLeagueComponent ,canActivate:[AdminLeagueGuard]},
   {path: 'league/:leagueId/seasons/:seasonId/rounds', component: RoundsComponent },
   {path: 'league/:leagueId/seasons/:seasonId/create-round', component: CreateRoundComponent },
   {path: 'league/:leagueId/seasons/:seasonId/rounds/:roundId/edit-match/:matchId', component: MatchComponent },
@@ -95,7 +97,8 @@ const routes : Routes = [
     CreateContractComponent,
     ContractsListComponent,
     ContractEditComponent,
-    InjuryEditComponent
+    InjuryEditComponent,
+    NotificationStatusComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
@@ -104,6 +107,7 @@ const routes : Routes = [
     ReactiveFormsModule,
     FormsModule,
     NgbPaginationModule,
+      FaIconComponent,
   ],
   providers: [
     {

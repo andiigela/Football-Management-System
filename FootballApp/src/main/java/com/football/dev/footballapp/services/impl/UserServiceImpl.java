@@ -1,24 +1,19 @@
 package com.football.dev.footballapp.services.impl;
-
 import com.football.dev.footballapp.dto.UserEntityDto;
-import com.football.dev.footballapp.exceptions.UserNotFoundException;
 import com.football.dev.footballapp.mapper.UserEntityToDTOMapper;
-import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.UserEntity;
 import com.football.dev.footballapp.models.enums.Gender;
-import com.football.dev.footballapp.repository.UserRepository;
+import com.football.dev.footballapp.repository.jparepository.UserRepository;
 import com.football.dev.footballapp.services.FileUploadService;
 import com.football.dev.footballapp.services.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 
 @Service
@@ -115,5 +110,9 @@ public class UserServiceImpl implements UserService {
         Page<UserEntity> userPage = userRepository.findByRoleDescriptionAndIsDeleted(role, isDeleted, pageRequest);
         Page<UserEntityDto> userDtos = userPage.map(userEntityMapper);
         return userDtos;
+    }
+    @Override
+    public UserEntity getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(()->new EntityNotFoundException("User not found with that email"));
     }
 }

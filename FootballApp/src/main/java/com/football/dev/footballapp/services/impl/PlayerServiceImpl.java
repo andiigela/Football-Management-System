@@ -1,22 +1,23 @@
 package com.football.dev.footballapp.services.impl;
 import com.football.dev.footballapp.dto.PlayerDto;
-import com.football.dev.footballapp.dto.RoundDto;
-import com.football.dev.footballapp.mapper.SeasonDtoMapper;
+import com.football.dev.footballapp.dto.PlayerIdDto;
+import com.football.dev.footballapp.exceptions.UserNotFoundException;
 import com.football.dev.footballapp.models.Club;
+import com.football.dev.footballapp.models.Notification;
 import com.football.dev.footballapp.models.Player;
-import com.football.dev.footballapp.models.Round;
+import com.football.dev.footballapp.models.UserEntity;
 import com.football.dev.footballapp.models.enums.Foot;
-import com.football.dev.footballapp.repository.ClubRepository;
-import com.football.dev.footballapp.repository.PlayerRepository;
+import com.football.dev.footballapp.repository.jparepository.ClubRepository;
+import com.football.dev.footballapp.repository.jparepository.PlayerRepository;
+import com.football.dev.footballapp.repository.mongorepository.NotificationRepository;
+import com.football.dev.footballapp.services.AuthenticationHelperService;
 import com.football.dev.footballapp.services.FileUploadService;
+import com.football.dev.footballapp.services.NotificationService;
 import com.football.dev.footballapp.services.PlayerService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.support.PageableExecutionUtils;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,17 +33,29 @@ public class PlayerServiceImpl implements PlayerService {
     private final FileUploadService fileUploadService;
     private final Function<PlayerDto, Player> playerDtoToPlayer;
     private final Function<Player, PlayerDto> playerToPlayerDto;
+    private final SimpMessagingTemplate simpMessagingTemplate;
+    private final NotificationService notificationService;
+    private final NotificationRepository notificationRepository;
+    private final AuthenticationHelperService authenticationHelperService;
 
 
     public PlayerServiceImpl(PlayerRepository playerRepository,Function<PlayerDto, Player> playerDtoToPlayer,
                              ClubRepository clubRepository,FileUploadService fileUploadService,
-                             Function<Player, PlayerDto> playerToPlayerDto){
+                             Function<Player, PlayerDto> playerToPlayerDto,
+                             SimpMessagingTemplate simpMessagingTemplate,
+                             NotificationService notificationService,
+                             NotificationRepository notificationRepository,
+                             AuthenticationHelperService authenticationHelperService
+                             ){
         this.playerRepository=playerRepository;
         this.playerDtoToPlayer=playerDtoToPlayer;
         this.clubRepository=clubRepository;
         this.fileUploadService=fileUploadService;
         this.playerToPlayerDto=playerToPlayerDto;
-
+        this.simpMessagingTemplate=simpMessagingTemplate;
+        this.notificationService=notificationService;
+        this.notificationRepository=notificationRepository;
+        this.authenticationHelperService=authenticationHelperService;
     }
     @Override
     public void savePlayer(PlayerDto playerDto, MultipartFile file){
@@ -104,6 +117,30 @@ public class PlayerServiceImpl implements PlayerService {
         if(playerDb == null) throw new EntityNotFoundException("Player not found with specified id: " + id);
         playerDb.isDeleted = true;
         playerRepository.save(playerDb);
+    }
+    @Override
+    public void sendDeletePlayerPermission(Long id) {
+        Player playerDb = this.getPlayer(id);
+        if(playerDb == null) throw new EntityNotFoundException("Player not found with specified id: " + id);
+        String message = "Club " + playerDb.getClub().getName()
+                + " needs permission to delete player: " + playerDb.getName() + " with id: " + playerDb.getId();
+        notificationService.createPlayerDeletePermissionNotification(new Notification(id,message));
+        simpMessagingTemplate.convertAndSend("/topic/notifications/askedpermission",message);
+        UserEntity currentLoggedInUser = this.authenticationHelperService.getUserEntityFromAuthentication();
+        PlayerIdDto playerWhoAskedPermission = new PlayerIdDto(playerDb.getId());
+        this.simpMessagingTemplate.convertAndSend(("/topic/askedpermission/" + currentLoggedInUser.getId()),playerWhoAskedPermission);
+    }
+    @Override
+    public List<PlayerIdDto> deletedPlayers() {
+        return playerRepository.findPlayersByIsDeleted(true).stream().map(player -> new PlayerIdDto(player.getId())).collect(Collectors.toList());
+    }
+    @Override
+    public List<PlayerIdDto> getPlayerIdsWhoAskedPermissionFromCurrentUser() {
+        UserEntity currentUser = authenticationHelperService.getUserEntityFromAuthentication();
+        if(currentUser == null) throw new UserNotFoundException("User not found");
+        return notificationRepository.findNotificationsByFromUserId(currentUser.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Sent notifications not found with userId: " + currentUser.getId()))
+                .stream().map(notification -> new PlayerIdDto(notification.getPlayerId())).collect(Collectors.toList());
     }
 
 }

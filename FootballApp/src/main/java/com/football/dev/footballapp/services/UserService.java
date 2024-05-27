@@ -19,4 +19,5 @@ public interface UserService {
     void updateUser(Long userId, UserEntityDto updatedUser);
     UserEntity getUserProfile(Long userId);
     Page<UserEntityDto> getUsersByRoleAndIsDeleted(String role, boolean isDeleted, int pageNumber, int pageSize);
+    UserEntity getUserByEmail(String email);
 }

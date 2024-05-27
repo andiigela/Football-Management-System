@@ -7,19 +7,15 @@ import com.football.dev.footballapp.mapper.LeagueDTOMapper;
 import com.football.dev.footballapp.mapper.SeasonDtoMapper;
 import com.football.dev.footballapp.models.League;
 import com.football.dev.footballapp.models.Season;
-import com.football.dev.footballapp.repository.LeagueRepository;
-import com.football.dev.footballapp.repository.SeasonRepository;
+import com.football.dev.footballapp.repository.jparepository.SeasonRepository;
+import com.football.dev.footballapp.repository.jparepository.LeagueRepository;
 import com.football.dev.footballapp.services.LeagueService;
-import com.football.dev.footballapp.services.SeasonService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 @Service
 public class LeagueServiceImpl implements LeagueService {
     private final LeagueRepository leagueRepository;

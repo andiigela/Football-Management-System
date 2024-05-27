@@ -1,33 +1,25 @@
 package com.football.dev.footballapp.services.impl;
 
-import com.football.dev.footballapp.dto.ClubDto;
-import com.football.dev.footballapp.dto.MatchDTO;
 import com.football.dev.footballapp.dto.RoundDto;
-import com.football.dev.footballapp.exceptions.ResourceNotFoundException;
 import com.football.dev.footballapp.mapper.RoundDtoMapper;
 import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.Match;
 import com.football.dev.footballapp.models.Round;
 import com.football.dev.footballapp.models.Season;
-import com.football.dev.footballapp.repository.ClubRepository;
-import com.football.dev.footballapp.repository.MatchRepository;
-import com.football.dev.footballapp.repository.RoundRepository;
-import com.football.dev.footballapp.repository.SeasonRepository;
+import com.football.dev.footballapp.repository.jparepository.RoundRepository;
+import com.football.dev.footballapp.repository.jparepository.SeasonRepository;
+import com.football.dev.footballapp.repository.jparepository.ClubRepository;
+import com.football.dev.footballapp.repository.jparepository.MatchRepository;
 import com.football.dev.footballapp.services.RoundService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
-
 @Service
 public class RoundServiceImpl implements RoundService {
     private final RoundRepository roundRepository;

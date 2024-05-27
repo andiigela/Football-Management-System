@@ -3,7 +3,6 @@ import com.football.dev.footballapp.models.UserEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
 @Service
 public class AuthenticationHelperServiceImpl implements AuthenticationHelperService {
     private final UserService userService;

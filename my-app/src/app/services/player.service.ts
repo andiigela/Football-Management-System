@@ -41,13 +41,17 @@ export class PlayerService {
     formData.append("playerDto",JSON.stringify(playerDto));
     return this.http.post(`${this.playerUrl}/edit/${playerDto.id}`,formData,{headers});
   }
-  public deletePlayer(id: number): Observable<any>{
-    let headers = this.getHeaders();
-    return this.http.delete(`${this.playerUrl}/delete/${id}`,{headers})
-  }
   public getImageUrl(imagePath: string): Observable<any>{
     let headers = this.getHeaders();
     return this.http.get(`http://localhost:8080/images/${imagePath}`,{headers,responseType: 'blob'});
+  }
+  public getPlayerIdsWhoAskedPermissionFromCurrentUser(): Observable<any>{
+    let headers = this.getHeaders();
+    return this.http.get(`${this.playerUrl}/askedpermission/currentuser`,{headers});
+  }
+  public sendDeletePlayerPermission(id: number): Observable<any>{
+    let headers = this.getHeaders();
+    return this.http.post(`${this.playerUrl}/delete/permission/${id}`,{headers})
   }
 }
 
