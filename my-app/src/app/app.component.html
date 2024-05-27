@@ -10,18 +10,19 @@
         <li class="nav-item">
           <a class="nav-link" routerLink="/dashboard/users">Users</a>
         </li>
-        <!--<li class="nav-item">
+        <li class="nav-item">
           <a class="nav-link" routerLink="/league">League</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/match">Match</a>
-        </li>
+<!--        <li class="nav-item">-->
+<!--          <a class="nav-link" routerLink="/match">Match</a>-->
+<!--        </li>-->
         <li class="nav-item">
           <a class="nav-link" routerLink="/transfer">Transfer</a>
         </li>
-       <li class="nav-item">
-          <a class="nav-link" routerLink="/profile">Profile</a>
-        </li>-->
+<!--        <li class="nav-item">-->
+<!--          <a class="nav-link" routerLink="/seasons">Seasons</a>-->
+<!--        </li>-->
+
       </ul>
     </ng-container>
     <ng-container *ngIf="isClub() | async">
@@ -43,10 +44,11 @@
 <!--    <span *ngIf="hasNotifications" class="notification-badge">!</span>-->
   </div>
   <ng-container *ngIf="authService.isAuthenticated | async" class="navbar-text" style="margin-right: 20px;">
-    <a *ngIf="authService.isAuthenticated | async" class="nav-link profile-link" routerLink="/profile">
-       {{ authService.getUserEmail() | async }}
+    <a *ngIf="authService.isAuthenticated | async" class="nav-link profile-link" [routerLink]="['/profile', userId]">
+      Your Profile
     </a>
   </ng-container>
+
   <div class="ml-auto" style="margin-right: 50px; margin-left: 30px;">
     <app-loginstatus></app-loginstatus>
     <a *ngIf="!(authService.isAuthenticated | async)" class="btn btn-outline-primary" routerLink="/register" style="margin-left: 20px;">Register</a>

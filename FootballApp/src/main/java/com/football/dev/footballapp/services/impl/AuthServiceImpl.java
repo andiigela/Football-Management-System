@@ -1,21 +1,27 @@
-package com.football.dev.footballapp.services;
+package com.football.dev.footballapp.services.impl;
 
 import com.football.dev.footballapp.dto.*;
+import com.football.dev.footballapp.mapper.UserEntityDTOMapper;
 import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.RefreshToken;
 import com.football.dev.footballapp.models.Role;
 import com.football.dev.footballapp.models.UserEntity;
-import com.football.dev.footballapp.repository.jparepository.ClubRepository;
-import com.football.dev.footballapp.repository.jparepository.RoleRepository;
-import com.football.dev.footballapp.repository.jparepository.UserRepository;
+import com.football.dev.footballapp.repository.ClubRepository;
+import com.football.dev.footballapp.repository.RoleRepository;
+import com.football.dev.footballapp.repository.UserRepository;
 import com.football.dev.footballapp.security.JWTGenerator;
+import com.football.dev.footballapp.services.AuthService;
+import com.football.dev.footballapp.services.RefreshTokenService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.util.Collections;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -67,7 +73,6 @@ public class AuthServiceImpl implements AuthService {
 
         UserEntity user = new UserEntity();
         user.setEmail(registerDto.getEmail());
-        user.setNotificationsNumber(0L);
 
         String hashedPassword = passwordEncoder.encode(registerDto.getPassword());
         user.setPassword(hashedPassword);

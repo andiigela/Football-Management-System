@@ -1,19 +1,27 @@
-export class MatchDto {
-   id : number;
-   homeTeamId: string ;
-   awayTeamId:string ;
-   matchDate:Date;
-   stadium:string;
-   result:string;
-   homeTeamScore:number;
-   awayTeamScore:number;
+import {ClubDto} from "./club-dto";
 
-  constructor(id: number, homeTeamId: string, awayTeamId: string, matchDate: Date, stadium: string, result: string, homeTeamScore: number, awayTeamScore: number) {
+export class MatchDto {
+  id: number;
+  homeTeam: ClubDto;
+  awayTeam: ClubDto;
+  matchDate: Date;
+  result: string;
+  homeTeamScore: number;
+  awayTeamScore: number;
+
+  constructor(
+    id: number,
+    homeTeam: ClubDto,
+    awayTeam: ClubDto,
+    matchDate: Date,
+    result: string,
+    homeTeamScore: number,
+    awayTeamScore: number
+  ) {
     this.id = id;
-    this.homeTeamId = homeTeamId;
-    this.awayTeamId = awayTeamId;
+    this.homeTeam = homeTeam;
+    this.awayTeam = awayTeam;
     this.matchDate = matchDate;
-    this.stadium = stadium;
     this.result = result;
     this.homeTeamScore = homeTeamScore;
     this.awayTeamScore = awayTeamScore;

@@ -51,7 +51,7 @@
     </table>
     <div class="d-flex justify-content-center">
         <ngb-pagination [page]="pageNumber"
-                        [pageSize]="10"
+                        [pageSize]="pageSize"
                         [collectionSize]="totalElements"
                         [maxSize]="5"
                         (pageChange)="OnPageChange($event)"

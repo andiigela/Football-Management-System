@@ -1,0 +1,16 @@
+<div class="my-4">
+  <h2 class="px-3">Create New Round</h2>
+  <div class="px-3">
+    <div class="form-group">
+      <label for="startDate">Start Date:</label>
+      <input type="datetime-local" id="startDate" name="startDate" [(ngModel)]="newRound.start_date" class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="endDate">End Date:</label>
+      <input type="datetime-local" id="endDate" name="endDate" [(ngModel)]="newRound.end_date" class="form-control" required [min]="newRound.start_date">
+    </div>
+    <div *ngIf="!newRound.start_date || !newRound.end_date" class="text-danger">Please select both start and end dates.</div>
+    <div *ngIf="error" class="text-danger">{{ error }}</div>
+  </div>
+  <button class="btn btn-primary mx-3" (click)="createRound()">Create Round</button>
+</div>

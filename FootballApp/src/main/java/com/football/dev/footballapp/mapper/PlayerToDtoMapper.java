@@ -6,9 +6,9 @@ import com.football.dev.footballapp.models.Player;
 import org.springframework.stereotype.Service;
 import java.util.function.Function;
 @Service
-public class PlayerToDtoMapper implements Function<Player, PlayerDto> {
+public class PlayerToDTOMapper implements Function<Player, PlayerDto> {
     private Function<Contract, ContractDto> contractDtoMapper;
-    public PlayerToDtoMapper(Function<Contract, ContractDto> contractDtoMapper) {
+    public PlayerToDTOMapper(Function<Contract, ContractDto> contractDtoMapper) {
         this.contractDtoMapper = contractDtoMapper;
     }
     @Override

@@ -1,33 +1,39 @@
 import { Injectable } from '@angular/core';
-import {environment} from "../../environments/environment";
-import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
-import {MatchDto} from "../common/match-dto";
+import { environment } from '../../environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { MatchDto } from '../common/match-dto';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class MatchService {
-  private readonly transferUrl : string = `${environment.api.baseUrl + environment.api.matchUrl}}`
+    private readonly apiUrl: string = `${environment.api.baseUrl}${environment.api.matchUrl}`;
 
+    constructor(private http: HttpClient) { }
 
-  constructor(private http:HttpClient) { }
+    // Create a match
+    createMatch(roundId: number, matchDto: MatchDto): Observable<any> {
+        return this.http.post(`${this.apiUrl}/${roundId}/create`, matchDto);
+    }
 
-  listAllMatches():Observable<MatchDto[]>{
-    return this.http.get<MatchDto[]>(`${this.transferUrl}`)
-  }
-  getMatchById(id:number):Observable<MatchDto>{
-    return this.http.get<MatchDto>(`${this.transferUrl}/${id}`)
-  }
-  deleteMatch(id:number):Observable<any>{
-    return this.http.delete<MatchDto>(`${this.transferUrl}/${id}`)
-  }
-  editMatch(id:number,matchDTO:MatchDto):Observable<any>{
-    return this.http.put<any>(`${this.transferUrl}/${id}`,id)
-  }
-  createMatch(matchDto:MatchDto):Observable<any>{
-    return this.http.post<any>(`${this.transferUrl}`,matchDto)
-  }
+    // Get all matches for a round with pagination
+    getMatches(roundId: number, page: number = 0, size: number = 10): Observable<any> {
+        return this.http.get(`${this.apiUrl}/${roundId}/?page=${page}&size=${size}`);
+    }
 
+    // Get a match by its ID
+    getMatch(roundId: number, matchId: number): Observable<any> {
+        return this.http.get(`${this.apiUrl}/${roundId}/${matchId}`);
+    }
 
+    // Update a match
+    editMatch(roundId: number, matchId: number, matchDto: MatchDto): Observable<any> {
+        return this.http.put(`${this.apiUrl}/${roundId}/edit/${matchId}`, matchDto);
+    }
+
+    // Delete a match
+    deleteMatch(roundId: number, matchId: number): Observable<any> {
+        return this.http.delete(`${this.apiUrl}/${roundId}/delete/${matchId}`);
+    }
 }

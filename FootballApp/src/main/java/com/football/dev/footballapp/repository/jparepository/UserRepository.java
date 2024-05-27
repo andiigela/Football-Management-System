@@ -1,6 +1,8 @@
-package com.football.dev.footballapp.repository.jparepository;
+package com.football.dev.footballapp.repository;
 
 import com.football.dev.footballapp.models.UserEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
@@ -12,6 +14,5 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Boolean existsByEmail(String username);
     List<UserEntity> findAll();
     List<UserEntity> findByRoleDescription(String role);
-    List<UserEntity> findByRoleDescriptionAndIsDeleted(String role, boolean isDeleted);
-    List<UserEntity> findUserEntitiesByRoleDescription(String description);
+    Page<UserEntity> findByRoleDescriptionAndIsDeleted(String role, boolean isDeleted, Pageable pageable);
 }

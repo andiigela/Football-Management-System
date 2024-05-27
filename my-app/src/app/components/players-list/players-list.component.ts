@@ -15,7 +15,7 @@ import {AuthService} from "../../services/auth.service";
 export class PlayersListComponent implements OnInit, OnDestroy{
   playersList: PlayerDto[]=[];
   pageNumber: number = 1;
-  pageSize: number = 10;
+  pageSize: number = 5;
   totalElements: number = 0;
   private connectionId: string = "playeraskedpermission";
   playersWhoAskedPermission: PlayerIdDto[]=[];
