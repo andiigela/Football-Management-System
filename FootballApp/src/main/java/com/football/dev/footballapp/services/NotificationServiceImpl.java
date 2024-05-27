@@ -1,5 +1,6 @@
 package com.football.dev.footballapp.services;
 import com.football.dev.footballapp.dto.NotificationDto;
+import com.football.dev.footballapp.exceptions.UserNotFoundException;
 import com.football.dev.footballapp.models.Notification;
 import com.football.dev.footballapp.models.UserEntity;
 import com.football.dev.footballapp.repository.jparepository.UserRepository;
@@ -44,12 +45,13 @@ public class NotificationServiceImpl implements NotificationService{
         });
     }
     @Override
-    public List<NotificationDto> getNotificationsByUser(Long userId) {
-        UserEntity userDb = userRepository.findById(userId).orElseThrow(()-> new EntityNotFoundException("User not found with id: " + userId));
-        userDb.setNotificationsNumber(0L);
-        userRepository.save(userDb);
-        return notificationRepository.findNotificationsByToUserId(userId)
-                .orElseThrow(() -> new EntityNotFoundException("Notifications not found with userId: " + userId))
+    public List<NotificationDto> getNotificationsByCurrentUser() {
+        UserEntity userEntity = authenticationHelperService.getUserEntityFromAuthentication();
+        if(userEntity == null) throw new UsernameNotFoundException("User not found!");
+        userEntity.setNotificationsNumber(0L);
+        userRepository.save(userEntity);
+        return notificationRepository.findNotificationsByToUserId(userEntity.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Notifications not found with userId: " + userEntity.getId()))
                 .stream().map(notificationDtoMapper).collect(Collectors.toList());
     }
     @Override
@@ -65,5 +67,19 @@ public class NotificationServiceImpl implements NotificationService{
             notificationRepository.save(notificationParam);
             userRepository.save(user);
         });
+    }
+    @Override
+    public Long getNotificationsCountByCurrentUser() {
+        UserEntity userEntity = authenticationHelperService.getUserEntityFromAuthentication();
+        Long notificationCount = userEntity.getNotificationsNumber();
+        return notificationCount;
+    }
+
+    @Override
+    public void updateUserNotificationsCount(Long notificationsCount) {
+        UserEntity userEntity = authenticationHelperService.getUserEntityFromAuthentication();
+        if(userEntity == null) throw new UserNotFoundException("User not found!");
+        userEntity.setNotificationsNumber(notificationsCount);
+        userRepository.save(userEntity);
     }
 }

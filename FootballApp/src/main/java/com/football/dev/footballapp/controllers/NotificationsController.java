@@ -1,9 +1,11 @@
 package com.football.dev.footballapp.controllers;
 import com.football.dev.footballapp.dto.NotificationDto;
 import com.football.dev.footballapp.dto.PlayerIdDto;
+import com.football.dev.footballapp.dto.UserNotificationsCountDto;
 import com.football.dev.footballapp.models.UserEntity;
 import com.football.dev.footballapp.services.AuthenticationHelperService;
 import com.football.dev.footballapp.services.NotificationService;
+import com.football.dev.footballapp.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,21 +15,21 @@ import java.util.List;
 @CrossOrigin("http://localhost:4200")
 public class NotificationsController {
     private final NotificationService notificationService;
-    private final AuthenticationHelperService authenticationHelperService;
-    public NotificationsController(NotificationService notificationService,AuthenticationHelperService authenticationHelperService){
+    public NotificationsController(NotificationService notificationService){
         this.notificationService=notificationService;
-        this.authenticationHelperService=authenticationHelperService;
     }
     @GetMapping("/")
     public ResponseEntity<List<NotificationDto>> getNotifications() {
-        UserEntity userEntity = authenticationHelperService.getUserEntityFromAuthentication();
-        List<NotificationDto> notificationDtoList = this.notificationService.getNotificationsByUser(userEntity.getId());
+        List<NotificationDto> notificationDtoList = this.notificationService.getNotificationsByCurrentUser();
         return ResponseEntity.status(HttpStatus.OK).body(notificationDtoList);
     }
     @GetMapping("/counts")
     public ResponseEntity<Long> getNotificationCount() {
-        UserEntity userEntity = authenticationHelperService.getUserEntityFromAuthentication();
-        Long notificationCount = userEntity.getNotificationsNumber();
-        return ResponseEntity.ok(notificationCount);
+        return ResponseEntity.ok(this.notificationService.getNotificationsCountByCurrentUser());
+    }
+    @PutMapping("/counts/update")
+    public ResponseEntity<String> updatePlayerNotificationsCount(@RequestBody Long notificationCount) {
+        this.notificationService.updateUserNotificationsCount(notificationCount);
+        return ResponseEntity.ok().build();
     }
 }

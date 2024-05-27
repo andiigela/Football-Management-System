@@ -18,9 +18,9 @@ public class WebSocketSecurityConfiguration extends AbstractSecurityWebSocketMes
     protected void configureInbound(MessageSecurityMetadataSourceRegistry messages) {
         messages
                 .nullDestMatcher().authenticated()
-                .simpDestMatchers("/app/playerDeleted").hasRole("ADMIN_CLUB")
+                .simpDestMatchers("/app/notifications/askedpermission").hasRole("ADMIN_CLUB")
                 .simpDestMatchers("/app/askedpermission/**").hasRole("ADMIN_CLUB")
-                .simpSubscribeDestMatchers("/topic/playerDeleted").hasRole("ADMIN_LEAGUE")
+                .simpSubscribeDestMatchers("/topic/notifications/askedpermission").hasRole("ADMIN_LEAGUE")
                 .simpSubscribeDestMatchers("/topic/askedpermission/**").hasRole("ADMIN_CLUB")
                 .anyMessage().authenticated();
     }
