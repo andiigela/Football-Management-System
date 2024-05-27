@@ -11,7 +11,6 @@ export class WebSocketService {
   private stompClient: {[key: string]: any} = {};
   private messageSubject: { [key: string]: BehaviorSubject<string> } = {};
   private serverUrl = 'http://localhost:8080/our-websocket';
-  private notificationCount :BehaviorSubject<number> = new BehaviorSubject<number>(0);
   constructor() {
   }
   connect(topicUrl: string,connectionId: string){
@@ -46,11 +45,11 @@ export class WebSocketService {
     })
     return headers;
   }
-  incrementNotificationCount(): void{
-    const currentCount = this.notificationCount.getValue();
-    this.notificationCount.next(currentCount + 1);
-  }
-  getNotificationCount(): Observable<number> {
-    return this.notificationCount.asObservable();
-  }
+  // incrementNotificationCount(): void{
+  //   const currentCount = this.notificationCount.getValue();
+  //   this.notificationCount.next(currentCount + 1);
+  // }
+  // getNotificationCount(): Observable<number> {
+  //   return this.notificationCount.asObservable();
+  // }
 }

@@ -24,4 +24,8 @@ export class NotificationService {
     let headers = this.getHeaders();
     return this.http.get(`${this.notificationUrl}/counts`,{headers});
   }
+  public updateNotificationsCount(notificationsCount: number): Observable<any>{
+    let headers = this.getHeaders();
+    return this.http.put(`${this.notificationUrl}/counts/update`,notificationsCount,{headers});
+  }
 }

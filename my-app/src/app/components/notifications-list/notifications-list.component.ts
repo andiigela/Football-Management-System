@@ -11,12 +11,12 @@ import {PlayerIdDto} from "../../common/player-id-dto";
 })
 export class NotificationsListComponent implements OnInit{
   notificationsList: NotificationDto[] = [];
-  deletedPlayerIds: PlayerIdDto[] = [];
+  askedPermissionPlayerIds: PlayerIdDto[] = [];
   constructor(private notificationService: NotificationService,private playerService: PlayerService) {
   }
   ngOnInit(): void {
     this.playerService.getDeletedPlayerIds().subscribe((ids: PlayerIdDto[]) => {
-      this.deletedPlayerIds = ids;
+      this.askedPermissionPlayerIds = ids;
       this.notificationService.retrieveNotifications().subscribe(notifications => {
         this.notificationsList = notifications;
         this.notificationsList.forEach(notification => this.updateNotificationPermission(notification));
@@ -24,7 +24,7 @@ export class NotificationsListComponent implements OnInit{
     });
   }
   private updateNotificationPermission(notificationDto: NotificationDto): void {
-    if (this.deletedPlayerIds.some(playerIdDto => playerIdDto.id === notificationDto.playerId)) {
+    if (this.askedPermissionPlayerIds.some(playerIdDto => playerIdDto.id === notificationDto.playerId)) {
       notificationDto.permissionGiven = true;
     }
   }

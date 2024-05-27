@@ -3,6 +3,7 @@ import {faBell} from "@fortawesome/free-solid-svg-icons";
 import {WebSocketService} from "../../services/web-socket.service";
 import {Router} from "@angular/router";
 import {NotificationService} from "../../services/notification.service";
+import {BehaviorSubject, Observable} from "rxjs";
 
 @Component({
   selector: 'app-notification-status',
@@ -11,35 +12,34 @@ import {NotificationService} from "../../services/notification.service";
 })
 export class NotificationStatusComponent implements OnInit {
   protected readonly faBell = faBell;
-  protected countNotification: number = 0;
+  private notificationCount :BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  protected notificationsCount: number = 0;
   private connectionId: string = "notification";
   constructor(private webSocketService: WebSocketService,private notificationService: NotificationService,private route: Router) {
   }
   ngOnInit(): void {
+    this.retrieveNotificationsNumberFromAPI();
     this.webSocketService.getMessages(this.connectionId).subscribe(notification => {
       if(notification){
         console.log("Message: " + notification);
-        this.webSocketService.incrementNotificationCount();
+        this.incrementNotificationCount();
       }
     })
-    this.webSocketService.getNotificationCount().subscribe(currentCount => {
-      this.countNotification=currentCount;
+    this.notificationCount.subscribe(currentCount => {
+      this.notificationsCount=currentCount;
     });
-    this.notificationService.retrieveNotificationsCount().subscribe(data => {
-      this.showNotificationsNumber(data);
-      console.log("My Counts: " + data);
+  }
+  retrieveNotificationsNumberFromAPI(){
+    this.notificationService.retrieveNotificationsCount().subscribe(count => {
+      this.notificationCount.next(count);
     })
   }
   redirectToNotifications(){
-    this.countNotification=0;
+    this.notificationsCount=0;
+    this.notificationService.updateNotificationsCount(this.notificationsCount);
     this.route.navigateByUrl("/notifications");
   }
-  showNotificationsNumber(countFromAPI: string){
-    if(this.countNotification == 0 && parseInt(countFromAPI) != 0){
-      this.countNotification=parseInt(countFromAPI);
-    }
-
+  incrementNotificationCount(): void{
+    this.notificationCount.next(this.notificationsCount + 1);
   }
-
-
 }
