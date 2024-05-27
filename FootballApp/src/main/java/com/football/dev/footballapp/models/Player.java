@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@Where(clause = "is_deleted=false")
+//@Where(clause = "is_deleted=false")
 public class Player extends BaseEntity {
     public Player(String name, Double height, Double weight, Integer shirtNumber,String preferredFoot,String position){
         this.name = name;

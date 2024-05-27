@@ -4,6 +4,8 @@ import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms"
 import { LoginDto } from "../../common/login-dto";
 import { Router } from "@angular/router";
 import { AuthService } from "../../services/auth.service";
+import {WebSocketService} from "../../services/web-socket.service";
+import {SharedNotificationService} from "../../services/shared-notification.service";
 
 @Component({
     selector: 'app-login',
@@ -14,8 +16,8 @@ export class LoginComponent implements OnInit {
     loginFormGroup: FormGroup = new FormGroup<any>({});
     loginError: boolean = false;
     enableError: boolean = false;
-
-    constructor(private formBuilder: FormBuilder, private http: HttpClient, private router: Router, private authService: AuthService) { }
+    constructor(private formBuilder: FormBuilder, private router: Router,private authService: AuthService,
+                private sharedNotificationService: SharedNotificationService) { }
 
     ngOnInit(): void {
         this.authService.checkIsAuthenticated();
@@ -45,6 +47,7 @@ export class LoginComponent implements OnInit {
                         if (role === 'ADMIN_LEAGUE' || role === 'ADMIN_CLUB') {
                             this.authService.setTokens(res.accessToken, res.refreshToken);
                             this.router.navigateByUrl("/dashboard");
+                            this.sharedNotificationService.readNotificationsFromWebSocket();
                         } else {
                           console.log("Unknown role:", role);
                         }

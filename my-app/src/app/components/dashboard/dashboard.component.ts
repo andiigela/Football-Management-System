@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {WebSocketService} from "../../services/web-socket.service";
 
 @Component({
   selector: 'app-dashboard',
@@ -6,6 +7,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent {
-
 
 }
