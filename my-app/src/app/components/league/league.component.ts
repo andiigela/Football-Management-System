@@ -64,7 +64,6 @@ export class LeagueComponent implements OnInit{
       this.leagueService.searchLeaguesByName(this.searchQuery).subscribe(
         response => {
           this.leagues = response;
-          // Reset pagination
           this.pageNumber = 1;
           this.totalElements = this.leagues.length;
         },
@@ -73,7 +72,6 @@ export class LeagueComponent implements OnInit{
         }
       );
     } else {
-      // If search query is empty, fetch all leagues
       this.findAllLeagues();
     }
   }

@@ -6,6 +6,7 @@ import com.football.dev.footballapp.dto.LeagueDTO;
 import com.football.dev.footballapp.dto.SeasonDto;
 import com.football.dev.footballapp.exceptions.ResourceNotFoundException;
 import com.football.dev.footballapp.models.ES.LeagueES;
+import com.football.dev.footballapp.models.League;
 import com.football.dev.footballapp.services.LeagueService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -107,5 +108,10 @@ public class LeagueController {
             listOfProducts.add(hit.source());
         }
         return listOfProducts;
+    }
+
+    @GetMapping("/search")
+    public List<LeagueES> searchLeagues(@RequestParam String name) {
+        return leagueService.findLeaguesByNameES(name);
     }
 }

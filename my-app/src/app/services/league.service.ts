@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Observable} from "rxjs";
 import {LeagueDto} from "../common/league-dto";
@@ -12,6 +12,13 @@ import {PageResponseDto} from "../common/page-response-dto";
 export class LeagueService {
   private leagueUrl = `${environment.api.baseUrl + environment.api.leagueUrl}`
   constructor(private http:HttpClient) { }
+
+  private getHeaders(): HttpHeaders {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem("accessToken")}`
+    });
+    return headers;
+  }
   returnAllLeagues(pageNumber: number, pageSize: number):Observable<PageResponseDto<LeagueDto>> {
     console.log(this.leagueUrl)
     return this.http.get<PageResponseDto<LeagueDto>>(`${this.leagueUrl}?pageNumber=${pageNumber}&pageSize=${pageSize}`);
@@ -41,6 +48,11 @@ export class LeagueService {
   }
 
   searchLeaguesByName(name: string): Observable<LeagueDto[]> {
-    return this.http.get<LeagueDto[]>(`${this.leagueUrl}/matchAllLeagues/${name}`);
+    const headers = this.getHeaders();
+    return this.http.get<LeagueDto[]>(`${this.leagueUrl}/search?name=${name}`, { headers: headers });
   }
+  // searchLeaguesByName(name: string): Observable<LeagueDto[]> {
+  //   return this.http.get<LeagueDto[]>(`${this.leagueUrl}/matchAllLeagues/${name}`);
+  // }
+
 }

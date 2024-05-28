@@ -7,6 +7,6 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 import java.util.List;
 
 public interface LeagueRepositoryES extends ElasticsearchRepository<LeagueES, String> {
-    @Query("{\"match\": {\"name\": {\"query\": \"?0\"}}}")
-    List<LeagueES> findByName(String name);
+//    @Query("{\"match\": {\"name\": {\"query\": \"?0\"}}}")
+    List<LeagueES> findByNameContainingIgnoreCase(String name);
 }

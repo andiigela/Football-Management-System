@@ -3,6 +3,7 @@ package com.football.dev.footballapp.services.impl;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.football.dev.footballapp.dto.LeagueDTO;
 import com.football.dev.footballapp.dto.SeasonDto;
 import com.football.dev.footballapp.exceptions.ResourceNotFoundException;
@@ -33,7 +34,6 @@ public class LeagueServiceImpl implements LeagueService {
     private final SeasonRepository seasonRepository;
     private final LeagueRepositoryES leagueRepositoryES;
     private final LeagueDTOMapper leagueDTOMapper;
-
     private ElasticsearchClient elasticsearchClient;
     public LeagueServiceImpl(LeagueRepository leagueRepository,
                              SeasonRepository seasonRepository,
@@ -84,8 +84,31 @@ public class LeagueServiceImpl implements LeagueService {
             league.setIsDeleted(true);
             league.setName(league.getName() + " - " + league.getId());
             leagueRepository.save(league);
+            try {
+                SearchResponse<LeagueES> searchResponse = elasticsearchClient.search(s -> s
+                                .index("league")
+                                .query(q -> q
+                                        .match(m -> m
+                                                .field("name")
+                                                .query(league.getName())
+                                        )
+                                ),
+                        LeagueES.class
+                );
+
+                List<Hit<LeagueES>> hits = searchResponse.hits().hits();
+                for (Hit<LeagueES> hit : hits) {
+                    if (hit.source().getName().equals(league.getName())) {
+                        leagueRepositoryES.deleteById(hit.id());
+                        break;
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
     }
+
 
     @Override
     public void updateLeague(Long id, LeagueDTO leagueDTO) {
@@ -95,6 +118,9 @@ public class LeagueServiceImpl implements LeagueService {
             dbLeague.setEnd_date(leagueDTO.getEnd_date());
             dbLeague.setDescription(leagueDTO.getDescription());
             leagueRepository.save(dbLeague);
+            LeagueES leagueES = new LeagueES(leagueDTO.getIdEs(), leagueDTO.getName(),
+                    leagueDTO.getStart_date(), leagueDTO.getEnd_date(), leagueDTO.getDescription());
+            leagueRepositoryES.save(leagueES);
         });
     }
 
@@ -143,5 +169,10 @@ public class LeagueServiceImpl implements LeagueService {
         SearchResponse<LeagueES> searchResponse = elasticsearchClient.search(s->s.index("league").query(supplier.get()),LeagueES.class);
         System.out.println("elasticsearch query is "+supplier.get().toString());
         return searchResponse;
+    }
+
+    @Override
+    public List<LeagueES> findLeaguesByNameES(String name) {
+        return leagueRepositoryES.findByNameContainingIgnoreCase(name);
     }
 }

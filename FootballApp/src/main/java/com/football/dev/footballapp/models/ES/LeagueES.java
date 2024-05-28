@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -20,9 +22,15 @@ import java.util.Date;
 public class LeagueES {
     @Id
     private String id;
+    //private Long dbId;
     private String name;
+
+   // @Field(type = FieldType.Date)
     private Date startDate;
+
+    //@Field(type = FieldType.Date)
     private Date endDate;
+
     private String description;
     public LeagueES(String name, Date startDate, Date endDate, String description){
         this.name = name;
