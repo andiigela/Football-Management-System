@@ -1,15 +1,20 @@
 <div class="container">
-  <div class="d-flex justify-content-between align-items-center mb-3" style="margin-top: 30px">
-    <h2 class="mb-0">All Leagues</h2>
-    <button (click)="redirectToCreateLeague()" class="btn btn-primary">Create League</button>
-    <div class="input-group" style="width: 300px;">
-      <input type="text" class="form-control" placeholder="Search leagues..." [(ngModel)]="searchQuery">
-      <div class="input-group-append">
-        <button class="btn btn-primary" type="button" (click)="searchLeagues()">Search</button>
+  <div class="row mb-3" style="margin-top: 30px">
+    <div class="col-md-4">
+      <h2 class="mb-0">All Leagues</h2>
+      <button (click)="redirectToCreateLeague()" class="btn btn-primary mt-2">Create League</button>
+    </div>
+    <div class="col-md-4 offset-md-4">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Search leagues..." [(ngModel)]="searchQuery">
+        <div class="input-group-append">
+          <button class="btn btn-primary" type="button" (click)="searchLeagues()">Search</button>
+        </div>
       </div>
     </div>
   </div>
-  <div class="row">
+
+  <div class="row" *ngIf="leagues.length > 0; else noLeaguesMessage">
     <div *ngFor="let league of leagues" class="col-md-4 mb-3">
       <div class="card">
         <div class="card-body">
@@ -26,12 +31,19 @@
       </div>
     </div>
   </div>
-</div>
-<div class="d-flex justify-content-center mt-3">
-  <ngb-pagination
-    [collectionSize]="totalElements"
-    [(page)]="pageNumber"
-    [pageSize]="pageSize"
-    (pageChange)="onPageChange($event)">
-  </ngb-pagination>
+
+  <ng-template #noLeaguesMessage>
+    <div class="alert alert-warning" role="alert">
+      No leagues found. Please create a new league.
+    </div>
+  </ng-template>
+
+  <div class="d-flex justify-content-center mt-3">
+    <ngb-pagination
+      [collectionSize]="totalElements"
+      [(page)]="pageNumber"
+      [pageSize]="pageSize"
+      (pageChange)="onPageChange($event)">
+    </ngb-pagination>
+  </div>
 </div>

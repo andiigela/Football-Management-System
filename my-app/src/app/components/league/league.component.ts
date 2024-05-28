@@ -13,7 +13,7 @@ export class LeagueComponent implements OnInit{
   leagues :LeagueDto[]= [];
   newLeague: LeagueDto = new LeagueDto(0, '', new Date(), new Date(), '');
   pageNumber: number = 1;
-  pageSize: number = 1;
+  pageSize: number = 3;
   totalElements: number = 0;
   searchQuery: string = '';
 
