@@ -21,8 +21,8 @@ import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LeagueES {
     @Id
-    private String id;
-    //private Long dbId;
+    private String id; //id e elasticsearch
+    private Long dbId; //id e postgres
     private String name;
 
    // @Field(type = FieldType.Date)

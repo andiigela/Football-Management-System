@@ -49,13 +49,22 @@ public class LeagueServiceImpl implements LeagueService {
 
     @Override
     public void insertLeague(LeagueDTO leagueDTO) {
-        League league = new League(leagueDTO.getName(), leagueDTO.getStart_date(),
-                leagueDTO.getEnd_date(), leagueDTO.getDescription());
-        LeagueES leagueES = new LeagueES(leagueDTO.getIdEs(),leagueDTO.getName(),
-                leagueDTO.getStart_date(), leagueDTO.getEnd_date(), leagueDTO.getDescription());
-        leagueRepository.save(league);
+        // Create and save the League entity to PostgreSQL
+        League league = new League(leagueDTO.getName(), leagueDTO.getStart_date(), leagueDTO.getEnd_date(), leagueDTO.getDescription());
+        League savedLeague = leagueRepository.save(league);
+
+        // Create and save the LeagueES document to Elasticsearch
+        LeagueES leagueES = new LeagueES();
+        leagueES.setId(leagueDTO.getIdEs());  // Set Elasticsearch ID if available
+        leagueES.setDbId(savedLeague.getId());  // Use generated PostgreSQL ID
+        leagueES.setName(leagueDTO.getName());
+        leagueES.setStartDate(leagueDTO.getStart_date());
+        leagueES.setEndDate(leagueDTO.getEnd_date());
+        leagueES.setDescription(leagueDTO.getDescription());
+
         leagueRepositoryES.save(leagueES);
     }
+
 
     @Override
     public Optional<LeagueDTO> selectLeagueByName(String name) {
@@ -118,7 +127,7 @@ public class LeagueServiceImpl implements LeagueService {
             dbLeague.setEnd_date(leagueDTO.getEnd_date());
             dbLeague.setDescription(leagueDTO.getDescription());
             leagueRepository.save(dbLeague);
-            LeagueES leagueES = new LeagueES(leagueDTO.getIdEs(), leagueDTO.getName(),
+            LeagueES leagueES = new LeagueES(leagueDTO.getIdEs(), leagueDTO.getId(), leagueDTO.getName(),
                     leagueDTO.getStart_date(), leagueDTO.getEnd_date(), leagueDTO.getDescription());
             leagueRepositoryES.save(leagueES);
         });
