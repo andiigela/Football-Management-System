@@ -28,4 +28,12 @@ export class NotificationService {
     let headers = this.getHeaders();
     return this.http.put(`${this.notificationUrl}/counts/update`,notificationsCount,{headers});
   }
+  public deleteNotification(userId: number,notificationDto: NotificationDto): Observable<any>{
+    let headers = this.getHeaders();
+      let options = {
+          headers: headers,
+          body: notificationDto
+      };
+    return this.http.delete(`${this.notificationUrl}/${userId}/delete`,options);
+  }
 }

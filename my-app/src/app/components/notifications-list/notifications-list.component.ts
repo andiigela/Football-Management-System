@@ -5,6 +5,7 @@ import {PlayerService} from "../../services/player.service";
 import {PlayerIdDto} from "../../common/player-id-dto";
 import {WebSocketService} from "../../services/web-socket.service";
 import {SharedNotificationService} from "../../services/shared-notification.service";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-notifications-list',
@@ -19,7 +20,9 @@ export class NotificationsListComponent implements OnInit{
   private connectionId: string = "notification";
   constructor(private notificationService: NotificationService,
               private playerService: PlayerService,
-              private webSocketService: WebSocketService, private sharedNotificationService: SharedNotificationService) {
+              private webSocketService: WebSocketService,
+              private sharedNotificationService: SharedNotificationService,
+              private authService: AuthService) {
   }
 
   ngOnInit(): void {
@@ -46,9 +49,15 @@ export class NotificationsListComponent implements OnInit{
       notificationDto.permissionGiven = true;
     }
   }
-    giveDeletePlayerPermission(notificationDto: NotificationDto): void {
+  protected giveDeletePlayerPermission(notificationDto: NotificationDto): void {
       this.playerService.acceptDeletePlayerPermission(notificationDto.playerId).subscribe(data => {
         notificationDto.permissionGiven = true;
     });
   }
+  protected deleteNotification(notificationDto: NotificationDto){
+    this.notificationService.deleteNotification(this.authService.getUserIdFromToken()!,notificationDto).subscribe(()=>{
+      this.notificationsList = this.notificationsList.filter(notification => notification.id != notificationDto.id);
+    });
+  }
+
 }
