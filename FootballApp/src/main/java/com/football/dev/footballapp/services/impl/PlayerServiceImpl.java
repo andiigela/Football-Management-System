@@ -1,4 +1,5 @@
 package com.football.dev.footballapp.services.impl;
+import com.football.dev.footballapp.dto.NotificationDto;
 import com.football.dev.footballapp.dto.PlayerDto;
 import com.football.dev.footballapp.dto.PlayerIdDto;
 import com.football.dev.footballapp.exceptions.UserNotFoundException;
@@ -124,8 +125,8 @@ public class PlayerServiceImpl implements PlayerService {
         if(playerDb == null) throw new EntityNotFoundException("Player not found with specified id: " + id);
         String message = "Club " + playerDb.getClub().getName()
                 + " needs permission to delete player: " + playerDb.getName() + " with id: " + playerDb.getId();
-        notificationService.createPlayerDeletePermissionNotification(new Notification(id,message));
-        simpMessagingTemplate.convertAndSend("/topic/notifications/askedpermission",message);
+        Notification notification = notificationService.createPlayerDeletePermissionNotification(id,message);
+        simpMessagingTemplate.convertAndSend("/topic/notifications/askedpermission",new NotificationDto(notification.getId(),notification.getPlayerId(),notification.getDescription()));
         UserEntity currentLoggedInUser = this.authenticationHelperService.getUserEntityFromAuthentication();
         PlayerIdDto playerWhoAskedPermission = new PlayerIdDto(playerDb.getId());
         this.simpMessagingTemplate.convertAndSend(("/topic/askedpermission/" + currentLoggedInUser.getId()),playerWhoAskedPermission);

@@ -10,10 +10,9 @@ export class SharedNotificationService {
   private notificationCountSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   private connectionId: string = "notification";
   constructor(private notificationService: NotificationService,private webSocketService: WebSocketService) { }
-  readNotificationsFromWebSocket(){
+  readNotificationsFromWebSocketToIncrement(){
     this.webSocketService.getMessages(this.connectionId).subscribe(notification => {
       if(notification){
-        console.log("Message: " + notification);
         this.incrementNotificationCount();
       }
     })
@@ -29,8 +28,9 @@ export class SharedNotificationService {
   }
   resetNotificationCount() {
     const number_zero = 0;
-    this.notificationService.updateNotificationsCount(number_zero);
-    this.notificationCountSubject.next(number_zero);
+    this.notificationService.updateNotificationsCount(number_zero).subscribe(()=>{
+      this.notificationCountSubject.next(number_zero);
+    })
   }
   public retrieveNotificationsCount(): Observable<number>{
     return this.notificationCountSubject.asObservable();
