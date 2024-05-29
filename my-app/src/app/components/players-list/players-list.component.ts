@@ -56,6 +56,10 @@ export class PlayersListComponent implements OnInit, OnDestroy{
       this.webSocketService.getMessages(this.connectionId2).subscribe((data: any)=>{
           const deletedPlayerId: number = JSON.parse(data);
           this.playersList = this.playersList.filter(player => player.id != deletedPlayerId);
+          this.totalElements--;
+          if(this.totalElements <= 0){
+            this.getPlayers();
+          }
           console.log("player deleted: " + deletedPlayerId);
       })
   }
