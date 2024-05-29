@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface NotificationService {
     void createNotification(String message);
-    void createPlayerDeletePermissionNotification(Notification notification);
+    Notification createPlayerDeletePermissionNotification(Long playerToBeDeletedId, String message);
     List<NotificationDto> getNotificationsByCurrentUser();
     Long getNotificationsCountByCurrentUser();
     void updateUserNotificationsCount(Long notificationsCount);
