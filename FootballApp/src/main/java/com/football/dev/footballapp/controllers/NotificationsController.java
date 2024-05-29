@@ -27,4 +27,9 @@ public class NotificationsController {
         this.notificationService.updateUserNotificationsCount(notificationCount);
         return ResponseEntity.ok().build();
     }
+    @DeleteMapping("/{userId}/delete")
+    public ResponseEntity<String> deletePlayerNotification(@PathVariable("userId") Long userId,@RequestBody NotificationDto notificationDto) {
+        this.notificationService.deleteNotification(userId,notificationDto);
+        return ResponseEntity.ok().build();
+    }
 }

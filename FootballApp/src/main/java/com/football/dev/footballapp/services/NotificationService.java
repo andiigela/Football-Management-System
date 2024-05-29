@@ -11,4 +11,5 @@ public interface NotificationService {
     List<NotificationDto> getNotificationsByCurrentUser();
     Long getNotificationsCountByCurrentUser();
     void updateUserNotificationsCount(Long notificationsCount);
+    void deleteNotification(Long userId,NotificationDto notificationDto);
 }
