@@ -15,20 +15,24 @@ export class PlayersListComponent implements OnInit, OnDestroy{
   pageNumber: number = 1;
   pageSize: number = 10;
   totalElements: number = 0;
-  private connectionId: string = "playeraskedpermission";
+  private connectionId1: string = "playeraskedpermission";
+  private connectionId2: string = "deletedplayer";
   playersWhoAskedPermission: PlayerIdDto[]=[];
   playerWhoAskedPermission: PlayerIdDto|null=null;
-
   constructor(private playerService: PlayerService,private router: Router,
               private webSocketService: WebSocketService,
               private authService: AuthService) {
   }
   ngOnDestroy(): void {
-    this.webSocketService.disconnect(this.connectionId);
+    this.webSocketService.disconnect(this.connectionId1);
+    this.webSocketService.disconnect(this.connectionId2);
   }
   ngOnInit(): void {
-    this.webSocketService.connect(("/topic/askedpermission/"+this.authService.getUserIdFromToken()),this.connectionId);
+    this.webSocketService.connect(("/topic/askedpermission/"+this.authService.getUserIdFromToken()),this.connectionId1);
+    this.webSocketService.connect(("/topic/playerDeleted/"+this.authService.getUserIdFromToken()),this.connectionId2);
     this.getPlayers();
+    this.subscribeToDeletedPlayersFromBroker();
+
   }
   private subscribeToRetrievedAskedPermissionPlayersFromApi(){
     this.playerService.getPlayerIdsWhoAskedPermissionFromCurrentUser().subscribe((playerIds: PlayerIdDto[])=>{
@@ -36,8 +40,8 @@ export class PlayersListComponent implements OnInit, OnDestroy{
       this.updatePlayersListWithNotifications();
     })
   }
-  private subscribeToSentNotifications(): void {
-    this.webSocketService.getMessages(this.connectionId).subscribe((data: any[]) => {
+  private subscribeToSentNotificationsFromBroker(): void {
+    this.webSocketService.getMessages(this.connectionId1).subscribe((data: any[]) => {
       if(data.length > 0){
         if (typeof data === 'string') {
           this.playerWhoAskedPermission = JSON.parse(data);
@@ -47,6 +51,13 @@ export class PlayersListComponent implements OnInit, OnDestroy{
         }
       }
     });
+  }
+  private subscribeToDeletedPlayersFromBroker(){
+      this.webSocketService.getMessages(this.connectionId2).subscribe((data: any)=>{
+          const deletedPlayerId: number = JSON.parse(data);
+          this.playersList = this.playersList.filter(player => player.id != deletedPlayerId);
+          console.log("player deleted: " + deletedPlayerId);
+      })
   }
   private updatePlayersListWithNotifications(): void {
     this.playersList = this.playersList.map((playerDto: PlayerDto) => {
@@ -74,7 +85,7 @@ export class PlayersListComponent implements OnInit, OnDestroy{
   deletePlayer(id: number){
     this.playerService.sendDeletePlayerPermission(id)
         .subscribe(()=> {
-          this.subscribeToSentNotifications();
+          this.subscribeToSentNotificationsFromBroker();
         })
   }
   updatePlayerList(playersList: PlayerDto[]){

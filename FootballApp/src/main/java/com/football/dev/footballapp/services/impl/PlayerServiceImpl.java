@@ -118,6 +118,7 @@ public class PlayerServiceImpl implements PlayerService {
         if(playerDb == null) throw new EntityNotFoundException("Player not found with specified id: " + id);
         playerDb.isDeleted = true;
         playerRepository.save(playerDb);
+        this.simpMessagingTemplate.convertAndSend(("/topic/playerDeleted/"+playerDb.getInsertUserId()),id);
     }
     @Override
     public void sendDeletePlayerPermission(Long id) {
