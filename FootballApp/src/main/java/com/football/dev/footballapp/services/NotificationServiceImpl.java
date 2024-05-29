@@ -66,14 +66,14 @@ public class NotificationServiceImpl implements NotificationService{
         if(currentUser == null) throw new UsernameNotFoundException("User not found!");
         List<UserEntity> adminLeagueUserEntities = userRepository.findUserEntitiesByRoleDescription("ADMIN_LEAGUE");
         if(adminLeagueUserEntities.isEmpty() || adminLeagueUserEntities == null) throw new NullPointerException("adminLeagueUserEntities is null or empty");
-        adminLeagueUserEntities.forEach(user -> {
-            user.setNotificationsNumber(user.getNotificationsNumber()+1);
-            userRepository.save(user);
-        });
         Notification notification = new Notification(playerToBeDeletedId,message);
         notification.setSendToAdmin(true);
         notification.setFromUserId(currentUser.getId());
         notification = notificationRepository.save(notification);
+        adminLeagueUserEntities.forEach(admin -> {
+            admin.setNotificationsNumber(admin.getNotificationsNumber()+1);
+            userRepository.save(admin);
+        });
         return notification;
     }
     @Override
