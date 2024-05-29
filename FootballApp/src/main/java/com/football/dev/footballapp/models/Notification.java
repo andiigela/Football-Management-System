@@ -16,6 +16,7 @@ public class Notification {
     private Long fromUserId;
     private String description;
     private Long playerId;
+    private Boolean sendToAdmin;
     public Notification(String description){
         this.description=description;
     }
