@@ -111,10 +111,12 @@ public class LeagueController {
     }
 
     @GetMapping("/search")
-    public List<LeagueES> searchLeagues(@RequestParam String name) {
-        return leagueService.findLeaguesByNameES(name);
+    public ResponseEntity<Page<LeagueES>> searchLeagues(@RequestParam String name,
+                                        @RequestParam int pageNumber,
+                                        @RequestParam int pageSize) {
+        Page<LeagueES> leagueES = leagueService.findLeaguesByNameES(name,pageNumber,pageSize);
+        return ResponseEntity.status(HttpStatus.OK).body(leagueES);
     }
-
     @PostMapping("/es")
     public ResponseEntity<Void> saveLeagueToES(@RequestBody LeagueDTO leagueDTO) {
         try {

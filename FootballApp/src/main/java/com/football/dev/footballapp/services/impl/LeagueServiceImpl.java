@@ -128,7 +128,7 @@ public class LeagueServiceImpl implements LeagueService {
             dbLeague.setEnd_date(leagueDTO.getEnd_date());
             dbLeague.setDescription(leagueDTO.getDescription());
             leagueRepository.save(dbLeague);
-            LeagueES leagueES = new LeagueES(leagueDTO.getIdEs(), leagueDTO.getId(), leagueDTO.getName(),
+            LeagueES leagueES = new LeagueES(leagueDTO.getIdEs(), leagueDTO.getDbId(), leagueDTO.getName(),
                     leagueDTO.getStart_date(), leagueDTO.getEnd_date(), leagueDTO.getDescription());
             leagueRepositoryES.save(leagueES);
         });
@@ -181,10 +181,11 @@ public class LeagueServiceImpl implements LeagueService {
         return searchResponse;
     }
 
-    public List<LeagueES> findLeaguesByNameES(String name) {
+    public Page<LeagueES> findLeaguesByNameES(String name, int pageNumber, int pageSize) {
         try {
             logger.info("Searching for leagues with name containing: {}", name);
-            List<LeagueES> leagues = leagueRepositoryES.findByNameContainingIgnoreCase(name);
+            PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+            Page<LeagueES> leagues = leagueRepositoryES.findByNameContainingIgnoreCase(name, pageRequest);
             logger.info("Found leagues: {}", leagues);
             return leagues;
         } catch (Exception e) {
@@ -192,7 +193,6 @@ public class LeagueServiceImpl implements LeagueService {
             throw e;
         }
     }
-
     @Override
     public void saveLeagueToES(LeagueDTO leagueDTO) throws IOException {
         LeagueES leagueES = new LeagueES();

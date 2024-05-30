@@ -15,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 public class LeagueDTO {
-    private Long id;
+    private Long dbId;
     private String idEs;
     private String name;
     private Date start_date;
@@ -35,16 +35,16 @@ public class LeagueDTO {
         this.end_date = end_date;
         this.description = description;
     }
-    public LeagueDTO(Long id,String name, Date start_date, Date end_date, String description) {
-        this.id = id;
+    public LeagueDTO(Long dbId,String name, Date start_date, Date end_date, String description) {
+        this.dbId = dbId;
         this.name = name;
         this.start_date = start_date;
         this.end_date = end_date;
         this.description = description;
     }
 
-    public LeagueDTO(Long id, String idEs, String name, Date start_date, Date end_date, String description) {
-        this.id = id;
+    public LeagueDTO(Long dbId, String idEs, String name, Date start_date, Date end_date, String description) {
+        this.dbId = dbId;
         this.idEs = idEs;
         this.name = name;
         this.start_date = start_date;
