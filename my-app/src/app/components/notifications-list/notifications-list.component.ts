@@ -6,6 +6,7 @@ import {PlayerIdDto} from "../../common/player-id-dto";
 import {WebSocketService} from "../../services/web-socket.service";
 import {SharedNotificationService} from "../../services/shared-notification.service";
 import {AuthService} from "../../services/auth.service";
+import {PageResponseDto} from "../../common/page-response-dto";
 
 @Component({
   selector: 'app-notifications-list',
@@ -16,7 +17,9 @@ export class NotificationsListComponent implements OnInit{
   notificationsList: NotificationDto[] = [];
   askedPermissionPlayerIds: PlayerIdDto[] = [];
   notificationDto: NotificationDto|null=null;
-
+  pageNumber: number = 1;
+  pageSize: number = 10;
+  totalElements: number = 0;
   private connectionId: string = "notification";
   constructor(private notificationService: NotificationService,
               private playerService: PlayerService,
@@ -29,10 +32,7 @@ export class NotificationsListComponent implements OnInit{
     this.sharedNotificationService.resetNotificationCount()
     this.playerService.getDeletedPlayerIds().subscribe((ids: PlayerIdDto[]) => {
       this.askedPermissionPlayerIds = ids;
-      this.notificationService.retrieveNotifications().subscribe(notifications => {
-        this.notificationsList = notifications;
-        this.notificationsList.forEach(notification => this.updateNotificationPermission(notification));
-      });
+      this.retrieveNotifications();
     });
     this.webSocketService.getMessages(this.connectionId).subscribe((data: any[]) => {
       if(data.length > 0){
@@ -43,6 +43,13 @@ export class NotificationsListComponent implements OnInit{
         }
       }
     })
+  }
+  retrieveNotifications(){
+    this.notificationService.retrieveNotifications(this.pageNumber-1,this.pageSize).subscribe((notifications: PageResponseDto<NotificationDto>) => {
+      this.notificationsList = notifications.content;
+      this.totalElements = notifications.totalElements;
+      this.notificationsList.forEach(notification => this.updateNotificationPermission(notification));
+    });
   }
   private updateNotificationPermission(notificationDto: NotificationDto): void {
     if (this.askedPermissionPlayerIds.some(playerIdDto => playerIdDto.id === notificationDto.playerId)) {
@@ -58,6 +65,10 @@ export class NotificationsListComponent implements OnInit{
     this.notificationService.deleteNotification(this.authService.getUserIdFromToken()!,notificationDto).subscribe(()=>{
       this.notificationsList = this.notificationsList.filter(notification => notification.id != notificationDto.id);
     });
+  }
+  OnPageChange(pageNumber: number){
+    this.pageNumber = pageNumber;
+    this.retrieveNotifications();
   }
 
 }

@@ -21,5 +21,12 @@
         </tr>
         </tbody>
     </table>
-
+    <div class="d-flex justify-content-center">
+        <ngb-pagination [page]="pageNumber"
+                        [pageSize]="10"
+                        [collectionSize]="totalElements"
+                        [maxSize]="5"
+                        (pageChange)="OnPageChange($event)">
+        </ngb-pagination>
+    </div>
 </div>

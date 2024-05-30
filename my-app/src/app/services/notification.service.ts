@@ -16,9 +16,9 @@ export class NotificationService {
     return headers;
   }
   constructor(private http: HttpClient) { }
-  public retrieveNotifications(): Observable<any>{
+  public retrieveNotifications(page: number, size: number): Observable<any>{
     let headers = this.getHeaders();
-    return this.http.get(`${this.notificationUrl}/`,{headers});
+    return this.http.get(`${this.notificationUrl}/?page=${page}&size=${size}`,{headers});
   }
   public retrieveNotificationsCount(): Observable<any>{
     let headers = this.getHeaders();
