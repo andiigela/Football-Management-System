@@ -47,9 +47,8 @@ export class LeagueService {
     return this.http.get<LeagueDto[]>(`${this.leagueUrl}/matchAllLeagues`);
   }
 
-  searchLeaguesByName(name: string): Observable<LeagueDto[]> {
-    const headers = this.getHeaders();
-    return this.http.get<LeagueDto[]>(`${this.leagueUrl}/search?name=${name}`, { headers: headers });
+  searchLeaguesByName(name: string, pageNumber: number, pageSize: number): Observable<PageResponseDto<LeagueDto>> {
+    return this.http.get<PageResponseDto<LeagueDto>>(`${this.leagueUrl}/search?name=${name}&pageNumber=${pageNumber}&pageSize=${pageSize}`);
   }
   // searchLeaguesByName(name: string): Observable<LeagueDto[]> {
   //   return this.http.get<LeagueDto[]>(`${this.leagueUrl}/matchAllLeagues/${name}`);
