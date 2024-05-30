@@ -15,12 +15,18 @@
             <td>{{ val.description }}</td>
             <td *ngIf="val.playerId != null">
               <button *ngIf="val.permissionGiven !== true" class="btn btn-warning mr-2" (click)="this.giveDeletePlayerPermission(val)">Give Permission</button>
-                <button *ngIf="val.permissionGiven === true" disabled class="btn btn-warning mr-2">Given Permission</button>
-
+              <button *ngIf="val.permissionGiven === true" disabled class="btn btn-warning mr-2">Given Permission</button>
+              <button (click)="deleteNotification(val)" class="btn btn-danger">Delete</button>
             </td>
-
         </tr>
         </tbody>
     </table>
-
+    <div class="d-flex justify-content-center">
+        <ngb-pagination [page]="pageNumber"
+                        [pageSize]="10"
+                        [collectionSize]="totalElements"
+                        [maxSize]="5"
+                        (pageChange)="OnPageChange($event)">
+        </ngb-pagination>
+    </div>
 </div>

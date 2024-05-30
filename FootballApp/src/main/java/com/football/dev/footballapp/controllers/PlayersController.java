@@ -51,9 +51,6 @@ public class PlayersController {
     public ResponseEntity<PageResponseDto<PlayerDto>> getPlayers(@RequestParam(defaultValue = "0") int page,
                                                                  @RequestParam(defaultValue = "10") int size) {
         Page<PlayerDto> playersDtoPage = playerService.retrievePlayers(page,size);
-        Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-        boolean isAdmin = authorities.stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN_CLUB"));
-        log.info("is admin league: " + isAdmin);
         PageResponseDto<PlayerDto> responseDto = new PageResponseDto<>(
                 playersDtoPage.getContent(),
                 playersDtoPage.getNumber(),
@@ -85,6 +82,7 @@ public class PlayersController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deletePlayer(@PathVariable("id") Long id){
         playerService.deletePlayer(id);
+        log.info("Player has been deleted: " + id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
     @GetMapping("/deleted")

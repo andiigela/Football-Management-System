@@ -1,5 +1,4 @@
 package com.football.dev.footballapp.dto;
-import com.football.dev.footballapp.models.Notification;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

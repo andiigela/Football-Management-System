@@ -17,7 +17,7 @@ export class NotificationStatusComponent implements OnInit {
   }
   ngOnInit(): void {
     this.sharedNotification.fetchNotificationCountsFromApi();
-    this.sharedNotification.readNotificationsFromWebSocket();
+    this.sharedNotification.readNotificationsFromWebSocketToIncrement();
     this.sharedNotification.retrieveNotificationsCount().subscribe(count => this.notificationsCount=count)
 
   }

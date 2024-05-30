@@ -16,9 +16,9 @@ export class NotificationService {
     return headers;
   }
   constructor(private http: HttpClient) { }
-  public retrieveNotifications(): Observable<any>{
+  public retrieveNotifications(page: number, size: number): Observable<any>{
     let headers = this.getHeaders();
-    return this.http.get(`${this.notificationUrl}/`,{headers});
+    return this.http.get(`${this.notificationUrl}/?page=${page}&size=${size}`,{headers});
   }
   public retrieveNotificationsCount(): Observable<any>{
     let headers = this.getHeaders();
@@ -27,5 +27,13 @@ export class NotificationService {
   public updateNotificationsCount(notificationsCount: number): Observable<any>{
     let headers = this.getHeaders();
     return this.http.put(`${this.notificationUrl}/counts/update`,notificationsCount,{headers});
+  }
+  public deleteNotification(userId: number,notificationDto: NotificationDto): Observable<any>{
+    let headers = this.getHeaders();
+      let options = {
+          headers: headers,
+          body: notificationDto
+      };
+    return this.http.delete(`${this.notificationUrl}/${userId}/delete`,options);
   }
 }
