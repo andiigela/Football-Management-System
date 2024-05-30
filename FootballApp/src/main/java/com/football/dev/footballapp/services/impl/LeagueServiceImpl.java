@@ -128,11 +128,28 @@ public class LeagueServiceImpl implements LeagueService {
             dbLeague.setEnd_date(leagueDTO.getEndDate());
             dbLeague.setDescription(leagueDTO.getDescription());
             leagueRepository.save(dbLeague);
-            LeagueES leagueES = new LeagueES(leagueDTO.getIdEs(), leagueDTO.getDbId(), leagueDTO.getName(),
-                    leagueDTO.getStartDate(), leagueDTO.getEndDate(), leagueDTO.getDescription());
-            leagueRepositoryES.save(leagueES);
+
+            LeagueES existingLeagueES = leagueRepositoryES.findByDbId(id);
+            if (existingLeagueES != null) {
+                existingLeagueES.setName(leagueDTO.getName());
+                existingLeagueES.setStartDate(leagueDTO.getStartDate());
+                existingLeagueES.setEndDate(leagueDTO.getEndDate());
+                existingLeagueES.setDescription(leagueDTO.getDescription());
+                leagueRepositoryES.save(existingLeagueES);
+            } else {
+                LeagueES newLeagueES = new LeagueES();
+                newLeagueES.setId(leagueDTO.getIdEs());
+                newLeagueES.setDbId(dbLeague.getId());
+                newLeagueES.setName(leagueDTO.getName());
+                newLeagueES.setStartDate(leagueDTO.getStartDate());
+                newLeagueES.setEndDate(leagueDTO.getEndDate());
+                newLeagueES.setDescription(leagueDTO.getDescription());
+                newLeagueES.setDeleted(false);
+                leagueRepositoryES.save(newLeagueES);
+            }
         });
     }
+
 
     @Override
     public void createSeasonForLeague(Long leagueId, SeasonDto seasonDto) throws ResourceNotFoundException {
