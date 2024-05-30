@@ -1,6 +1,9 @@
 package com.football.dev.footballapp.controllers;
 import com.football.dev.footballapp.dto.NotificationDto;
+import com.football.dev.footballapp.dto.PageResponseDto;
+import com.football.dev.footballapp.dto.PlayerDto;
 import com.football.dev.footballapp.services.NotificationService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +17,16 @@ public class NotificationsController {
         this.notificationService=notificationService;
     }
     @GetMapping("/")
-    public ResponseEntity<List<NotificationDto>> getNotifications() {
-        List<NotificationDto> notificationDtoList = this.notificationService.getNotificationsByCurrentUser();
-        return ResponseEntity.status(HttpStatus.OK).body(notificationDtoList);
+    public ResponseEntity<PageResponseDto<NotificationDto>>getNotifications(@RequestParam(defaultValue = "0") int page,
+                                                                  @RequestParam(defaultValue = "10") int size) {
+        Page<NotificationDto> notificationDtoPage = this.notificationService.getNotificationsByCurrentUser(page,size);
+        PageResponseDto<NotificationDto> responseDto = new PageResponseDto<>(
+                notificationDtoPage.getContent(),
+                notificationDtoPage.getNumber(),
+                notificationDtoPage.getSize(),
+                notificationDtoPage.getTotalElements()
+        );
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
     @GetMapping("/counts")
     public ResponseEntity<Long> getNotificationCount() {

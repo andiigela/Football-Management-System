@@ -6,6 +6,8 @@ import com.football.dev.footballapp.models.UserEntity;
 import com.football.dev.footballapp.repository.jparepository.UserRepository;
 import com.football.dev.footballapp.repository.mongorepository.NotificationRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -45,20 +47,21 @@ public class NotificationServiceImpl implements NotificationService{
         });
     }
     @Override
-    public List<NotificationDto> getNotificationsByCurrentUser() {
+    public Page<NotificationDto> getNotificationsByCurrentUser(int pageNumber, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
         UserEntity userEntity = authenticationHelperService.getUserEntityFromAuthentication();
         if(userEntity == null) throw new UsernameNotFoundException("User not found!");
         Boolean isAdmin = userEntity.getRole().getDescription().equals("ADMIN_LEAGUE");
         userEntity.setNotificationsNumber(0L);
         userRepository.save(userEntity);
         if(isAdmin){
-            return notificationRepository.findNotificationsByToUserIdOrSendToAdminTrue(userEntity.getId())
-                    .orElseThrow(() -> new EntityNotFoundException("Notifications not found for Admin League"))
-                    .stream().map(notificationDtoMapper).collect(Collectors.toList());
+            Page<Notification> notificationsByUserOrAdmin = notificationRepository.findNotificationsByToUserIdOrSendToAdminTrue(userEntity.getId(),pageRequest)
+                        .orElseThrow(() -> new EntityNotFoundException("Notifications not found for Admin League"));
+            return notificationsByUserOrAdmin.map(notificationDtoMapper);
         }
-        return notificationRepository.findNotificationsByToUserIdAndSendToAdminFalse(userEntity.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Notifications not found for simple user with id: " + userEntity.getId()))
-                .stream().map(notificationDtoMapper).collect(Collectors.toList());
+        Page<Notification> notificationsByUser = notificationRepository.findNotificationsByToUserIdAndSendToAdminFalse(userEntity.getId(),pageRequest)
+                .orElseThrow(() -> new EntityNotFoundException("Notifications not found for simple user with id: " + userEntity.getId()));
+        return notificationsByUser.map(notificationDtoMapper);
     }
     @Override
     public Notification createPlayerDeletePermissionNotification(Long playerToBeDeletedId, String message) {
