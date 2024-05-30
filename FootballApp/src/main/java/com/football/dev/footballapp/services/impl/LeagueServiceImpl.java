@@ -185,7 +185,7 @@ public class LeagueServiceImpl implements LeagueService {
         try {
             logger.info("Searching for leagues with name containing: {}", name);
             PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
-            Page<LeagueES> leagues = leagueRepositoryES.findByNameContainingIgnoreCase(name, pageRequest);
+            Page<LeagueES> leagues = leagueRepositoryES.findByNameContainingIgnoreCaseAndIsDeletedFalse(name, pageRequest);
             logger.info("Found leagues: {}", leagues);
             return leagues;
         } catch (Exception e) {

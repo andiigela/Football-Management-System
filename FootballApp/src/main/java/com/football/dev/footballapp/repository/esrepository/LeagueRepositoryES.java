@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface LeagueRepositoryES extends ElasticsearchRepository<LeagueES, String> {
 
-    Page<LeagueES> findByNameContainingIgnoreCase(String name, Pageable pageable);
+    Page<LeagueES> findByNameContainingIgnoreCaseAndIsDeletedFalse(String name, Pageable pageable);
     LeagueES findByDbId(Long id);
     Page<LeagueES> findByIsDeletedTrue(Pageable pageable);
 
