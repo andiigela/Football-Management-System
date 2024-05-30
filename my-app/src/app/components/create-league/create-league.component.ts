@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import {LeagueDto} from "../../common/league-dto";
-import {LeagueService} from "../../services/league.service";
-import {Router} from "@angular/router";
+import { LeagueDto } from "../../common/league-dto";
+import { LeagueService } from "../../services/league.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-create-league',
@@ -10,10 +10,16 @@ import {Router} from "@angular/router";
 })
 export class CreateLeagueComponent {
   newLeague: LeagueDto = new LeagueDto(0, '', new Date(), new Date(), ''); // Assuming LeagueDto is defined
+  endDateError: string = '';
 
   constructor(private leagueService: LeagueService, private router: Router) {}
 
   createLeague(): void {
+    if (this.newLeague.endDate < this.newLeague.startDate) {
+      this.endDateError = 'End date cannot be before start date';
+      return;
+    }
+
     this.leagueService.createLeague(this.newLeague).subscribe(() => {
       // Handle success
       alert('League created successfully!');
@@ -23,9 +29,6 @@ export class CreateLeagueComponent {
     }, error => {
       // Handle error
       alert('Failed to create league. Please try again.');
-
     });
   }
-
-
 }
