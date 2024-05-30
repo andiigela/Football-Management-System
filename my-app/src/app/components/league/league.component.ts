@@ -45,12 +45,12 @@ export class LeagueComponent implements OnInit{
   deleteLeague(id: number): void {
     this.leagueService.deleteLeague(id).subscribe(() => {
       // If deletion is successful, remove the league from the local array
-      this.leagues = this.leagues.filter(league => league.id !== id);
+      this.leagues = this.leagues.filter(league => league.dbId !== id);
     });
   }
 
   updateLeague(league: LeagueDto): void {
-    this.router.navigate(['/update-league', league.id], { state: { league: league } });
+    this.router.navigate(['/update-league', league.dbId], { state: { league: league } });
   }
   redirectToCreateLeague(): void {
     this.router.navigate(['/create-league']);

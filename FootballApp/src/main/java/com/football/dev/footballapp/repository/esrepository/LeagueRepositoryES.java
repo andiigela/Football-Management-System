@@ -9,4 +9,5 @@ import java.util.List;
 public interface LeagueRepositoryES extends ElasticsearchRepository<LeagueES, String> {
 //    @Query("{\"match\": {\"name\": {\"query\": \"?0\"}}}")
     List<LeagueES> findByNameContainingIgnoreCase(String name);
+    LeagueES findByDbId(Long id);
 }

@@ -26,4 +26,5 @@ public interface LeagueService {
     SearchResponse<LeagueES> matchAllLeagueServices() throws IOException;
     SearchResponse<LeagueES> matchLeaguesWithName(String fieldValue) throws IOException;
     List<LeagueES> findLeaguesByNameES(String name);
+    void saveLeagueToES(LeagueDTO leagueDTO) throws IOException;
 }

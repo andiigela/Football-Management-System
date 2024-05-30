@@ -99,6 +99,11 @@
             <artifactId>elasticsearch-rest-client</artifactId>
             <version>7.17.2</version> <!-- Update to the latest version if needed -->
         </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>9.0.65</version>
+        </dependency>
     </dependencies>
 
     <build>

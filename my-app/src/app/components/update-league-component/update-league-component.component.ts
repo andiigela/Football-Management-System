@@ -27,7 +27,7 @@ export class UpdateLeagueComponent implements OnInit {
   }
 
   updateLeague(): void {
-    this.leagueService.editLeague(this.league.id, this.league).subscribe(() => {
+    this.leagueService.editLeague(this.league.dbId, this.league).subscribe(() => {
       // Handle success
       this.router.navigate(['/league']); // Navigate back to the league route
     }, error => {

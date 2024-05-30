@@ -114,4 +114,14 @@ public class LeagueController {
     public List<LeagueES> searchLeagues(@RequestParam String name) {
         return leagueService.findLeaguesByNameES(name);
     }
+
+    @PostMapping("/es")
+    public ResponseEntity<Void> saveLeagueToES(@RequestBody LeagueDTO leagueDTO) {
+        try {
+            leagueService.saveLeagueToES(leagueDTO);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
