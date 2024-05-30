@@ -57,7 +57,7 @@ public class LeagueServiceImpl implements LeagueService {
     public void insertLeague(LeagueDTO leagueDTO) {
         // Create and save the League entity to PostgreSQL
         League league = new League(leagueDTO.getName(),
-                leagueDTO.getStart_date(), leagueDTO.getEnd_date(),
+                leagueDTO.getStartDate(), leagueDTO.getEndDate(),
                 leagueDTO.getDescription());
         League savedLeague = leagueRepository.save(league);
 
@@ -124,12 +124,12 @@ public class LeagueServiceImpl implements LeagueService {
     public void updateLeague(Long id, LeagueDTO leagueDTO) {
         leagueRepository.findById(id).ifPresent(dbLeague -> {
             dbLeague.setName(leagueDTO.getName());
-            dbLeague.setStart_date(leagueDTO.getStart_date());
-            dbLeague.setEnd_date(leagueDTO.getEnd_date());
+            dbLeague.setStart_date(leagueDTO.getStartDate());
+            dbLeague.setEnd_date(leagueDTO.getEndDate());
             dbLeague.setDescription(leagueDTO.getDescription());
             leagueRepository.save(dbLeague);
             LeagueES leagueES = new LeagueES(leagueDTO.getIdEs(), leagueDTO.getDbId(), leagueDTO.getName(),
-                    leagueDTO.getStart_date(), leagueDTO.getEnd_date(), leagueDTO.getDescription());
+                    leagueDTO.getStartDate(), leagueDTO.getEndDate(), leagueDTO.getDescription());
             leagueRepositoryES.save(leagueES);
         });
     }
@@ -198,8 +198,9 @@ public class LeagueServiceImpl implements LeagueService {
         LeagueES leagueES = new LeagueES();
 
         leagueES.setName(leagueDTO.getName());
-        leagueES.setStartDate(leagueDTO.getStart_date());
-        leagueES.setEndDate(leagueDTO.getEnd_date());
+        leagueES.setStartDate(leagueDTO.getStartDate());
+        leagueES.setEndDate(leagueDTO.getEndDate());
+        leagueES.setEndDate(leagueDTO.getEndDate());
         leagueES.setDescription(leagueDTO.getDescription());
         leagueRepositoryES.save(leagueES);
 
