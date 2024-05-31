@@ -1,11 +1,11 @@
 package com.football.dev.footballapp.services.impl;
 
 import com.football.dev.footballapp.dto.*;
-import com.football.dev.footballapp.models.Club;
-import com.football.dev.footballapp.models.RefreshToken;
-import com.football.dev.footballapp.models.Role;
-import com.football.dev.footballapp.models.UserEntity;
+import com.football.dev.footballapp.models.*;
+import com.football.dev.footballapp.models.ES.LeagueES;
+import com.football.dev.footballapp.models.ES.UserEntityES;
 import com.football.dev.footballapp.repository.esrepository.ClubRepositoryES;
+import com.football.dev.footballapp.repository.esrepository.UserRepositoryES;
 import com.football.dev.footballapp.repository.jparepository.ClubRepository;
 import com.football.dev.footballapp.repository.jparepository.RoleRepository;
 import com.football.dev.footballapp.repository.jparepository.UserRepository;
@@ -21,13 +21,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
+    private final UserRepositoryES userRepositoryES;
     private final RoleRepository roleRepository;
     private final ClubRepository clubRepository;
     private final ClubRepositoryES clubRepositoryES;
-
     private final JWTGenerator jwtGenerator;
     private final AuthenticationManager authenticationManager;
     private final RefreshTokenService refreshTokenService;
@@ -36,7 +38,7 @@ public class AuthServiceImpl implements AuthService {
                            ClubRepository clubRepository, JWTGenerator jwtGenerator,
                            AuthenticationManager authenticationManager,
                            RefreshTokenService refreshTokenService, PasswordEncoder passwordEncoder,
-                           ClubRepositoryES clubRepositoryES) {
+                           ClubRepositoryES clubRepositoryES, UserRepositoryES userRepositoryES) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.clubRepository = clubRepository;
@@ -45,6 +47,7 @@ public class AuthServiceImpl implements AuthService {
         this.refreshTokenService = refreshTokenService;
         this.passwordEncoder = passwordEncoder;
         this.clubRepositoryES = clubRepositoryES;
+        this.userRepositoryES = userRepositoryES;
     }
 
     @Override
@@ -67,9 +70,7 @@ public class AuthServiceImpl implements AuthService {
         throw new UsernameNotFoundException("Invalid user request");
     }
 
-
     @Override
-
     public void register(RegisterDto registerDto) {
         if (userRepository.existsByEmail(registerDto.getEmail())) {
             throw new IllegalArgumentException("Username is taken!");
@@ -84,7 +85,15 @@ public class AuthServiceImpl implements AuthService {
         Role role = roleRepository.findByDescription("ADMIN_CLUB")
                 .orElseThrow(() -> new IllegalStateException("Default role not found"));
         user.setRole(role);
-        userRepository.save(user);
+        UserEntity savedUser = userRepository.save(user);
+        String esId = UUID.randomUUID().toString();
+        UserEntityES userES = new UserEntityES();
+        userES.setId(esId);
+        userES.setDbId(savedUser.getId());
+        userES.setEmail(savedUser.getEmail());
+        userES.setEnabled(savedUser.isEnabled());
+        userES.setDeleted(false);
+        userRepositoryES.save(userES);
         Club club = new Club();
         club.setName(registerDto.getClubName());
         club.setUser(user);

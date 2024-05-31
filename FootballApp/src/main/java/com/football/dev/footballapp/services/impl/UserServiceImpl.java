@@ -2,6 +2,8 @@ package com.football.dev.footballapp.services.impl;
 
 import com.football.dev.footballapp.dto.UserEntityDto;
 import com.football.dev.footballapp.mapper.UserEntityToDTOMapper;
+import com.football.dev.footballapp.models.ES.LeagueES;
+import com.football.dev.footballapp.models.ES.UserEntityES;
 import com.football.dev.footballapp.models.UserEntity;
 
 import com.football.dev.footballapp.models.enums.Gender;
@@ -49,8 +51,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUserStatus(Long userId, boolean enabled) {
         UserEntity user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        UserEntityES userES = userRepositoryES.findByDbId(userId);
         user.setEnabled(enabled);
+        userES.setEnabled(enabled);
         userRepository.save(user);
+        userRepositoryES.save(userES);
     }
     @Override
     @Transactional
@@ -123,5 +128,10 @@ public class UserServiceImpl implements UserService {
         Page<UserEntity> userPage = userRepository.findByRoleDescriptionAndIsDeleted(role, isDeleted, pageRequest);
         Page<UserEntityDto> userDtos = userPage.map(userEntityMapper);
         return userDtos;
+    }
+
+    @Override
+    public List<UserEntityES> findUsersByEmailES(String email) {
+        return userRepositoryES.findByEmailStartingWithAndIsDeletedFalse(email);
     }
 }

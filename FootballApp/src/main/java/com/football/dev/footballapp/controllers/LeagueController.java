@@ -76,8 +76,6 @@ public class LeagueController {
             return ResponseEntity.notFound().build();
         }
     }
-
-
     @GetMapping("/matchAll")
     public String matchAll() throws IOException {
         SearchResponse<Map> searchResponse =  leagueService.matchAllServices();
@@ -96,7 +94,6 @@ public class LeagueController {
         }
         return listOfProducts;
     }
-
     @GetMapping("/matchAllLeagues/{fieldValue}")
     public List<LeagueES> matchAllLeaguesWithName(@PathVariable String fieldValue) throws IOException {
         SearchResponse<LeagueES> searchResponse =  leagueService.matchLeaguesWithName(fieldValue);
@@ -109,7 +106,6 @@ public class LeagueController {
         }
         return listOfProducts;
     }
-
     @GetMapping("/search")
     public ResponseEntity<Page<LeagueES>> searchLeagues(@RequestParam String name,
                                         @RequestParam int pageNumber,

@@ -2,6 +2,8 @@ package com.football.dev.footballapp.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.football.dev.footballapp.dto.UserEntityDto;
+import com.football.dev.footballapp.models.ES.LeagueES;
+import com.football.dev.footballapp.models.ES.UserEntityES;
 import com.football.dev.footballapp.models.UserEntity;
 import com.football.dev.footballapp.security.JWTGenerator;
 import com.football.dev.footballapp.services.UserService;
@@ -76,6 +78,12 @@ public class UserController {
     @GetMapping("users/{userId}")
     public UserEntity getUserProfile(@PathVariable Long userId) {
         return userService.getUserProfile(userId);
+    }
+    @GetMapping("/search")
+    public ResponseEntity<List<UserEntityES>> searchUsers(@RequestParam String email) {
+        System.out.println("Searching users with email: " + email);
+        List<UserEntityES> users = userService.findUsersByEmailES(email);
+        return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 
 }

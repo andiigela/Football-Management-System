@@ -12,6 +12,4 @@ public interface LeagueRepositoryES extends ElasticsearchRepository<LeagueES, St
 
     Page<LeagueES> findByNameContainingIgnoreCaseAndIsDeletedFalse(String name, Pageable pageable);
     LeagueES findByDbId(Long id);
-    Page<LeagueES> findByIsDeletedTrue(Pageable pageable);
-
 }
