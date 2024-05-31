@@ -3,6 +3,9 @@ package com.football.dev.footballapp.services.impl;
 import com.football.dev.footballapp.dto.MatchDTO;
 import com.football.dev.footballapp.mapper.MatchDTOMapper;
 import com.football.dev.footballapp.models.*;
+import com.football.dev.footballapp.models.ES.LeagueES;
+import com.football.dev.footballapp.models.ES.MatchES;
+import com.football.dev.footballapp.repository.esrepository.MatchRepositoryES;
 import com.football.dev.footballapp.repository.jparepository.ClubRepository;
 import com.football.dev.footballapp.repository.jparepository.MatchRepository;
 import com.football.dev.footballapp.repository.jparepository.RoundRepository;
@@ -15,12 +18,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 @Service
 public class MatchServiceImpl implements MatchService {
     private final MatchRepository matchRepository;
+    private final MatchRepositoryES matchRepositoryES;
     private final ClubRepository clubRepository;
     private final StadiumRepository stadiumRepository;
     private final RoundRepository roundRepository;
@@ -28,12 +35,13 @@ public class MatchServiceImpl implements MatchService {
 
     public MatchServiceImpl(MatchRepository matchRepository, MatchDTOMapper mapper,
                             ClubRepository clubRepository, StadiumRepository stadiumRepository,
-                            RoundRepository roundRepository) {
+                            RoundRepository roundRepository, MatchRepositoryES matchRepositoryES) {
         this.matchRepository = matchRepository;
         this.clubRepository = clubRepository;
         this.stadiumRepository= stadiumRepository;
         this.mapper = mapper;
         this.roundRepository = roundRepository;
+        this.matchRepositoryES = matchRepositoryES;
     }
     @Override
     public void saveMatch(MatchDTO matchDto, Long roundId) {
@@ -47,6 +55,7 @@ public class MatchServiceImpl implements MatchService {
         Match match = new Match(homeTeam, awayTeam, matchDto.getMatchDate(), matchDto.getResult(), matchDto.getHomeTeamScore(), matchDto.getAwayTeamScore(), roundDb);
 
         matchRepository.save(match);
+
     }
 
     @Override
@@ -89,7 +98,11 @@ public class MatchServiceImpl implements MatchService {
         });
     }
 
-
+    @Override
+    public Page<MatchES> retrieveMatchesByDateAndResult(Date date, Integer homeTeamResult, Integer awayTeamResult, int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return matchRepositoryES.findMatchesByMatchDateAndHomeTeamScoreAndAwayTeamScore(date, homeTeamResult, awayTeamResult, pageable);
+    }
 //    @Override
 //    public void insertMatch(MatchDTO matchDTO) {
 //        Club homeTeam = clubRepository.findById(matchDTO.getHomeTeamId().getId())

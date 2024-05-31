@@ -3,9 +3,11 @@ package com.football.dev.footballapp.services.impl;
 import com.football.dev.footballapp.dto.RoundDto;
 import com.football.dev.footballapp.mapper.RoundDtoMapper;
 import com.football.dev.footballapp.models.Club;
+import com.football.dev.footballapp.models.ES.MatchES;
 import com.football.dev.footballapp.models.Match;
 import com.football.dev.footballapp.models.Round;
 import com.football.dev.footballapp.models.Season;
+import com.football.dev.footballapp.repository.esrepository.MatchRepositoryES;
 import com.football.dev.footballapp.repository.jparepository.ClubRepository;
 import com.football.dev.footballapp.repository.jparepository.MatchRepository;
 import com.football.dev.footballapp.repository.jparepository.RoundRepository;
@@ -28,18 +30,21 @@ public class RoundServiceImpl implements RoundService {
     private final RoundDtoMapper roundDtoMapper;
     private final ClubRepository clubRepository;
     private final MatchRepository matchRepository;
+    private final MatchRepositoryES matchRepositoryES;
     private final SeasonRepository seasonRepository;
 
     public RoundServiceImpl(RoundRepository roundRepository,
                             RoundDtoMapper roundDtoMapper,
                             ClubRepository clubRepository,
                             MatchRepository matchRepository,
-                            SeasonRepository seasonRepository) {
+                            SeasonRepository seasonRepository,
+                            MatchRepositoryES matchRepositoryES) {
         this.roundRepository = roundRepository;
         this.roundDtoMapper = roundDtoMapper;
         this.clubRepository = clubRepository;
         this.matchRepository = matchRepository;
         this.seasonRepository = seasonRepository;
+        this.matchRepositoryES = matchRepositoryES;
     }
     @Override
     public void saveRound(RoundDto roundDto, Long seasonId) {
@@ -53,7 +58,19 @@ public class RoundServiceImpl implements RoundService {
         for (Match match : generatedMatches) {
             match.setRound(savedRound);
             matchRepository.save(match);
+            MatchES matchES = createMatchES(match);
+            matchRepositoryES.save(matchES);
         }
+    }
+    private MatchES createMatchES(Match match) {
+        String esId = UUID.randomUUID().toString();
+        MatchES matchES = new MatchES();
+        matchES.setId(esId);
+        matchES.setDbId(match.getId());
+        matchES.setMatchDate(match.getMatchDate());
+        matchES.setHomeTeamScore(match.getHomeTeamScore());
+        matchES.setAwayTeamScore(match.getAwayTeamScore());
+        return matchES;
     }
 
     @Override
