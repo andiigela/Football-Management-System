@@ -63,42 +63,19 @@ public class MatchController {
     }
     @GetMapping("/filter")
     public ResponseEntity<Page<MatchES>> getMatchesByDateAndResult(
-            @RequestParam(name = "date") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX") Date date,
+            @RequestParam(name = "date") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Date date,
             @RequestParam Integer homeTeamResult,
             @RequestParam Integer awayTeamResult,
             @RequestParam(defaultValue = "0") int pageNumber,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
-        // Log the parameters received
+
         logger.debug("Received request with date: {}, homeTeamResult: {}, awayTeamResult: {}, pageNumber: {}, pageSize: {}", date, homeTeamResult, awayTeamResult, pageNumber, pageSize);
-
-        // Call the service method
         Page<MatchES> matchES = matchService.retrieveMatchesByDateAndResult(date,homeTeamResult,awayTeamResult,pageNumber, pageSize);
-
-        // Log the result
         logger.debug("Retrieved matches: {}", matchES.getContent());
 
         return ResponseEntity.status(HttpStatus.OK).body(matchES);
     }
-//    @GetMapping
-//    public ResponseEntity<List<MatchDTO>>listAllMatches(){
-//        return ResponseEntity.ok(matchService.listAllMatch());
-//    }
-//    @GetMapping("{id}")
-//    public ResponseEntity<MatchDTO>returnMatchById(@PathVariable("id")Long id ){
-//        return ResponseEntity.ok(matchService.selectMatchById(id).get());
-//    }
-//    @DeleteMapping("{id}")
-//    public void deleteMatch(@PathVariable("id")Long id){
-//        matchService.deleteMatch(id);
-//    }
-//    @PutMapping("{id}")
-//    public void editMatch(@PathVariable("id")Long id , @RequestBody MatchDTO matchDTO){
-//        matchService.updateMatch(id,matchDTO);
-//    }
-//    @PostMapping
-//    public void createMatch(@RequestBody MatchDTO matchDTO){
-//        matchService.insertMatch(matchDTO);
-//    }
+
 
 }

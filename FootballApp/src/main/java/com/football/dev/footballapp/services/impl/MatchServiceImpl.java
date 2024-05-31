@@ -29,16 +29,14 @@ public class MatchServiceImpl implements MatchService {
     private final MatchRepository matchRepository;
     private final MatchRepositoryES matchRepositoryES;
     private final ClubRepository clubRepository;
-    private final StadiumRepository stadiumRepository;
     private final RoundRepository roundRepository;
     private final MatchDTOMapper mapper;
 
     public MatchServiceImpl(MatchRepository matchRepository, MatchDTOMapper mapper,
-                            ClubRepository clubRepository, StadiumRepository stadiumRepository,
+                            ClubRepository clubRepository,
                             RoundRepository roundRepository, MatchRepositoryES matchRepositoryES) {
         this.matchRepository = matchRepository;
         this.clubRepository = clubRepository;
-        this.stadiumRepository= stadiumRepository;
         this.mapper = mapper;
         this.roundRepository = roundRepository;
         this.matchRepositoryES = matchRepositoryES;

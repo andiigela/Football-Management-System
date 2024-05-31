@@ -2,15 +2,46 @@
   <button class="btn btn-primary mx-4" (click)="createRound()">Create Round</button>
 </div>
 
-<div *ngFor="let round of rounds" class="my-4">
-  <div class="table-responsive mx-4">
+<!-- Filter section -->
+<div class="my-4">
+  <h3>Filter Matches</h3>
+  <div class="form-group mx-4">
+    <label for="filterDate">Filter by Date:</label>
+    <input type="datetime-local" class="form-control" id="filterDate" name="filterDate" [(ngModel)]="date">
+  </div>
+  <div class="form-group mx-4">
+    <label for="filterHomeTeamResult">Filter by Home Team Result:</label>
+    <input type="number" class="form-control" id="filterHomeTeamResult" name="filterHomeTeamResult" [(ngModel)]="homeTeamResult">
+  </div>
+  <div class="form-group mx-4">
+    <label for="filterAwayTeamResult">Filter by Away Team Result:</label>
+    <input type="number" class="form-control" id="filterAwayTeamResult" name="filterAwayTeamResult" [(ngModel)]="awayTeamResult">
+  </div>
+  <div class="form-group mx-4">
+    <button class="btn btn-primary" (click)="filterMatches()">Apply Filter</button>
+  </div>
+</div>
+
+<!-- Match listing -->
+<div class="my-4" *ngIf="isFilterApplied; else showRounds">
+  <!-- Display filteredMatches -->
+  <div *ngFor="let match of filteredMatches" class="my-4">
+    <p>Home Team: {{ match.homeTeam.name }}</p>
+    <p>Away Team: {{ match.awayTeam.name }}</p>
+    <p>Match Date: {{ match.matchDate | date: 'short' }}</p>
+    <p>Home Team Score: {{ match.homeTeamScore }}</p>
+    <p>Away Team Score: {{ match.awayTeamScore }}</p>
+    <p>Result: {{ match.result }}</p>
+  </div>
+  <button class="btn btn-secondary" (click)="clearFilters()">Clear Filters</button>
+</div>
+
+<ng-template #showRounds>
+  <!-- Display regular rounds -->
+  <div *ngFor="let round of rounds" class="my-4">
+    <h4>Round #{{ round.id }} : {{ round.start_date | date: 'short' }} - {{ round.end_date | date: 'short' }}</h4>
     <table class="table table-striped">
       <thead class="thead-dark">
-      <tr>
-        <th colspan="8" class="text-center" style="background-color: #343a40; color: white;">
-          Round #{{ round.id }} : {{ round.start_date | date: 'short' }} - {{ round.end_date | date: 'short' }}
-        </th>
-      </tr>
       <tr>
         <th scope="col">Match ID</th>
         <th scope="col">Home Team</th>
@@ -19,29 +50,25 @@
         <th scope="col">Home Team Score</th>
         <th scope="col">Away Team Score</th>
         <th scope="col">Result</th>
-        <th scope="col" *ngIf="isCurrentSeason">Actions</th>
       </tr>
       </thead>
       <tbody>
       <tr *ngFor="let match of round.matches">
         <td>{{ match.id }}</td>
-        <td>{{ match.homeTeam.name}}</td>
-        <td>{{ match.awayTeam.name}}</td>
+        <td>{{ match.homeTeam.name }}</td>
+        <td>{{ match.awayTeam.name }}</td>
         <td>{{ match.matchDate | date: 'short' }}</td>
         <td>{{ match.homeTeamScore }}</td>
         <td>{{ match.awayTeamScore }}</td>
         <td>{{ match.result }}</td>
-        <td *ngIf="isCurrentSeason">
-          <button class="btn btn-primary" (click)="redirectToEditMatch(round.id, match.id)">Update</button>
-        </td>
       </tr>
       </tbody>
     </table>
   </div>
+</ng-template>
 
-</div>
+<!-- Pagination -->
 <div class="d-flex justify-content-center">
-  <!-- Pagination -->
   <ngb-pagination
     [collectionSize]="totalElements"
     [(page)]="pageNumber"
@@ -49,4 +76,3 @@
     (pageChange)="onPageChange($event)">
   </ngb-pagination>
 </div>
-

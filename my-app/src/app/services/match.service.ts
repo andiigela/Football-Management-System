@@ -36,4 +36,9 @@ export class MatchService {
     deleteMatch(roundId: number, matchId: number): Observable<any> {
         return this.http.delete(`${this.apiUrl}/${roundId}/delete/${matchId}`);
     }
+
+  filterMatches(date: string, homeTeamResult: number, awayTeamResult: number, page: number = 0, size: number = 10): Observable<any> {
+    const params = `?date=${date}&homeTeamResult=${homeTeamResult}&awayTeamResult=${awayTeamResult}&pageNumber=${page}&pageSize=${size}`;
+    return this.http.get(`${this.apiUrl}/filter${params}`);
+  }
 }
