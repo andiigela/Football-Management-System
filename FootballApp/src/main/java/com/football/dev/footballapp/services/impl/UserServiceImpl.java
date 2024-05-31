@@ -51,10 +51,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUserStatus(Long userId, boolean enabled) {
         UserEntity user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        UserEntityES userES = userRepositoryES.findByDbId(userId);
         user.setEnabled(enabled);
-        userES.setEnabled(enabled);
         userRepository.save(user);
+
+        UserEntityES userES = userRepositoryES.findByDbId(userId);
+        userES.setEnabled(enabled);
         userRepositoryES.save(userES);
     }
     @Override
@@ -64,6 +65,9 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         user.setIsDeleted(true);
         userRepository.save(user);
+        UserEntityES userES = userRepositoryES.findByDbId(userId);
+        userES.setDeleted(true);
+        userRepositoryES.save(userES);
     }
 
     @Override

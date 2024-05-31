@@ -7,6 +7,7 @@ import {AuthService} from "./auth.service";
 import {PageResponseDto} from "../common/page-response-dto";
 import {RoundDto} from "../common/round-dto";
 import {UserDTO} from "../common/user-dto";
+import {LeagueDto} from "../common/league-dto";
 
 @Injectable({
     providedIn: 'root'
@@ -71,4 +72,8 @@ export class UserService {
         let headers = this.getHeaders();
         return this.http.get(`http://localhost:8080/images/${profile_picture}`, { headers, responseType: 'blob' });
     }
+
+  searchUsersByEmail(email: string): Observable<UserDTO[]> {
+    return this.http.get<UserDTO[]>(`${this.apiUrl}/search?email=${email}`);
+  }
 }

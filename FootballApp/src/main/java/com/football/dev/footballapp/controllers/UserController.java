@@ -38,11 +38,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userEntityDtoPage);
     }
 
-    /*public List<UserEntity> getAllUsers(@RequestParam Long currentUserId) {
-        return userService.getAllUsers().stream()
-                .filter(user -> !user.getId().equals(currentUserId))
-                .collect(Collectors.toList());
-    }*/
     @PutMapping("users/{userId}/status")
     public void updateUserStatus(@PathVariable Long userId, @RequestParam boolean enabled) {
         userService.updateUserStatus(userId, enabled);
@@ -79,7 +74,7 @@ public class UserController {
     public UserEntity getUserProfile(@PathVariable Long userId) {
         return userService.getUserProfile(userId);
     }
-    @GetMapping("/search")
+    @GetMapping("users/search")
     public ResponseEntity<List<UserEntityES>> searchUsers(@RequestParam String email) {
         System.out.println("Searching users with email: " + email);
         List<UserEntityES> users = userService.findUsersByEmailES(email);

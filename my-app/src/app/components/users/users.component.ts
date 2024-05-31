@@ -16,7 +16,7 @@ export class UsersComponent implements OnInit {
     pageNumber: number = 1;
     pageSize: number = 5;
     totalElements: number = 0;
-
+    searchQuery: string = '';
     constructor(private http: HttpClient, private userService: UserService, private authService: AuthService) { }
 
     ngOnInit(): void {
@@ -27,7 +27,26 @@ export class UsersComponent implements OnInit {
     getCurrentUserId(): void {
         this.currentUserId = this.authService.getUserIdFromToken();
     }
+  searchUsers(): void {
+    this.fetchUsers(this.searchQuery);
+  }
 
+    private fetchUsers(query: string): void {
+        if (query.trim() !== '') {
+            this.userService.searchUsersByEmail(query)
+                .subscribe(
+                    (users: UserDTO[]) => {
+                        this.users = users;
+                        console.log(users);
+                    },
+                    (error) => {
+                        console.error('Error fetching users:', error);
+                    }
+                );
+        } else {
+            this.loadUsers();
+        }
+    }
     loadUsers(): void {
         this.userService.getUsersWithUserRole(this.pageNumber-1, this.pageSize).subscribe(
             (response) => {
