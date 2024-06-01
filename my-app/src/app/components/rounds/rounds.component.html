@@ -1,7 +1,7 @@
-<div class="my-4" *ngIf="isCurrentSeason">
-  <button class="btn btn-primary mx-4" (click)="createRound()">Create Round</button>
-</div>
-<div class="my-4">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<div class="my-4" style="padding: 30px;">
+  <h3>Filter by Date</h3>
   <div class="form-row align-items-center">
     <div class="col-auto">
       <label for="startDate">Start Date:</label>
@@ -12,10 +12,17 @@
       <input type="datetime-local" class="form-control" id="endDate" [(ngModel)]="endDate">
     </div>
     <div class="col-auto">
-      <button class="btn btn-primary" (click)="filterRoundsByDateRange()">Filter</button>
-      <button class="btn btn-secondary" (click)="clearFilters()">Clear Filters</button>
+      <button (click)="filterRoundsByDateRange()" class="iconButton" title="Filter">
+        <i class="fa fa-filter"></i>
+      </button>
+      <button (click)="clearFilters()" class="iconButton" title="Cancel">
+        <i class="fa fa-times"></i>
+      </button>
     </div>
   </div>
+</div>
+<div class="my-4" *ngIf="isCurrentSeason">
+  <button class="btn btn-primary mx-4" (click)="createRound()">Create Round</button>
 </div>
 
   <div *ngFor="let round of rounds" class="my-4">
