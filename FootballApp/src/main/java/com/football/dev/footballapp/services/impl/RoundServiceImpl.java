@@ -3,11 +3,14 @@ package com.football.dev.footballapp.services.impl;
 import com.football.dev.footballapp.dto.RoundDto;
 import com.football.dev.footballapp.mapper.RoundDtoMapper;
 import com.football.dev.footballapp.models.Club;
+import com.football.dev.footballapp.models.ES.LeagueES;
 import com.football.dev.footballapp.models.ES.MatchES;
+import com.football.dev.footballapp.models.ES.RoundES;
 import com.football.dev.footballapp.models.Match;
 import com.football.dev.footballapp.models.Round;
 import com.football.dev.footballapp.models.Season;
 import com.football.dev.footballapp.repository.esrepository.MatchRepositoryES;
+import com.football.dev.footballapp.repository.esrepository.RoundRepositoryES;
 import com.football.dev.footballapp.repository.jparepository.ClubRepository;
 import com.football.dev.footballapp.repository.jparepository.MatchRepository;
 import com.football.dev.footballapp.repository.jparepository.RoundRepository;
@@ -16,6 +19,7 @@ import com.football.dev.footballapp.services.RoundService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -27,6 +31,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @Service
 public class RoundServiceImpl implements RoundService {
     private final RoundRepository roundRepository;
+    private final RoundRepositoryES roundRepositoryES;
     private final RoundDtoMapper roundDtoMapper;
     private final ClubRepository clubRepository;
     private final MatchRepository matchRepository;
@@ -38,13 +43,15 @@ public class RoundServiceImpl implements RoundService {
                             ClubRepository clubRepository,
                             MatchRepository matchRepository,
                             SeasonRepository seasonRepository,
-                            MatchRepositoryES matchRepositoryES) {
+                            MatchRepositoryES matchRepositoryES,
+                            RoundRepositoryES roundRepositoryES) {
         this.roundRepository = roundRepository;
         this.roundDtoMapper = roundDtoMapper;
         this.clubRepository = clubRepository;
         this.matchRepository = matchRepository;
         this.seasonRepository = seasonRepository;
         this.matchRepositoryES = matchRepositoryES;
+        this.roundRepositoryES = roundRepositoryES;
     }
     @Override
     public void saveRound(RoundDto roundDto, Long seasonId) {
@@ -55,12 +62,23 @@ public class RoundServiceImpl implements RoundService {
         round.setMatches(generatedMatches);
         Round savedRound = roundRepository.save(round);
 
+        //Saving in ES
+        String esId = UUID.randomUUID().toString();
+        RoundES roundES = new RoundES();
+        roundES.setId(esId);
+        roundES.setDbId(savedRound.getId());
+        roundES.setStartDate(savedRound.getStart_date());
+        roundES.setEndDate(savedRound.getEnd_date());
+        roundES.setSeason(seasonDb.id);
+        roundRepositoryES.save(roundES);
+
         for (Match match : generatedMatches) {
             match.setRound(savedRound);
             matchRepository.save(match);
             MatchES matchES = createMatchES(match);
             matchRepositoryES.save(matchES);
         }
+
     }
     private MatchES createMatchES(Match match) {
         String esId = UUID.randomUUID().toString();
@@ -101,29 +119,11 @@ public class RoundServiceImpl implements RoundService {
             roundRepository.save(roundDb);
         });
     }
-//    @Override
-//    public Optional<RoundDto> getRoundById(Long id) {
-//        return roundRepository.findById(id).map(roundDtoMapper);
-//    }
-
-//    @Override
-//    public Round createRound(Long seasonId, RoundDto roundDto) {
-//        Season season = seasonRepository.findById(seasonId)
-//                .orElseThrow(() -> new ResourceNotFoundException("Season not found with id: " + seasonId));
-//
-//        Round round = new Round(roundDto.getStart_date(), roundDto.getEnd_date());
-//        round.setSeason(season);
-//        Round savedRound = roundRepository.save(round);
-//        List<Match> randomMatches = generateRandomMatches(round);
-//
-//        randomMatches.forEach(match -> {
-//            match.setRound(savedRound);
-//            matchRepository.save(match);
-//        });
-//
-//        return savedRound;
-//    }
-
+    @Override
+    public Page<RoundES> findRoundsByStartDateBetween(Date startDate, Date endDate, int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return roundRepositoryES.findRoundsByStartDateBetween(startDate, endDate, pageable);
+    }
 
     private List<Match> generateRandomMatches(Round round) {
         List<Match> randomMatches = new ArrayList<>();
@@ -168,42 +168,6 @@ public class RoundServiceImpl implements RoundService {
         return LocalDateTime.of(LocalDate.ofEpochDay(randomEpochDay), LocalTime.of(random.nextInt(24), random.nextInt(60)));
     }
 
-
-//    @Override
-//    public List<MatchDTO> getMatchesByRoundId(Long roundId) {
-//        Optional<Round> roundOptional = roundRepository.findById(roundId);
-//        if (roundOptional.isPresent()) {
-//            Round round = roundOptional.get();
-//            List<Match> matches = matchRepository.findByRound(round);
-//            return matches.stream()
-//                    .map(match -> {
-//                        Club homeTeam = clubRepository.findById(match.getHomeTeamId().getId()).orElse(null);
-//                        Club awayTeam = clubRepository.findById(match.getAwayTeamId().getId()).orElse(null);
-//
-//                        return new MatchDTO(
-//                                match.getId(),
-//                                new ClubDto(homeTeam != null ? homeTeam.getId() : null,
-//                                        homeTeam != null ? homeTeam.getName() : null,
-//                                        homeTeam != null ? homeTeam.getFoundedYear() : null,
-//                                        homeTeam != null ? homeTeam.getCity() : null,
-//                                        homeTeam != null ? homeTeam.getWebsite() : null),
-//                                new ClubDto(awayTeam != null ? awayTeam.getId() : null,
-//                                        awayTeam != null ? awayTeam.getName() : null,
-//                                        awayTeam != null ? awayTeam.getFoundedYear() : null,
-//                                        awayTeam != null ? awayTeam.getCity() : null,
-//                                        awayTeam != null ? awayTeam.getWebsite() : null),
-//                                match.getMatchDate(),
-//                                match.getStadium(),
-//                                match.getResult(),
-//                                match.getHomeTeamScore(),
-//                                match.getAwayTeamScore()
-//                        );
-//                    })
-//                    .collect(Collectors.toList());
-//        } else {
-//            return Collections.emptyList();
-//        }
-//    }
 
 
 }

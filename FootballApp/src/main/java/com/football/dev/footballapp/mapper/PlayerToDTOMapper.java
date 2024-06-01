@@ -1,21 +1,18 @@
 package com.football.dev.footballapp.mapper;
-
+import com.football.dev.footballapp.dto.ContractDto;
 import com.football.dev.footballapp.dto.PlayerDto;
-import com.football.dev.footballapp.dto.RoundDto;
+import com.football.dev.footballapp.models.Contract;
 import com.football.dev.footballapp.models.Player;
-import com.football.dev.footballapp.models.Round;
 import org.springframework.stereotype.Service;
-
 import java.util.function.Function;
-
 @Service
-public class PlayerToDTOMapper implements Function<Player, PlayerDto> {
-
+public class PlayerToDtoMapper implements Function<Player, PlayerDto> {
+    private Function<Contract, ContractDto> contractDtoMapper;
+    public PlayerToDtoMapper(Function<Contract, ContractDto> contractDtoMapper) {
+        this.contractDtoMapper = contractDtoMapper;
+    }
     @Override
     public PlayerDto apply(Player player) {
-        PlayerDto playerDto = new PlayerDto(player.getName(),
-                player.getHeight(),player.getWeight(),player.getShirtNumber(),
-                player.getPreferred_foot().toString(),player.getPosition().toString());
-        return playerDto;
+        return new PlayerDto(player.getId(),player.getName(),player.getHeight(),player.getWeight(),player.getShirtNumber(),player.getImagePath(),player.getPreferred_foot().toString(),player.getPosition().toString(),player.getContracts(),contractDtoMapper);
     }
 }

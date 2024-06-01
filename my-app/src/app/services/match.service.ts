@@ -37,21 +37,8 @@ export class MatchService {
         return this.http.delete(`${this.apiUrl}/${roundId}/delete/${matchId}`);
     }
 
-  filterMatches(date?: string, homeTeamResult?: number, awayTeamResult?: number, page: number = 0, size: number = 10): Observable<any> {
-    let params = new HttpParams();
-
-    if (date) {
-      params = params.set('date', date);
-    }
-    if (homeTeamResult !== undefined) {
-      params = params.set('homeTeamResult', homeTeamResult.toString());
-    }
-    if (awayTeamResult !== undefined) {
-      params = params.set('awayTeamResult', awayTeamResult.toString());
-    }
-    params = params.set('pageNumber', page.toString());
-    params = params.set('pageSize', size.toString());
-
-    return this.http.get(`${this.apiUrl}/filter`, { params });
+  filterMatches(date: string, homeTeamResult: number, awayTeamResult: number, page: number = 0, size: number = 10): Observable<any> {
+    const params = `?date=${date}&homeTeamResult=${homeTeamResult}&awayTeamResult=${awayTeamResult}&pageNumber=${page}&pageSize=${size}`;
+    return this.http.get(`${this.apiUrl}/filter${params}`);
   }
 }

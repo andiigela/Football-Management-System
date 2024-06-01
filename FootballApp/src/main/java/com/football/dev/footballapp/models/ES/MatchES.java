@@ -22,7 +22,7 @@ public class MatchES {
     private Long dbId; //id e postgres
 
     @Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private Date matchDate; // Match date and time
+    private Date matchDate;
 
     @Field(type = FieldType.Integer)
     private Integer homeTeamScore; // Home team score
