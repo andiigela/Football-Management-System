@@ -85,7 +85,7 @@ export class RoundsComponent implements OnInit {
 
   createRound(): void {
     if (this.seasonId) {
-      this.router.navigate(['/league', 2, 'seasons', this.seasonId, 'create-round']);
+      this.router.navigate(['/league', this.leagueId, 'seasons', this.seasonId, 'create-round']);
     } else {
       console.error('Season ID is undefined or null');
     }
@@ -93,7 +93,7 @@ export class RoundsComponent implements OnInit {
 
   redirectToEditMatch(roundId: number | undefined, matchId: number): void {
     if (roundId !== undefined) {
-      this.router.navigate(['/league', 2, 'seasons', this.seasonId, 'rounds', roundId, 'edit-match', matchId]);
+      this.router.navigate(['/league', this.leagueId, 'seasons', this.seasonId, 'rounds', roundId, 'edit-match', matchId]);
     } else {
       console.error('Round ID is undefined');
     }

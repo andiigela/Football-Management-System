@@ -63,9 +63,9 @@ public class MatchController {
     }
     @GetMapping("/filter")
     public ResponseEntity<Page<MatchES>> getMatchesByDateAndResult(
-            @RequestParam(name = "date") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Date date,
-            @RequestParam Integer homeTeamResult,
-            @RequestParam Integer awayTeamResult,
+            @RequestParam(name = "date", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date date,
+            @RequestParam(required = false) Integer homeTeamResult,
+            @RequestParam(required = false) Integer awayTeamResult,
             @RequestParam(defaultValue = "0") int pageNumber,
             @RequestParam(defaultValue = "10") int pageSize
     ) {

@@ -19,6 +19,7 @@
   </div>
   <div class="form-group mx-4">
     <button class="btn btn-primary" (click)="filterMatches()">Apply Filter</button>
+    <button class="btn btn-secondary" (click)="clearFilters()" *ngIf="isFilterApplied">Clear Filters</button>
   </div>
 </div>
 
@@ -26,6 +27,7 @@
 <div class="my-4" *ngIf="isFilterApplied; else showRounds">
   <!-- Display filteredMatches -->
   <div *ngFor="let match of filteredMatches" class="my-4">
+    <p>Match ID: {{ match.id }}</p>
     <p>Home Team: {{ match.homeTeam.name }}</p>
     <p>Away Team: {{ match.awayTeam.name }}</p>
     <p>Match Date: {{ match.matchDate | date: 'short' }}</p>
@@ -33,7 +35,15 @@
     <p>Away Team Score: {{ match.awayTeamScore }}</p>
     <p>Result: {{ match.result }}</p>
   </div>
-  <button class="btn btn-secondary" (click)="clearFilters()">Clear Filters</button>
+  <!-- Pagination for filtered matches -->
+  <div class="d-flex justify-content-center">
+    <ngb-pagination
+      [collectionSize]="totalElements"
+      [(page)]="pageNumber"
+      [pageSize]="pageSize"
+      (pageChange)="onPageChange($event)">
+    </ngb-pagination>
+  </div>
 </div>
 
 <ng-template #showRounds>
@@ -61,8 +71,8 @@
         <tbody>
         <tr *ngFor="let match of round.matches">
           <td>{{ match.id }}</td>
-          <td>{{ match.homeTeam.name}}</td>
-          <td>{{ match.awayTeam.name}}</td>
+          <td>{{ match.homeTeam.name }}</td>
+          <td>{{ match.awayTeam.name }}</td>
           <td>{{ match.matchDate | date: 'short' }}</td>
           <td>{{ match.homeTeamScore }}</td>
           <td>{{ match.awayTeamScore }}</td>
@@ -78,7 +88,7 @@
 </ng-template>
 
 <!-- Pagination -->
-<div class="d-flex justify-content-center">
+<div class="d-flex justify-content-center" *ngIf="!isFilterApplied">
   <ngb-pagination
     [collectionSize]="totalElements"
     [(page)]="pageNumber"
