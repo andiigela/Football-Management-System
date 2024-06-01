@@ -1,8 +1,9 @@
-import { Component, Injectable, OnInit } from '@angular/core';
-import { PlayerService } from "../../services/player.service";
-import { PlayerDto } from "../../common/player-dto";
-import { Router } from "@angular/router";
-import { PlayerResponseDto } from "../../common/player-response-dto";
+import { Component, OnInit } from '@angular/core';
+import { PlayerService } from '../../services/player.service';
+import { ContractService } from '../../services/contract.service'; // Import ContractService
+import { PlayerDto } from '../../common/player-dto';
+import { Router } from '@angular/router';
+import { ContractDto } from '../../common/contract-dto';
 
 @Component({
   selector: 'app-players-list',
@@ -17,7 +18,7 @@ export class PlayersListComponent implements OnInit {
   sortedByHeightAsc: boolean = false;
   sortedByWeightAsc: boolean = false;
 
-  constructor(private playerService: PlayerService, private router: Router) {}
+  constructor(private playerService: PlayerService, private contractService: ContractService, private router: Router) {}
 
   ngOnInit(): void {
     this.getPlayers();
@@ -28,6 +29,7 @@ export class PlayersListComponent implements OnInit {
       this.playersList = response.content;
       this.totalElements = response.totalElements;
       this.updatePlayerList(this.playersList);
+      this.fetchContractsForPlayers(this.playersList); // Fetch contracts after players are loaded
     });
   }
 
@@ -41,10 +43,9 @@ export class PlayersListComponent implements OnInit {
   }
 
   deletePlayer(id: number): void {
-    this.playerService.deletePlayer(id)
-        .subscribe(() => {
-          this.playersList = this.playersList.filter(player => player.dbId != id);
-        });
+    this.playerService.deletePlayer(id).subscribe(() => {
+      this.playersList = this.playersList.filter(player => player.dbId !== id);
+    });
   }
 
   updatePlayerList(playersList: PlayerDto[]): void {
@@ -60,8 +61,7 @@ export class PlayersListComponent implements OnInit {
           error => {
             console.error(`Error fetching image for player: ${playerDto.name}`, error);
             playerDto.imagePath = ''; // Set default image path
-          }
-      );
+          });
     }
   }
 
@@ -70,11 +70,11 @@ export class PlayersListComponent implements OnInit {
   }
 
   redirectToCreatePlayerContract(playerId: number): void {
-    this.router.navigate([`/players/${playerId}/contracts/create`])
+    this.router.navigate([`/players/${playerId}/contracts/create`]);
   }
 
   redirectToPlayerContracts(playerId: number): void {
-    this.router.navigate([`/players/${playerId}/contracts`])
+    this.router.navigate([`/players/${playerId}/contracts`]);
   }
 
   sortByHeight(): void {
@@ -83,11 +83,13 @@ export class PlayersListComponent implements OnInit {
       this.playerService.getPlayersSortedByHeight(this.pageNumber - 1, this.pageSize).subscribe(players => {
         this.playersList = players.content;
         this.updatePlayerList(this.playersList); // Call updatePlayerList after sorting
+        this.fetchContractsForPlayers(this.playersList); // Fetch contracts after sorting
       });
     } else {
       this.playerService.getPlayersSortedByHeightDesc(this.pageNumber - 1, this.pageSize).subscribe(players => {
         this.playersList = players.content;
         this.updatePlayerList(this.playersList); // Call updatePlayerList after sorting
+        this.fetchContractsForPlayers(this.playersList); // Fetch contracts after sorting
       });
     }
   }
@@ -98,12 +100,22 @@ export class PlayersListComponent implements OnInit {
       this.playerService.getPlayersSortedByWeight(this.pageNumber - 1, this.pageSize).subscribe(players => {
         this.playersList = players.content;
         this.updatePlayerList(this.playersList); // Call updatePlayerList after sorting
+        this.fetchContractsForPlayers(this.playersList); // Fetch contracts after sorting
       });
     } else {
       this.playerService.getPlayersSortedByWeightDesc(this.pageNumber - 1, this.pageSize).subscribe(players => {
         this.playersList = players.content;
         this.updatePlayerList(this.playersList); // Call updatePlayerList after sorting
+        this.fetchContractsForPlayers(this.playersList); // Fetch contracts after sorting
       });
     }
+  }
+
+  fetchContractsForPlayers(playersList: PlayerDto[]): void {
+    playersList.forEach(player => {
+      this.contractService.retrieveContracts(player.dbId, 0, 10).subscribe(response => {
+        player.contracts = response.content;
+      });
+    });
   }
 }

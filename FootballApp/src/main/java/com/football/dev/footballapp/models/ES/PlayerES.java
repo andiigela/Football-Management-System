@@ -34,5 +34,5 @@ public class PlayerES {
     @Field(type = FieldType.Text)
     private String position;
     @Field(type = FieldType.Text)
-    private List<String> contracts;
+    private String contracts;
 }
