@@ -39,7 +39,7 @@ export class PlayerService {
       formData.append("file",file!);
     }
     formData.append("playerDto",JSON.stringify(playerDto));
-    return this.http.post(`${this.playerUrl}/edit/${playerDto.id}`,formData,{headers});
+    return this.http.post(`${this.playerUrl}/edit/${playerDto.dbId}`,formData,{headers});
   }
   public deletePlayer(id: number): Observable<any>{
     let headers = this.getHeaders();
@@ -48,6 +48,26 @@ export class PlayerService {
   public getImageUrl(imagePath: string): Observable<any>{
     let headers = this.getHeaders();
     return this.http.get(`http://localhost:8080/images/${imagePath}`,{headers,responseType: 'blob'});
+  }
+
+  public getPlayersSortedByHeight(pageNumber: number, pageSize: number): Observable<PageResponseDto<PlayerDto>> {
+    let headers = this.getHeaders();
+    return this.http.get<PageResponseDto<PlayerDto>>(`${this.playerUrl}/sortedByHeight?pageNumber=${pageNumber}&pageSize=${pageSize}`, { headers });
+  }
+
+  public getPlayersSortedByHeightDesc(pageNumber: number, pageSize: number): Observable<PageResponseDto<PlayerDto>> {
+    let headers = this.getHeaders();
+    return this.http.get<PageResponseDto<PlayerDto>>(`${this.playerUrl}/sortedByHeightDesc?pageNumber=${pageNumber}&pageSize=${pageSize}`, { headers });
+  }
+
+  public getPlayersSortedByWeight(pageNumber: number, pageSize: number): Observable<PageResponseDto<PlayerDto>> {
+    let headers = this.getHeaders();
+    return this.http.get<PageResponseDto<PlayerDto>>(`${this.playerUrl}/sortedByWeight?pageNumber=${pageNumber}&pageSize=${pageSize}`, { headers });
+  }
+
+  public getPlayersSortedByWeightDesc(pageNumber: number, pageSize: number): Observable<PageResponseDto<PlayerDto>> {
+    let headers = this.getHeaders();
+    return this.http.get<PageResponseDto<PlayerDto>>(`${this.playerUrl}/sortedByWeightDesc?pageNumber=${pageNumber}&pageSize=${pageSize}`, { headers });
   }
 }
 

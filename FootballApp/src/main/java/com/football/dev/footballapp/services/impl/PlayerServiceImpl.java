@@ -1,8 +1,11 @@
 package com.football.dev.footballapp.services.impl;
 import com.football.dev.footballapp.dto.PlayerDto;
 import com.football.dev.footballapp.models.Club;
+import com.football.dev.footballapp.models.ES.LeagueES;
+import com.football.dev.footballapp.models.ES.PlayerES;
 import com.football.dev.footballapp.models.Player;
 import com.football.dev.footballapp.models.enums.Foot;
+import com.football.dev.footballapp.repository.esrepository.PlayerRepositoryES;
 import com.football.dev.footballapp.repository.jparepository.ClubRepository;
 import com.football.dev.footballapp.repository.jparepository.PlayerRepository;
 import com.football.dev.footballapp.services.FileUploadService;
@@ -15,11 +18,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.print.Pageable;
+import java.util.List;
+import java.util.UUID;
 import java.util.function.Function;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
     private final PlayerRepository playerRepository;
+    private final PlayerRepositoryES playerRepositoryES;
     private final ClubRepository clubRepository;
     private final FileUploadService fileUploadService;
     private final Function<PlayerDto, Player> playerDtoToPlayer;
@@ -28,12 +35,14 @@ public class PlayerServiceImpl implements PlayerService {
 
     public PlayerServiceImpl(PlayerRepository playerRepository,Function<PlayerDto, Player> playerDtoToPlayer,
                              ClubRepository clubRepository,FileUploadService fileUploadService,
-                             Function<Player, PlayerDto> playerToPlayerDto){
+                             Function<Player, PlayerDto> playerToPlayerDto,
+                             PlayerRepositoryES playerRepositoryES){
         this.playerRepository=playerRepository;
         this.playerDtoToPlayer=playerDtoToPlayer;
         this.clubRepository=clubRepository;
         this.fileUploadService=fileUploadService;
         this.playerToPlayerDto=playerToPlayerDto;
+        this.playerRepositoryES = playerRepositoryES;
 
     }
     @Override
@@ -47,6 +56,18 @@ public class PlayerServiceImpl implements PlayerService {
         if(clubDb == null) throw new EntityNotFoundException("User is not authenticated.");
         player.setClub(clubDb);
         playerRepository.save(player);
+        String esId = UUID.randomUUID().toString();
+        PlayerES playerES = new PlayerES();
+        playerES.setId(esId);  // Set a unique ID for each document
+        playerES.setDbId(player.getId());
+        playerES.setName(player.getName());
+        playerES.setHeight(player.getHeight());
+        playerES.setWeight(player.getWeight());
+        playerES.setShirtNumber(player.getShirtNumber());
+        playerES.setImagePath(player.getImagePath());
+        playerES.setPosition(player.getPosition().toString());
+        playerES.setPreferred_foot(player.getPreferred_foot().toString());
+        playerRepositoryES.save(playerES);
     }
 
     @Override
@@ -96,6 +117,33 @@ public class PlayerServiceImpl implements PlayerService {
         if(playerDb == null) throw new EntityNotFoundException("Player not found with specified id: " + id);
         playerDb.isDeleted = true;
         playerRepository.save(playerDb);
+        PlayerES playerES = playerRepositoryES.findByDbId(id);
+        playerES.setDeleted(true);
+        playerRepositoryES.save(playerES);
+
+    }
+    @Override
+    public Page<PlayerES> getAllPlayersSortedByHeight(int pageNumber, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+        return playerRepositoryES.findAllByDeletedFalseOrderByHeightAsc(pageRequest);
+    }
+
+    @Override
+    public Page<PlayerES> getAllPlayersSortedByHeightDesc(int pageNumber, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+        return playerRepositoryES.findAllByDeletedFalseOrderByHeightDesc(pageRequest);
+    }
+
+    @Override
+    public Page<PlayerES> getAllPlayersSortedByWeight(int pageNumber, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+        return playerRepositoryES.findAllByDeletedFalseOrderByWeightAsc(pageRequest);
+    }
+
+    @Override
+    public Page<PlayerES> getAllPlayersSortedByWeightDesc(int pageNumber, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+        return playerRepositoryES.findAllByDeletedFalseOrderByWeightDesc(pageRequest);
     }
 
 }

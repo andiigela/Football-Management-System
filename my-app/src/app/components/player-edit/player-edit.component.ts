@@ -41,7 +41,7 @@ export class PlayerEditComponent implements OnInit{
       const formValue = this.editForm.value
       let playerEditInfo = new PlayerDto(formValue.name, formValue.height, formValue.weight,
         formValue.shirtNumber, formValue.preferred_foot, "");
-      playerEditInfo.id = this.playerEdit.id;
+      playerEditInfo.dbId = this.playerEdit.dbId;
       this.playerService.updatePlayer(playerEditInfo,this.file)
         .subscribe(()=>{
           this.router.navigate(["/players"])
@@ -54,7 +54,7 @@ export class PlayerEditComponent implements OnInit{
   getPlayer(playerId: number){
     this.playerService.retrievePlayer(playerId).subscribe((player)=>{
       this.playerEdit = new PlayerDto(player.name,player.height,player.weight,player.shirtNumber,player.preferred_foot,"");
-      this.playerEdit.id=player.id
+      this.playerEdit.dbId=player.dbId
       this.getEditPlayerImageUrl(player.imagePath);
       this.editForm.patchValue({
         name: player.name,

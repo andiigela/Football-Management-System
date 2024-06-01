@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Setter
 public class PlayerDto {
     private Function<Contract,ContractDto> contractDtoMapper;
-    private Long id;
+    private Long dbId;
     private String name;
     private Double height;
     private Double weight;
@@ -29,10 +29,10 @@ public class PlayerDto {
     private String position;
     private List<ContractDto> contracts;
 
-    public PlayerDto(Long id, String name, Double height, Double weight, Integer shirtNumber, String imagePath,
+    public PlayerDto(Long dbId, String name, Double height, Double weight, Integer shirtNumber, String imagePath,
                      String preferred_foot, String position,
                      List<Contract> contracts,Function<Contract,ContractDto> contractDtoMapper) {
-        this.id = id;
+        this.dbId = dbId;
         this.name = name;
         this.height = height;
         this.weight = weight;

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.football.dev.footballapp.dto.PageResponseDto;
 import com.football.dev.footballapp.dto.PlayerDto;
 import com.football.dev.footballapp.dto.SeasonDto;
+import com.football.dev.footballapp.models.ES.PlayerES;
 import com.football.dev.footballapp.models.Player;
 import com.football.dev.footballapp.services.FileUploadService;
 import com.football.dev.footballapp.services.PlayerService;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.DataInput;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/players")
@@ -65,4 +67,32 @@ public class PlayersController {
         playerService.deletePlayer(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+    @GetMapping("/sortedByHeight")
+    public ResponseEntity<Page<PlayerES>> getPlayersSortedByHeight(@RequestParam(defaultValue = "0") int pageNumber,
+                                                                   @RequestParam(defaultValue = "10") int pageSize) {
+        Page<PlayerES> players = playerService.getAllPlayersSortedByHeight(pageNumber, pageSize);
+        return ResponseEntity.status(HttpStatus.OK).body(players);
+    }
+
+    @GetMapping("/sortedByWeight")
+    public ResponseEntity<Page<PlayerES>> getPlayersSortedByWeight(@RequestParam(defaultValue = "0") int pageNumber,
+                                                                   @RequestParam(defaultValue = "10") int pageSize) {
+        Page<PlayerES> players = playerService.getAllPlayersSortedByWeight(pageNumber, pageSize);
+        return ResponseEntity.status(HttpStatus.OK).body(players);
+    }
+
+    @GetMapping("/sortedByHeightDesc")
+    public ResponseEntity<Page<PlayerES>> getPlayersSortedByHeightDesc(@RequestParam(defaultValue = "0") int pageNumber,
+                                                                       @RequestParam(defaultValue = "10") int pageSize) {
+        Page<PlayerES> players = playerService.getAllPlayersSortedByHeightDesc(pageNumber, pageSize);
+        return ResponseEntity.status(HttpStatus.OK).body(players);
+    }
+
+    @GetMapping("/sortedByWeightDesc")
+    public ResponseEntity<Page<PlayerES>> getPlayersSortedByWeightDesc(@RequestParam(defaultValue = "0") int pageNumber,
+                                                                       @RequestParam(defaultValue = "10") int pageSize) {
+        Page<PlayerES> players = playerService.getAllPlayersSortedByWeightDesc(pageNumber, pageSize);
+        return ResponseEntity.status(HttpStatus.OK).body(players);
+    }
+
 }
