@@ -104,18 +104,18 @@ export class RoundsComponent implements OnInit {
     this.matchService.filterMatches(this.date, this.homeTeamResult, this.awayTeamResult, this.pageNumber-1, this.pageSize).subscribe(
       response => {
         this.filteredMatches = response.content;
-          this.isFilterApplied = true;
-          console.log(this.filteredMatches);
+        this.isFilterApplied = true;
+        console.log('Filtered matches:', this.filteredMatches);
       },
       error => {
         console.error('Error filtering matches:', error);
       }
     );
   }
-    clearFilters(): void {
 
-        this.filteredMatches = [];
-        this.isFilterApplied = false;
-        this.fetchRoundsForSeason();
-    }
+  clearFilters(): void {
+    this.filteredMatches = [];
+    this.isFilterApplied = false;
+    this.fetchRoundsForSeason();
+  }
 }
