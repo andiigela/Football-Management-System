@@ -11,6 +11,7 @@ import { RoundsService } from "../../services/rounds.service";
 })
 export class CreateRoundComponent implements OnInit {
   seasonId!: number;
+  leagueId!: number; // Added leagueId
   newRound: RoundDto = {
     start_date: new Date(),
     end_date: new Date()
@@ -27,6 +28,7 @@ export class CreateRoundComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.seasonId = +params['seasonId'];
+      this.leagueId = +params['leagueId']; // Retrieve leagueId from route params
     });
   }
 
@@ -36,7 +38,7 @@ export class CreateRoundComponent implements OnInit {
         () => {
           console.log('Round created successfully');
           // Navigate back to the rounds page
-          this.router.navigate(['/league', 2, 'seasons', this.seasonId, 'rounds']);
+          this.router.navigate(['/league', this.leagueId, 'seasons', this.seasonId, 'rounds']); // Use leagueId here
         },
         error => {
           console.error('Error creating round:', error);

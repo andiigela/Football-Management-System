@@ -39,7 +39,7 @@ public class ClubController {
         }
     }*/
 
-    @GetMapping("/")
+    @GetMapping("")
     public List<Club> getAllClubs() {
         return clubService.getAllClubs();
     }

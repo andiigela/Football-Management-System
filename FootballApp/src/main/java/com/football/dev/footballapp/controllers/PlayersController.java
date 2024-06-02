@@ -38,7 +38,7 @@ public class PlayersController {
 
     @PostMapping("/create")
     public ResponseEntity<PlayerDto> createPlayer(@RequestParam("file") MultipartFile file,
-                                                  @RequestParam("playerDto") String playerDto) {
+                                                  @RequestParam("") String playerDto) {
         try {
             PlayerDto playerDtoMapped = objectMapper.readValue(playerDto,PlayerDto.class);
             playerService.savePlayer(playerDtoMapped,file);
@@ -62,6 +62,11 @@ public class PlayersController {
         );
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
+
+   @GetMapping("")
+  public List<Player> getPlayers() {
+    return playerService.getAllPlayers();
+  }
     @GetMapping("/{id}")
     public ResponseEntity<Player> getPlayer(@PathVariable("id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(playerService.getPlayer(id));

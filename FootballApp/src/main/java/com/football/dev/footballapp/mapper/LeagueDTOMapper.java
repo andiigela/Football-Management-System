@@ -13,6 +13,6 @@ import java.util.stream.Collectors;
 public class LeagueDTOMapper implements Function<League, LeagueDTO> {
     @Override
     public LeagueDTO apply(League league) {
-        return new LeagueDTO(league.getId(), league.getName(),league.getStart_date(),league.getEnd_date(), league.getDescription());
+        return new LeagueDTO(league.getId(), league.getName(),league.getFounded(),league.getDescription(), league.getPicture());
     }
 }

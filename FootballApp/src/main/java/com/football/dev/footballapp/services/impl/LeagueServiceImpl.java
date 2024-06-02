@@ -10,9 +10,12 @@ import com.football.dev.footballapp.models.Season;
 import com.football.dev.footballapp.repository.jparepository.SeasonRepository;
 import com.football.dev.footballapp.repository.jparepository.LeagueRepository;
 import com.football.dev.footballapp.services.LeagueService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,20 +25,19 @@ public class LeagueServiceImpl implements LeagueService {
     private final LeagueDTOMapper leagueDTOMapper;
     private final SeasonRepository seasonRepository;
     private final SeasonDtoMapper seasonDtoMapper;
+    private final FileUploadServiceImpl fileUploadService;
 
-    public LeagueServiceImpl(LeagueRepository leagueRepository,
-                             LeagueDTOMapper leagueDTOMapper,
-                             SeasonRepository seasonRepository,
-                             SeasonDtoMapper seasonDtoMapper) {
-        this.leagueRepository = leagueRepository;
-        this.leagueDTOMapper = leagueDTOMapper;
-        this.seasonRepository = seasonRepository;
-        this.seasonDtoMapper = seasonDtoMapper;
-    }
+  public LeagueServiceImpl(LeagueRepository leagueRepository, LeagueDTOMapper leagueDTOMapper, SeasonRepository seasonRepository, SeasonDtoMapper seasonDtoMapper, FileUploadServiceImpl fileUploadService) {
+    this.leagueRepository = leagueRepository;
+    this.leagueDTOMapper = leagueDTOMapper;
+    this.seasonRepository = seasonRepository;
+    this.seasonDtoMapper = seasonDtoMapper;
+    this.fileUploadService = fileUploadService;
+  }
 
-    @Override
+  @Override
     public void insertLeague(LeagueDTO leagueDTO) {
-        leagueRepository.save(new League(leagueDTO.name(),leagueDTO.start_date(),leagueDTO.end_date(),leagueDTO.description()));
+        leagueRepository.save(new League(leagueDTO.name(),leagueDTO.founded(),leagueDTO.description(),leagueDTO.picture()));
     }
 
     @Override
@@ -68,9 +70,9 @@ public class LeagueServiceImpl implements LeagueService {
 
         leagueRepository.findById(id).ifPresent(dbLeague->{
             dbLeague.setName(leagueDTO.name());
-            dbLeague.setStart_date(leagueDTO.start_date());
-            dbLeague.setEnd_date(leagueDTO.end_date());
+            dbLeague.setFounded(leagueDTO.founded());
             dbLeague.setDescription(leagueDTO.description());
+            dbLeague.setPicture(dbLeague.getPicture());
 
             leagueRepository.save(dbLeague);
         });
@@ -87,16 +89,45 @@ public class LeagueServiceImpl implements LeagueService {
 
         seasonRepository.save(season);
 
-        league.getSeasons().add(season);
 
-        leagueRepository.save(league);
     }
     @Override
     public List<SeasonDto> getSeasonsForLeague(Long leagueId) throws ResourceNotFoundException {
         League league = leagueRepository.findById(leagueId)
                 .orElseThrow(() -> new ResourceNotFoundException("League not found with id: " + leagueId));
 
-        List<Season> seasons = league.getSeasons();
-        return seasons.stream().map(seasonDtoMapper).collect(Collectors.toList());
+      return null;
     }
+
+  @Override
+  public void insertLeague(MultipartFile file, LeagueDTO leagueDTO1) {
+    League league = new League(leagueDTO1.name(),leagueDTO1.founded(),leagueDTO1.description(),leagueDTO1.picture());
+    String picturePath = fileUploadService.uploadFile(leagueDTO1.name(), file);
+    if(picturePath == null) throw new RuntimeException("Failed to upload file.");
+    league.setPicture(picturePath);
+    leagueRepository.save(league);
+  }
+
+  @Override
+  public void updateLeague(LeagueDTO leagueDtoMapper, Long id, MultipartFile file) {
+    if(leagueDtoMapper == null){
+      return;
+    }
+    League league = leagueRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("League not found with id: " + id));
+
+    if (file != null && !file.isEmpty()){
+      fileUploadService.deleteFile(league.getPicture());
+      String fileUpload = fileUploadService.uploadFile(leagueDtoMapper.name(), file);
+      if (fileUpload==null){
+        throw new RuntimeException("Failed to upload file.");
+      }
+      league.setPicture(fileUpload);
+
+    }
+    league.setFounded(leagueDtoMapper.founded());
+    league.setDescription(leagueDtoMapper.description());
+    league.setName(leagueDtoMapper.name());
+
+    leagueRepository.save(league);
+  }
 }

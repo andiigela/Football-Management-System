@@ -32,17 +32,7 @@ public class Club extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserEntity user;
-
-    @OneToMany(mappedBy = "homeTeamId")
-    List<Match> homeMatches = new ArrayList();
-
-    @OneToMany(mappedBy = "awayTeamId")
-    List<Match> awayMatches = new ArrayList();
-
-    @OneToMany
-    private List<Player> players;
-
-    // Add other necessary attributes
+  // Add other necessary attributes
 
     public Club(Long id, String name, Integer foundedYear, String city, String website) {
         this.id = id;

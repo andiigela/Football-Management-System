@@ -1,6 +1,8 @@
 package com.football.dev.footballapp.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.football.dev.footballapp.dto.LeagueDTO;
+import com.football.dev.footballapp.dto.PlayerDto;
 import com.football.dev.footballapp.dto.SeasonDto;
 import com.football.dev.footballapp.exceptions.ResourceNotFoundException;
 import com.football.dev.footballapp.services.LeagueService;
@@ -8,7 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,12 +20,14 @@ import java.util.Optional;
 @RequestMapping("api/v1/league")
 public class LeagueController {
     private final LeagueService leagueService;
+    private final ObjectMapper objectMapper;
 
-    public LeagueController(LeagueService leagueService) {
-        this.leagueService = leagueService;
-    }
+  public LeagueController(LeagueService leagueService, ObjectMapper objectMapper) {
+    this.leagueService = leagueService;
+    this.objectMapper = objectMapper;
+  }
 
-    @GetMapping
+  @GetMapping
     public ResponseEntity<Page<LeagueDTO>> returnAllLeagues(@RequestParam(defaultValue = "0") int pageNumber,
                                                             @RequestParam(defaultValue = "2") int pageSize){
         Page<LeagueDTO> leagueDtoPage = leagueService.listAllLeagues(pageNumber,pageSize);
@@ -29,8 +35,14 @@ public class LeagueController {
 
     }
     @PostMapping
-    public void createLeague(@RequestBody LeagueDTO leagueDTO){
-        leagueService.insertLeague(leagueDTO);
+    public ResponseEntity<LeagueDTO> createLeague(@RequestParam("file") MultipartFile file, @RequestParam("leagueDto")String leagueDTO){
+      try {
+        LeagueDTO leagueDTO1 = objectMapper.readValue(leagueDTO,LeagueDTO.class);
+        leagueService.insertLeague(file,leagueDTO1);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
     }
     @GetMapping("{id}")
     public ResponseEntity<LeagueDTO> returnLeagueByID(@PathVariable("id") Long id) {
@@ -43,13 +55,14 @@ public class LeagueController {
         leagueService.deleteLeague(id);
     }
     @PutMapping("{id}")
-    public void editLeague(@PathVariable("id") Long id,@RequestBody LeagueDTO league) {
-        Optional<LeagueDTO> leagueOptional = leagueService.selectLeagueById(id);
-        if (leagueOptional.isPresent()) {
-            leagueService.updateLeague(id,league);
-        } else {
-             ResponseEntity.notFound().build();
-        }
+    public void editLeague(@RequestParam(value = "file",required = false) MultipartFile file,@RequestParam("leagueDto") String leagueDto,@PathVariable("id") Long id) {
+
+      try {
+        LeagueDTO leagueDtoMapper = objectMapper.readValue(leagueDto, LeagueDTO.class);
+        leagueService.updateLeague(leagueDtoMapper,id,file);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
     }
     @PostMapping("/{leagueId}/seasons")
     public ResponseEntity<Void> createSeasonForLeague(@PathVariable Long leagueId, @RequestBody SeasonDto seasonDto) {

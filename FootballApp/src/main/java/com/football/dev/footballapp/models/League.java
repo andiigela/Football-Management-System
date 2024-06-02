@@ -25,18 +25,8 @@ import java.util.List;
 @Where(clause = "is_deleted=false")
 public class League extends BaseEntity{
     private String name;
-    private Date start_date;
-    private Date end_date;
+    private Integer founded;
     private String description;
-    @OneToMany(mappedBy = "league")
-//    @JsonManagedReference
-    private List<Season> seasons = new ArrayList<>();
+    private String picture;
 
-    public League(String name, Date start_date, Date end_date, String description){
-
-        this.name = name;
-        this.start_date = start_date;
-        this.end_date = end_date;
-        this.description = description;
-    }
 }

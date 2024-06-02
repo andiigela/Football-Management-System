@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -19,6 +20,8 @@ import java.util.List;
 public class Season extends BaseEntity{
     private String name;
     private Boolean currentSeason =false;
+    private Date start_date;
+     private Date end_date;
 
     @ManyToOne
     private League league;

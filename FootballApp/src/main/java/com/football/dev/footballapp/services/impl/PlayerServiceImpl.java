@@ -1,4 +1,5 @@
 package com.football.dev.footballapp.services.impl;
+import com.football.dev.footballapp.dto.ClubDto;
 import com.football.dev.footballapp.dto.PlayerDto;
 import com.football.dev.footballapp.dto.PlayerIdDto;
 import com.football.dev.footballapp.exceptions.UserNotFoundException;
@@ -79,7 +80,13 @@ public class PlayerServiceImpl implements PlayerService {
         Page<PlayerDto> playerDtos = playersPage.map(playerToPlayerDto);
         return playerDtos;
     }
-    @Override
+
+  @Override
+  public List<Player> getAllPlayers() {
+    return playerRepository.findAll();
+  }
+
+  @Override
     public Player getPlayer(Long id) {
         if (id == null || id <= 0) throw new IllegalArgumentException("Player id must be a positive non-zero value");
         return playerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + id));
@@ -142,5 +149,15 @@ public class PlayerServiceImpl implements PlayerService {
                 .orElseThrow(() -> new EntityNotFoundException("Sent notifications not found with userId: " + currentUser.getId()))
                 .stream().map(notification -> new PlayerIdDto(notification.getPlayerId())).collect(Collectors.toList());
     }
+
+  @Override
+  public void changeTeam(Long id ,ClubDto clubDto) {
+      Club  club = new Club(clubDto.getId(),clubDto.getName(),clubDto.getFoundedYear(),clubDto.getCity(),clubDto.getWebsite());
+      Player player = playerRepository.findById(id).get();
+
+      player.setClub(club);
+      playerRepository.save(player);
+
+  }
 
 }

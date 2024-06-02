@@ -9,8 +9,8 @@ import java.util.List;
 
 public record LeagueDTO( Long id ,
                          String name,
-                         Date start_date,
-                         Date end_date,
-                         String description) {
+                         Integer founded,
+                         String description,
+                         String picture) {
 
 }

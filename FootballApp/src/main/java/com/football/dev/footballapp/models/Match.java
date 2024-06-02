@@ -31,6 +31,7 @@ public class Match extends BaseEntity {
     @ManyToOne
     private Round round;
 
+
     public Match(Club homeTeamId, Club awayTeamId, LocalDateTime matchDate,
                  String result, Integer homeTeamScore,
                  Integer awayTeamScore, Round round) {

@@ -12,6 +12,5 @@ import java.util.Optional;
 @Repository
 public interface LeagueRepository extends JpaRepository<League,Long> {
     Optional<League> findByName(String name);
-    Optional<League> findBySeasonsContaining(Season season);
     Page<League> findAll(Pageable pageable);
 }

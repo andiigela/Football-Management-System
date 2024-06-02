@@ -1,32 +1,40 @@
 <div *ngIf="leagues.length > 0" class="container">
-  <div class="d-flex justify-content-between align-items-center mb-3" style="margin-top: 30px">
-    <h2 class="mb-0">All Leagues</h2>
-    <button (click)="redirectToCreateLeague()" class="btn btn-primary">Create League</button>
+  <div class="mt-10">
+    <h2 class="text-xl font-bold mb-4">All Leagues</h2>
+    <button (click)="redirectToCreateLeague()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create League</button>
   </div>
-  <div class="row">
-    <div *ngFor="let league of leagues" class="col-md-4 mb-3">
-      <div class="card">
-        <div class="card-body">
-          <h3 class="card-title">{{ league.name }}</h3>
-          <p class="card-text">Start Date: {{ league.start_date | date }}</p>
-          <p class="card-text">End Date: {{ league.end_date | date }}</p>
-          <p class="card-text">Description: {{ league.description }}</p>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5">
+    <div *ngFor="let league of leagues" class="mb-8">
+      <div class="bg-white rounded-lg shadow-md">
+        <div class="p-4 flex flex-row gap-6">
+          <div>
+            <h3 class="text-xl font-semibold mb-2">{{ league.name }}</h3>
+            <p class="card-text">Founded: {{ league.founded  }}</p>
+            <p class="card-text">Description : {{ league.description  }}</p>
+
+          </div>
+          <div class="justify-center align-middle">
+            <img [src]="league.picture" class="rounded-full h-20 w-20 shadow-md border-emerald-100">
+
+          </div>
         </div>
-        <div class="card-footer">
-          <button (click)="updateLeague(league)" class="btn btn-primary mr-2">Update</button>
-          <button (click)="deleteLeague(league.id)" class="btn btn-danger">Delete</button>
-          <button (click)="redirectToLeagueSeasons(league.id)" class="btn btn-secondary">Seasons</button>
+        <div class="bg-gray-100 p-4 flex justify-between items-center gap-2 align-middle">
+          <button (click)="updateLeague(league.id)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Update</button>
+          <button (click)="deleteLeague(league.id)" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
+          <button (click)="redirectToLeagueSeasons(league.id)" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Seasons</button>
         </div>
       </div>
     </div>
   </div>
 </div>
+
 <div class="d-flex justify-content-center">
   <!-- Pagination -->
   <ngb-pagination
-          [collectionSize]="totalElements"
-          [(page)]="pageNumber"
-          [pageSize]="pageSize"
-          (pageChange)="onPageChange($event)">
+    [collectionSize]="totalElements"
+    [(page)]="pageNumber"
+    [pageSize]="pageSize"
+    (pageChange)="onPageChange($event)">
   </ngb-pagination>
 </div>
+
