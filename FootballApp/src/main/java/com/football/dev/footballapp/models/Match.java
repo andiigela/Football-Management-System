@@ -1,5 +1,6 @@
 package com.football.dev.footballapp.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ser.Serializers;
 import jakarta.persistence.*;
@@ -19,8 +20,10 @@ import java.time.LocalDateTime;
 @Where(clause = "is_deleted=false")
 public class Match extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)
+    @JsonBackReference
     private Club homeTeamId;
     @ManyToOne(fetch = FetchType.EAGER)
+    @JsonBackReference
     private Club awayTeamId;
     private LocalDateTime matchDate;
     @OneToOne

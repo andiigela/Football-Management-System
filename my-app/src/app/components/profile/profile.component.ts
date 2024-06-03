@@ -38,9 +38,9 @@ export class ProfileComponent implements OnInit {
       country: ['', Validators.required],
       birthDate: ['', Validators.required],
       profile_picture: [''],
-      address: [''],
-      city: [''],
-      postal_code: [''],
+      address: ['', Validators.required],
+      city: ['', Validators.required],
+      postal_code: ['', Validators.required],
       gender: ['', Validators.required],
     });
   }

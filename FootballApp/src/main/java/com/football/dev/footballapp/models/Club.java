@@ -1,5 +1,6 @@
 package com.football.dev.footballapp.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,9 +37,11 @@ public class Club extends BaseEntity {
     private UserEntity user;
 
     @OneToMany(mappedBy = "homeTeamId")
+    @JsonBackReference
     List<Match> homeMatches = new ArrayList();
 
     @OneToMany(mappedBy = "awayTeamId")
+    @JsonBackReference
     List<Match> awayMatches = new ArrayList();
 
     @OneToMany
@@ -54,5 +57,6 @@ public class Club extends BaseEntity {
         this.website = website;
     }
     @OneToMany(mappedBy = "club")
+    @JsonBackReference
     private List<Contract> contracts = new ArrayList<>();
 }
