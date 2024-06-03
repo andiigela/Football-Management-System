@@ -1,10 +1,15 @@
 package com.football.dev.footballapp.repository.jparepository;
+
 import com.football.dev.footballapp.models.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+
 import java.util.List;
 import java.util.Optional;
+
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByEmail(String username);
     Boolean existsByEmail(String username);

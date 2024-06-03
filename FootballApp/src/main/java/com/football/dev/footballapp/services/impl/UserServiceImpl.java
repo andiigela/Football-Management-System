@@ -1,14 +1,23 @@
 package com.football.dev.footballapp.services.impl;
 import com.football.dev.footballapp.dto.UserEntityDto;
 import com.football.dev.footballapp.mapper.UserEntityToDTOMapper;
+import com.football.dev.footballapp.models.ES.LeagueES;
+import com.football.dev.footballapp.models.ES.UserEntityES;
 import com.football.dev.footballapp.models.UserEntity;
 import com.football.dev.footballapp.models.enums.Gender;
+import com.football.dev.footballapp.repository.esrepository.UserRepositoryES;
 import com.football.dev.footballapp.repository.jparepository.UserRepository;
 import com.football.dev.footballapp.services.FileUploadService;
 import com.football.dev.footballapp.services.UserService;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.springframework.beans.factory.annotation.Autowired;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -22,12 +31,15 @@ public class UserServiceImpl implements UserService {
     private final Function<UserEntityDto, UserEntity> userEntityDtoToUserEntity;
     private final FileUploadService fileUploadService;
     private final UserEntityToDTOMapper userEntityMapper;
+    private final UserRepositoryES userRepositoryES;
     public UserServiceImpl(UserRepository userRepository, Function<UserEntityDto, UserEntity> userEntityDtoToUserEntity,
-            FileUploadService fileUploadService, UserEntityToDTOMapper userEntityMapper){
+            FileUploadService fileUploadService, UserEntityToDTOMapper userEntityMapper,
+                           UserRepositoryES userRepositoryES){
         this.userRepository=userRepository;
         this.userEntityDtoToUserEntity = userEntityDtoToUserEntity;
         this.fileUploadService=fileUploadService;
         this.userEntityMapper = userEntityMapper;
+        this.userRepositoryES = userRepositoryES;
     }
     public List<UserEntity> getAllUsers() {
         return userRepository.findAll();
@@ -37,6 +49,10 @@ public class UserServiceImpl implements UserService {
         UserEntity user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         user.setEnabled(enabled);
         userRepository.save(user);
+
+        UserEntityES userES = userRepositoryES.findByDbId(userId);
+        userES.setEnabled(enabled);
+        userRepositoryES.save(userES);
     }
     @Override
     @Transactional
@@ -45,6 +61,9 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         user.setIsDeleted(true);
         userRepository.save(user);
+        UserEntityES userES = userRepositoryES.findByDbId(userId);
+        userES.setDeleted(true);
+        userRepositoryES.save(userES);
     }
 
     @Override
@@ -68,7 +87,6 @@ public class UserServiceImpl implements UserService {
             userEntity.setEmail(loggedInUserEmail);
             userEntity.setPassword(loggedInUser.getPassword());
             userEntity.setRole(loggedInUser.getRole());
-
             userRepository.save(userEntity);
         } catch (Exception e) {
             e.printStackTrace();
@@ -91,10 +109,14 @@ public class UserServiceImpl implements UserService {
         userToUpdate.setAddress(updatedUserDto.address());
         userToUpdate.setCity(updatedUserDto.city());
         userToUpdate.setPostal_code(updatedUserDto.postal_code());
-        if(userToUpdate.getGender() != null) {
-            userToUpdate.setGender(Gender.valueOf(updatedUserDto.gender()));
-        }
+        userToUpdate.setGender(Gender.valueOf(updatedUserDto.gender()));
         userRepository.save(userToUpdate);
+
+        UserEntityES userEntityES = userRepositoryES.findByDbId(userId);
+        userEntityES.setEmail(updatedUserDto.email());
+        userEntityES.setEnabled(updatedUserDto.enabled());
+        userEntityES.setDeleted(userToUpdate.getIsDeleted());
+        userRepositoryES.save(userEntityES);
     }
 
     @Override
@@ -111,8 +133,15 @@ public class UserServiceImpl implements UserService {
         Page<UserEntityDto> userDtos = userPage.map(userEntityMapper);
         return userDtos;
     }
+
+
+    @Override
+    public List<UserEntityES> findUsersByEmailES(String email) {
+        return userRepositoryES.findByEmailStartingWithAndIsDeletedFalse(email);
+
     @Override
     public UserEntity getUserByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(()->new EntityNotFoundException("User not found with that email"));
+
     }
 }

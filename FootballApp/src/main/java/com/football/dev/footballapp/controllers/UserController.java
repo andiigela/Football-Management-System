@@ -2,6 +2,8 @@ package com.football.dev.footballapp.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.football.dev.footballapp.dto.UserEntityDto;
+import com.football.dev.footballapp.models.ES.LeagueES;
+import com.football.dev.footballapp.models.ES.UserEntityES;
 import com.football.dev.footballapp.models.UserEntity;
 import com.football.dev.footballapp.security.JWTGenerator;
 import com.football.dev.footballapp.services.UserService;
@@ -36,11 +38,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userEntityDtoPage);
     }
 
-    /*public List<UserEntity> getAllUsers(@RequestParam Long currentUserId) {
-        return userService.getAllUsers().stream()
-                .filter(user -> !user.getId().equals(currentUserId))
-                .collect(Collectors.toList());
-    }*/
     @PutMapping("users/{userId}/status")
     public void updateUserStatus(@PathVariable Long userId, @RequestParam boolean enabled) {
         userService.updateUserStatus(userId, enabled);
@@ -76,6 +73,12 @@ public class UserController {
     @GetMapping("users/{userId}")
     public UserEntity getUserProfile(@PathVariable Long userId) {
         return userService.getUserProfile(userId);
+    }
+    @GetMapping("users/search")
+    public ResponseEntity<List<UserEntityES>> searchUsers(@RequestParam String email) {
+        System.out.println("Searching users with email: " + email);
+        List<UserEntityES> users = userService.findUsersByEmailES(email);
+        return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 
 }

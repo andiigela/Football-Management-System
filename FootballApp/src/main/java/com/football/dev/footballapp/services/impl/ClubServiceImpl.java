@@ -4,6 +4,7 @@ import com.football.dev.footballapp.exceptions.ClubNotFoundException;
 import com.football.dev.footballapp.exceptions.UserNotFoundException;
 import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.UserEntity;
+import com.football.dev.footballapp.repository.esrepository.ClubRepositoryES;
 import com.football.dev.footballapp.repository.jparepository.ClubRepository;
 import com.football.dev.footballapp.repository.jparepository.UserRepository;
 import com.football.dev.footballapp.services.ClubService;
@@ -18,14 +19,19 @@ public class ClubServiceImpl implements ClubService {
     private final ClubRepository clubRepository;
     private final UserRepository userRepository;
     private final Function<ClubDto, Club> clubDtoToClub;
+    private final ClubRepositoryES clubRepositoryES;
 
-    public ClubServiceImpl(ClubRepository clubRepository, Function<ClubDto, Club> clubDtoToClub, UserRepository userRepository) {
+    public ClubServiceImpl(ClubRepository clubRepository,
+                           Function<ClubDto, Club> clubDtoToClub,
+                           UserRepository userRepository,
+                           ClubRepositoryES clubRepositoryES) {
         this.clubRepository = clubRepository;
         this.clubDtoToClub = clubDtoToClub;
         this.userRepository = userRepository;
+        this.clubRepositoryES = clubRepositoryES;
     }
 
-    /*@Override
+    @Override
     public void saveClub(ClubDto clubDto) {
         Club club = clubDtoToClub.apply(clubDto);
         if(club == null) return;
@@ -37,7 +43,8 @@ public class ClubServiceImpl implements ClubService {
         UserEntity authenticatedUser = optionalUser.orElseThrow(() -> new EntityNotFoundException("User is not authenticated."));
         club.setUser(authenticatedUser);
         clubRepository.save(club);
-    }*/
+        clubRepositoryES.save(club);
+    }
 
     @Override
     public void updateClub(ClubDto clubDto, Long id) {

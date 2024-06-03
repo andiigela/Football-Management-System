@@ -1,23 +1,34 @@
 <div class="container">
   <h2>Update League</h2>
-  <form (submit)="updateLeague()">
+  <form (ngSubmit)="updateLeague()" #leagueForm="ngForm" novalidate>
     <div class="form-group">
       <label for="name">Name:</label>
       <input type="text" id="name" name="name" [(ngModel)]="league.name" class="form-control" required>
+      <div *ngIf="leagueForm.controls['name'].invalid && (leagueForm.controls['name'].dirty || leagueForm.controls['name'].touched)" class="text-danger">
+        Name is required.
+      </div>
     </div>
     <div class="form-group">
       <label for="startDate">Start Date:</label>
-      <input type="date" id="startDate" name="startDate" [(ngModel)]="league.start_date" class="form-control" required>
+      <input type="date" id="startDate" name="startDate" [ngModel]="league.startDate | date:'yyyy-MM-dd'" (ngModelChange)="league.startDate=$event" class="form-control" required>
+      <div *ngIf="leagueForm.controls['startDate'].invalid && (leagueForm.controls['startDate'].dirty || leagueForm.controls['startDate'].touched)" class="text-danger">
+        Start Date is required.
+      </div>
     </div>
     <div class="form-group">
       <label for="endDate">End Date:</label>
-      <input type="date" id="endDate" name="endDate" [(ngModel)]="league.end_date" class="form-control" required>
+      <input type="date" id="endDate" name="endDate" [ngModel]="league.endDate | date:'yyyy-MM-dd'" (ngModelChange)="league.endDate=$event" class="form-control" required>
+      <div *ngIf="leagueForm.controls['endDate'].invalid && (leagueForm.controls['endDate'].dirty || leagueForm.controls['endDate'].touched)" class="text-danger">
+        End Date is required.
+      </div>
     </div>
     <div class="form-group">
       <label for="description">Description:</label>
       <textarea id="description" name="description" [(ngModel)]="league.description" class="form-control" required></textarea>
+      <div *ngIf="leagueForm.controls['description'].invalid && (leagueForm.controls['description'].dirty || leagueForm.controls['description'].touched)" class="text-danger">
+        Description is required.
+      </div>
     </div>
-    <button type="submit" class="btn btn-primary">Update</button>
+    <button type="submit" [disabled]="leagueForm.invalid" class="btn btn-primary">Update</button>
   </form>
 </div>
-

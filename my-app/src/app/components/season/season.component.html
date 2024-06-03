@@ -1,9 +1,10 @@
-<div *ngIf="seasons.length > 0" class="container">
+<div class="container">
   <div class="d-flex justify-content-between align-items-center mb-3" style="margin-top: 30px;">
     <h2>Seasons</h2>
     <button (click)="redirectToCreateSeason()" class="btn btn-primary">Create Season</button>
   </div>
-  <ul class="list-group">
+
+  <ul class="list-group" *ngIf="seasons.length > 0">
     <li *ngFor="let season of seasons" class="list-group-item">
       <h5 class="mb-1">Season ID: {{ season.id }}</h5>
       <p class="mb-1">Season Name: {{ season.name }}</p>
@@ -12,7 +13,12 @@
       <button (click)="addRound(season.id)" class="btn btn-success">Rounds</button>
     </li>
   </ul>
+
+  <div *ngIf="seasons.length === 0" class="text-center">
+    <p>No seasons available. Create a new season to get started!</p>
+  </div>
 </div>
+
 <div class="d-flex justify-content-center">
   <!-- Pagination -->
   <ngb-pagination

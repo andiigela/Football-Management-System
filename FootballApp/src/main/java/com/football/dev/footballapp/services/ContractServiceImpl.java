@@ -7,14 +7,10 @@ import com.football.dev.footballapp.repository.jparepository.PlayerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 public class ContractServiceImpl implements ContractService {
@@ -32,15 +28,13 @@ public class ContractServiceImpl implements ContractService {
         Player playerDb = playerRepository.findById(playerId).orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + playerId));
         contractRepository.save(new Contract(contractDto.getStartDate(),contractDto.getEndDate(), contractDto.getSalary(),contractDto.getContractType(),playerDb));
     }
+
     @Override
     public Page<ContractDto> retrieveContracts(Long playerId, int pageNumber, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<Contract> contractPage = contractRepository.findContractsByPlayerId(playerId, pageable);
-        List<ContractDto> contractDtos = contractPage.getContent()
-                .stream()
-                .map(contractDtoMapper)
-                .collect(Collectors.toList());
-        return PageableExecutionUtils.getPage(contractDtos, contractPage.getPageable(), contractPage::getTotalPages);
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+        Page<Contract> contractPage = contractRepository.findContractsByPlayerId(playerId, pageRequest);
+        Page<ContractDto> contractDtos = contractPage.map(contractDtoMapper);
+        return contractDtos;
     }
     @Override
     public ContractDto getContract(Long playerId, Long contractId) {

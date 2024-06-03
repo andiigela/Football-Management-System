@@ -1,22 +1,27 @@
 <div class="container">
   <h2>Create New League</h2>
-  <form (submit)="createLeague()">
+  <form (submit)="createLeague()" #leagueForm="ngForm">
     <div class="form-group">
       <label for="newName">Name:</label>
       <input type="text" id="newName" name="newName" [(ngModel)]="newLeague.name" class="form-control" required>
+      <div *ngIf="leagueForm.submitted && leagueForm.controls['newName'].errors?.['required']" style="color: red;">Name is required</div>
     </div>
     <div class="form-group">
       <label for="newStartDate">Start Date:</label>
-      <input type="date" id="newStartDate" name="newStartDate" [(ngModel)]="newLeague.start_date" class="form-control" required>
+      <input type="date" id="newStartDate" name="newStartDate" [(ngModel)]="newLeague.startDate" class="form-control" required>
+      <div *ngIf="leagueForm.submitted && leagueForm.controls['newStartDate'].errors?.['required']" style="color: red;">Start Date is required</div>
     </div>
     <div class="form-group">
       <label for="newEndDate">End Date:</label>
-      <input type="date" id="newEndDate" name="newEndDate" [(ngModel)]="newLeague.end_date" class="form-control" required>
+      <input type="date" id="newEndDate" name="newEndDate" [(ngModel)]="newLeague.endDate" class="form-control" required>
+      <div *ngIf="leagueForm.submitted && leagueForm.controls['newEndDate'].errors?.['required']" style="color: red;">End Date is required</div>
+      <div *ngIf="endDateError" style="color: red;">{{ endDateError }}</div>
     </div>
     <div class="form-group">
       <label for="newDescription">Description:</label>
       <textarea id="newDescription" name="newDescription" [(ngModel)]="newLeague.description" class="form-control" required></textarea>
+      <div *ngIf="leagueForm.submitted && leagueForm.controls['newDescription'].errors?.['required']" style="color: red;">Description is required</div>
     </div>
-    <button type="submit" class="btn btn-primary">Create</button>
+    <button type="submit" class="btn btn-primary" [disabled]="leagueForm.invalid">Create</button>
   </form>
 </div>

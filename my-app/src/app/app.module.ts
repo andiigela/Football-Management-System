@@ -37,9 +37,12 @@ import {ContractsListComponent} from "./components/contracts-list/contracts-list
 import {ContractEditComponent} from "./components/contract-edit/contract-edit.component";
 import {AdminLeagueGuard} from "./guards/admin-league.guard";
 import {AdminClubGuard} from "./guards/admin-club.guard";
+import {DatePipe} from "@angular/common";
+
 import {NotificationStatusComponent} from "./components/notification-status/notification-status.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {NotificationsListComponent} from "./components/notifications-list/notifications-list.component";
+
 
 
 const routes : Routes = [
@@ -121,7 +124,8 @@ const routes : Routes = [
     AuthGuard,
     AuthGuard2,
     AdminLeagueGuard,
-    AdminClubGuard
+    AdminClubGuard,
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })

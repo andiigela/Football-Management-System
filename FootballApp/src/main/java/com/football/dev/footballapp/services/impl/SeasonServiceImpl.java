@@ -9,7 +9,9 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
 import java.util.Optional;
+
 @Service
 public class SeasonServiceImpl implements SeasonService {
     private final SeasonRepository seasonRepository;

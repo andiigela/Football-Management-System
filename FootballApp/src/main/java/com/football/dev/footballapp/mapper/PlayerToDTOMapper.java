@@ -5,6 +5,7 @@ import com.football.dev.footballapp.models.Contract;
 import com.football.dev.footballapp.models.Player;
 import org.springframework.stereotype.Service;
 import java.util.function.Function;
+
 @Service
 public class PlayerToDTOMapper implements Function<Player, PlayerDto> {
     private Function<Contract, ContractDto> contractDtoMapper;

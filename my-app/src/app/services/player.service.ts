@@ -30,15 +30,19 @@ export class PlayerService {
     let headers = this.getHeaders();
     return this.http.get<PlayerDto>(`${this.playerUrl}/${id}`,{headers})
   }
-  public updatePlayer(playerDto: PlayerDto,file: File|null): Observable<any>{
-    let headers= this.getHeaders();
-    const formData = new FormData();
-    if(file != null){
-      formData.append("file",file!);
+    public updatePlayer(playerDto: PlayerDto, file: File|null): Observable<any> {
+        let headers = this.getHeaders();
+        const formData = new FormData();
+        if (file != null) {
+            formData.append("file", file);
+        }
+        formData.append("playerDto", JSON.stringify(playerDto));
+
+        console.log('URL:', `${this.playerUrl}/edit/${playerDto.dbId}`); // Debugging log
+
+        return this.http.post(`${this.playerUrl}/edit/${playerDto.dbId}`, formData, { headers });
     }
-    formData.append("playerDto",JSON.stringify(playerDto));
-    return this.http.post(`${this.playerUrl}/edit/${playerDto.id}`,formData,{headers});
-  }
+
   public sendDeletePlayerPermission(id: number): Observable<any>{
     let headers = this.getHeaders();
     return this.http.post(`${this.playerUrl}/delete/permission/${id}`,{headers})
@@ -51,6 +55,26 @@ export class PlayerService {
     let headers = this.getHeaders();
     return this.http.get(`http://localhost:8080/images/${imagePath}`,{headers,responseType: 'blob'});
   }
+
+  public getPlayersSortedByHeight(pageNumber: number, pageSize: number): Observable<PageResponseDto<PlayerDto>> {
+    let headers = this.getHeaders();
+    return this.http.get<PageResponseDto<PlayerDto>>(`${this.playerUrl}/sortedByHeight?pageNumber=${pageNumber}&pageSize=${pageSize}`, { headers });
+  }
+
+  public getPlayersSortedByHeightDesc(pageNumber: number, pageSize: number): Observable<PageResponseDto<PlayerDto>> {
+    let headers = this.getHeaders();
+    return this.http.get<PageResponseDto<PlayerDto>>(`${this.playerUrl}/sortedByHeightDesc?pageNumber=${pageNumber}&pageSize=${pageSize}`, { headers });
+  }
+
+  public getPlayersSortedByWeight(pageNumber: number, pageSize: number): Observable<PageResponseDto<PlayerDto>> {
+    let headers = this.getHeaders();
+    return this.http.get<PageResponseDto<PlayerDto>>(`${this.playerUrl}/sortedByWeight?pageNumber=${pageNumber}&pageSize=${pageSize}`, { headers });
+  }
+
+  public getPlayersSortedByWeightDesc(pageNumber: number, pageSize: number): Observable<PageResponseDto<PlayerDto>> {
+    let headers = this.getHeaders();
+    return this.http.get<PageResponseDto<PlayerDto>>(`${this.playerUrl}/sortedByWeightDesc?pageNumber=${pageNumber}&pageSize=${pageSize}`, { headers });
+
   public getDeletedPlayerIds(): Observable<any>{
     let headers = this.getHeaders();
     return this.http.get(`${this.playerUrl}/deleted`,{headers});
@@ -58,6 +82,7 @@ export class PlayerService {
   public getPlayerIdsWhoAskedPermissionFromCurrentUser(): Observable<any>{
     let headers = this.getHeaders();
     return this.http.get(`${this.playerUrl}/askedpermission/currentuser`,{headers});
+
   }
 }
 

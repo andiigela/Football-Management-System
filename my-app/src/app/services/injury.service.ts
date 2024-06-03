@@ -20,7 +20,7 @@ export class InjuryService {
   }
   public retrieveInjuries(playerId: number,pageNumber: number, pageSize: number): Observable<PageResponseDto<InjuryDto>>{
     let headers = this.getHeaders();
-    return this.http.get<PageResponseDto<InjuryDto>>(`${this.injuryUrl}/${playerId}/?page=${pageNumber}&size=${pageSize}`,{headers});
+    return this.http.get<PageResponseDto<InjuryDto>>(`${this.injuryUrl}/${playerId}/?pageNumber=${pageNumber}&pageSize=${pageSize}`,{headers});
   }
   public createInjury(playerId: number,injuryDto: InjuryDto): Observable<any>{
     let headers = this.getHeaders();

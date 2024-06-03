@@ -57,9 +57,10 @@
                     .getBody();
             return claims.getSubject();
         }
-        public String generateAccessToken(String username, String role, boolean enabled) {
+        public String generateAccessToken(String username,Long userId, String role, boolean enabled) {
             return Jwts.builder()
                     .setSubject(username)
+                    .claim("userId", userId)
                     .claim("role", role)
                     .claim("enabled", enabled)
                     .setIssuedAt(new Date())

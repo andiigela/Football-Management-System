@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { MatchDto } from '../common/match-dto';
 
@@ -36,4 +36,9 @@ export class MatchService {
     deleteMatch(roundId: number, matchId: number): Observable<any> {
         return this.http.delete(`${this.apiUrl}/${roundId}/delete/${matchId}`);
     }
+
+  filterMatches(date: string, homeTeamResult: number, awayTeamResult: number, page: number = 0, size: number = 10): Observable<any> {
+    const params = `?date=${date}&homeTeamResult=${homeTeamResult}&awayTeamResult=${awayTeamResult}&pageNumber=${page}&pageSize=${size}`;
+    return this.http.get(`${this.apiUrl}/filter${params}`);
+  }
 }

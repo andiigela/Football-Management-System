@@ -26,7 +26,7 @@ public class ClubController {
 
     }
 
-   /* @PostMapping("/create")
+   @PostMapping("/create")
     public ResponseEntity<String> createClub(@RequestParam("clubDto") String clubDto) {
         try {
             ClubDto clubDtoMapped = objectMapper.readValue(clubDto,ClubDto.class);
@@ -37,7 +37,7 @@ public class ClubController {
         }catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: " + e.getMessage());
         }
-    }*/
+    }
 
     @GetMapping("/")
     public List<Club> getAllClubs() {

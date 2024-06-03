@@ -1,7 +1,7 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {LeagueDto} from "../../common/league-dto";
-import {LeagueService} from "../../services/league.service";
-import {ActivatedRoute, Router} from "@angular/router";
+import { Component, OnInit } from '@angular/core';
+import { LeagueDto } from "../../common/league-dto";
+import { LeagueService } from "../../services/league.service";
+import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
   selector: 'app-update-league-component',
@@ -16,23 +16,22 @@ export class UpdateLeagueComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       const leagueId = params['id'];
-      const leagueData = history.state.league; // Get league data passed from parent component
+      const leagueData = history.state.league;
 
       if (leagueData) {
+        // Convert string dates to Date objects
+        leagueData.startDate = new Date(leagueData.startDate);
+        leagueData.endDate = new Date(leagueData.endDate);
         this.league = leagueData;
-      } else {
-        // Fetch league data from backend using leagueId
       }
     });
   }
 
   updateLeague(): void {
-    this.leagueService.editLeague(this.league.id, this.league).subscribe(() => {
-      // Handle success
-      this.router.navigate(['/league']); // Navigate back to the league route
+    this.leagueService.editLeague(this.league.dbId, this.league).subscribe(() => {
+      this.router.navigate(['/league']);
     }, error => {
-      // Handle error
-      alert('Failed to update league. Please try again.'); // Show alert for error
+      alert('Failed to update league. Please try again.');
     });
   }
 }
