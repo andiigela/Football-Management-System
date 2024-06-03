@@ -12,7 +12,8 @@ import java.util.List;
 public interface PlayerService {
     void savePlayer(PlayerDto playerDto, MultipartFile file);
     Page<PlayerDto> retrievePlayers(int pageNumber, int pageSize);
-    PlayerDto getPlayer(Long id);
+    PlayerDto getPlayerDto(Long id);
+    Player getPlayer(Long id);
     void updatePlayer(PlayerDto playerDto, Long id, MultipartFile file);
     void deletePlayer(Long id);
     Page<PlayerES> getAllPlayersSortedByHeight(int pageNumber, int pageSize);

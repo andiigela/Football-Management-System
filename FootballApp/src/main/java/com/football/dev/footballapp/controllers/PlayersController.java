@@ -64,7 +64,7 @@ public class PlayersController {
     }
     @GetMapping("/{id}")
     public ResponseEntity<PlayerDto> getPlayer(@PathVariable("id") Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(playerService.getPlayer(id));
+        return ResponseEntity.status(HttpStatus.OK).body(playerService.getPlayerDto(id));
     }
     @PostMapping("/edit/{id}")
     public ResponseEntity<String> editPlayer(@RequestParam(value = "file",required = false) MultipartFile file,@RequestParam("playerDto") String playerDto,

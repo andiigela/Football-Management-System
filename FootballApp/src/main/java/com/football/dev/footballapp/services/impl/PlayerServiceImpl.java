@@ -32,6 +32,7 @@ import java.awt.print.Pageable;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
@@ -102,10 +103,16 @@ public class PlayerServiceImpl implements PlayerService {
         return playerDtos;
     }
     @Override
-    public PlayerDto getPlayer(Long id) {
+    public PlayerDto getPlayerDto(Long id) {
         if (id == null || id <= 0) throw new IllegalArgumentException("Player id must be a positive non-zero value");
         Player player = playerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + id));
         return playerToPlayerDto.apply(player);
+    }
+
+    @Override
+    public Player getPlayer(Long id) {
+        if (id == null || id <= 0) throw new IllegalArgumentException("Player id must be a positive non-zero value");
+        return playerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + id));
     }
     @Override
     public void updatePlayer(PlayerDto playerDto, Long dbId, MultipartFile file) {
@@ -144,7 +151,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public void deletePlayer(Long id) {
-        PlayerDto playerDto = this.getPlayer(id);
+        PlayerDto playerDto = this.getPlayerDto(id);
         if (playerDto == null) throw new EntityNotFoundException("Player not found with specified id: " + id);
         Player playerDb = playerDtoToPlayer.apply(playerDto);
         playerDb.setIsDeleted(true);

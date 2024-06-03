@@ -73,8 +73,8 @@ export class PlayerService {
 
   public getPlayersSortedByWeightDesc(pageNumber: number, pageSize: number): Observable<PageResponseDto<PlayerDto>> {
     let headers = this.getHeaders();
-    return this.http.get<PageResponseDto<PlayerDto>>(`${this.playerUrl}/sortedByWeightDesc?pageNumber=${pageNumber}&pageSize=${pageSize}`, { headers });
-
+    return this.http.get<PageResponseDto<PlayerDto>>(`${this.playerUrl}/sortedByWeightDesc?pageNumber=${pageNumber}&pageSize=${pageSize}`, {headers});
+  }
   public getDeletedPlayerIds(): Observable<any>{
     let headers = this.getHeaders();
     return this.http.get(`${this.playerUrl}/deleted`,{headers});

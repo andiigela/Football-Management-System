@@ -62,7 +62,7 @@ export class PlayersListComponent implements OnInit, OnDestroy{
   private subscribeToDeletedPlayersFromBroker(){
       this.webSocketService.getMessages(this.connectionId2).subscribe((data: any)=>{
           const deletedPlayerId: number = JSON.parse(data);
-          this.playersList = this.playersList.filter(player => player.id != deletedPlayerId);
+          this.playersList = this.playersList.filter(player => player.dbId != deletedPlayerId);
           this.totalElements--;
           if(this.totalElements <= 0){
             this.getPlayers();
@@ -73,7 +73,7 @@ export class PlayersListComponent implements OnInit, OnDestroy{
   private updatePlayersListWithNotifications(): void {
     this.playersList = this.playersList.map((playerDto: PlayerDto) => {
       playerDto.permissionSent = this.playersWhoAskedPermission
-          .some((playerIdDto: PlayerIdDto) => playerIdDto.id === playerDto.id
+          .some((playerIdDto: PlayerIdDto) => playerIdDto.id === playerDto.dbId
           );
       return playerDto;
     });

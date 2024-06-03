@@ -138,7 +138,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserEntityES> findUsersByEmailES(String email) {
         return userRepositoryES.findByEmailStartingWithAndIsDeletedFalse(email);
-
+    }
     @Override
     public UserEntity getUserByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(()->new EntityNotFoundException("User not found with that email"));
