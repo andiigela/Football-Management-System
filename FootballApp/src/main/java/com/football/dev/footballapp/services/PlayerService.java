@@ -16,6 +16,7 @@ public interface PlayerService {
     Player getPlayer(Long id);
     void updatePlayer(PlayerDto playerDto, Long id, MultipartFile file);
     void deletePlayer(Long id);
+    void deletePlayerDto(Long id);
     Page<PlayerES> getAllPlayersSortedByHeight(int pageNumber, int pageSize);
     Page<PlayerES> getAllPlayersSortedByWeight(int pageNumber, int pageSize);
     Page<PlayerES> getAllPlayersSortedByWeightDesc(int pageNumber, int pageSize);

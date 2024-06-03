@@ -148,15 +148,21 @@ public class PlayerServiceImpl implements PlayerService {
         playerRepositoryES.save(existingPlayerES);
 
     }
-
     @Override
     public void deletePlayer(Long id) {
+        Player playerDb = this.getPlayer(id);
+        if(playerDb == null) throw new EntityNotFoundException("Player not found with specified id: " + id);
+        playerDb.isDeleted = true;
+        playerRepository.save(playerDb);
+        this.simpMessagingTemplate.convertAndSend(("/topic/playerDeleted/"+playerDb.getInsertUserId()),id);
+    }
+    @Override
+    public void deletePlayerDto(Long id) {
         PlayerDto playerDto = this.getPlayerDto(id);
         if (playerDto == null) throw new EntityNotFoundException("Player not found with specified id: " + id);
         Player playerDb = playerDtoToPlayer.apply(playerDto);
         playerDb.setIsDeleted(true);
         playerRepository.save(playerDb);
-        this.simpMessagingTemplate.convertAndSend(("/topic/playerDeleted/"+playerDb.getInsertUserId()),id);
         PlayerES playerES = playerRepositoryES.findByDbId(id);
         playerES.setDeleted(true);
         playerRepositoryES.save(playerES);
