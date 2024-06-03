@@ -111,7 +111,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         UserEntity user = refreshToken.getUserInfo();
-        String newAccessToken = jwtGenerator.generateAccessToken(user.getEmail(), user.getRole().getDescription(), user.isEnabled());
+        String newAccessToken = jwtGenerator.generateAccessToken(user.getEmail(), user.getId(), user.getRole().getDescription(), user.isEnabled());
         return new JwtResponseDto(newAccessToken, null);
     }
 }
