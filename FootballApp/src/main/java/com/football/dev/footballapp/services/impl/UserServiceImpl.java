@@ -115,6 +115,12 @@ public class UserServiceImpl implements UserService {
         userToUpdate.setPostal_code(updatedUserDto.postal_code());
         userToUpdate.setGender(Gender.valueOf(updatedUserDto.gender()));
         userRepository.save(userToUpdate);
+
+        UserEntityES userEntityES = userRepositoryES.findByDbId(userId);
+        userEntityES.setEmail(updatedUserDto.email());
+        userEntityES.setEnabled(updatedUserDto.enabled());
+        userEntityES.setDeleted(userToUpdate.getIsDeleted());
+        userRepositoryES.save(userEntityES);
     }
 
     @Override
