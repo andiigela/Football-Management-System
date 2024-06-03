@@ -48,7 +48,7 @@ public class PlayersController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Player> getPlayer(@PathVariable("id") Long id) {
+    public ResponseEntity<PlayerDto> getPlayer(@PathVariable("id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(playerService.getPlayer(id));
     }
     @PostMapping("/edit/{id}")

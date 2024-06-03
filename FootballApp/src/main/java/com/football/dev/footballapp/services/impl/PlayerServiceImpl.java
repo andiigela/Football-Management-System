@@ -5,6 +5,7 @@ import com.football.dev.footballapp.models.ES.LeagueES;
 import com.football.dev.footballapp.models.ES.PlayerES;
 import com.football.dev.footballapp.models.Player;
 import com.football.dev.footballapp.models.enums.Foot;
+import com.football.dev.footballapp.models.enums.FootballPosition;
 import com.football.dev.footballapp.repository.esrepository.PlayerRepositoryES;
 import com.football.dev.footballapp.repository.jparepository.ClubRepository;
 import com.football.dev.footballapp.repository.jparepository.PlayerRepository;
@@ -80,17 +81,18 @@ public class PlayerServiceImpl implements PlayerService {
         return playerDtos;
     }
     @Override
-    public Player getPlayer(Long id) {
+    public PlayerDto getPlayer(Long id) {
         if (id == null || id <= 0) throw new IllegalArgumentException("Player id must be a positive non-zero value");
-        return playerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + id));
+        Player player = playerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + id));
+        return playerToPlayerDto.apply(player);
     }
     @Override
-    public void updatePlayer(PlayerDto playerDto, Long id, MultipartFile file) {
+    public void updatePlayer(PlayerDto playerDto, Long dbId, MultipartFile file) {
         if (playerDto == null) {
             return;
         }
-        Player playerDb = playerRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + id));
+        Player playerDb = playerRepository.findById(dbId)
+                .orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + dbId));
         if (file != null && !file.isEmpty()) {
             // A new file is provided, handle file upload
             fileUploadService.deleteFile(playerDb.getImagePath()); // Deleting previous file
@@ -109,18 +111,26 @@ public class PlayerServiceImpl implements PlayerService {
             playerDb.setPreferred_foot(Foot.valueOf(playerDto.getPreferred_foot()));
         }
         playerRepository.save(playerDb);
+        PlayerES existingPlayerES = playerRepositoryES.findByDbId(dbId);
+        existingPlayerES.setName(playerDto.getName());
+        existingPlayerES.setHeight(playerDto.getHeight());
+        existingPlayerES.setWeight(playerDto.getWeight());
+        existingPlayerES.setShirtNumber(playerDto.getShirtNumber());
+        existingPlayerES.setPreferred_foot(Foot.valueOf(playerDto.getPreferred_foot()).toString());
+        playerRepositoryES.save(existingPlayerES);
+
     }
 
     @Override
     public void deletePlayer(Long id) {
-        Player playerDb = this.getPlayer(id);
-        if(playerDb == null) throw new EntityNotFoundException("Player not found with specified id: " + id);
-        playerDb.isDeleted = true;
+        PlayerDto playerDto = this.getPlayer(id);
+        if (playerDto == null) throw new EntityNotFoundException("Player not found with specified id: " + id);
+        Player playerDb = playerDtoToPlayer.apply(playerDto);
+        playerDb.setIsDeleted(true);
         playerRepository.save(playerDb);
         PlayerES playerES = playerRepositoryES.findByDbId(id);
         playerES.setDeleted(true);
         playerRepositoryES.save(playerES);
-
     }
     @Override
     public Page<PlayerES> getAllPlayersSortedByHeight(int pageNumber, int pageSize) {

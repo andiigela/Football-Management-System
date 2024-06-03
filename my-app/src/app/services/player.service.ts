@@ -32,16 +32,20 @@ export class PlayerService {
     let headers = this.getHeaders();
     return this.http.get<PlayerDto>(`${this.playerUrl}/${id}`,{headers})
   }
-  public updatePlayer(playerDto: PlayerDto,file: File|null): Observable<any>{
-    let headers= this.getHeaders();
-    const formData = new FormData();
-    if(file != null){
-      formData.append("file",file!);
+    public updatePlayer(playerDto: PlayerDto, file: File|null): Observable<any> {
+        let headers = this.getHeaders();
+        const formData = new FormData();
+        if (file != null) {
+            formData.append("file", file);
+        }
+        formData.append("playerDto", JSON.stringify(playerDto));
+
+        console.log('URL:', `${this.playerUrl}/edit/${playerDto.dbId}`); // Debugging log
+
+        return this.http.post(`${this.playerUrl}/edit/${playerDto.dbId}`, formData, { headers });
     }
-    formData.append("playerDto",JSON.stringify(playerDto));
-    return this.http.post(`${this.playerUrl}/edit/${playerDto.dbId}`,formData,{headers});
-  }
-  public deletePlayer(id: number): Observable<any>{
+
+    public deletePlayer(id: number): Observable<any>{
     let headers = this.getHeaders();
     return this.http.delete(`${this.playerUrl}/delete/${id}`,{headers})
   }
