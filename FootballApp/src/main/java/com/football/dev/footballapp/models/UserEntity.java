@@ -16,7 +16,6 @@ import java.util.Date;
 @AllArgsConstructor
 @Where(clause = "is_deleted=false")
 public class UserEntity extends BaseEntity {
-
     private String firstName;
     private String lastName;
     @Column(unique = true,nullable = false)
@@ -66,4 +65,5 @@ public class UserEntity extends BaseEntity {
             return null;
         }
     }
+    private Long notificationsNumber=0L;
 }

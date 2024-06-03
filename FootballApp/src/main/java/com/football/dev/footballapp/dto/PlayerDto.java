@@ -18,8 +18,13 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 public class PlayerDto {
+
     private Function<Contract,ContractDto> contractDtoMapper;
     private Long dbId;
+
+//    private Function<Contract,ContractDto> contractDtoMapper;
+//    private Long id;
+
     private String name;
     private Double height;
     private Double weight;

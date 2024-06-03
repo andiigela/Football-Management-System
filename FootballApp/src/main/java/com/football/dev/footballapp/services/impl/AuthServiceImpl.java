@@ -1,6 +1,6 @@
 package com.football.dev.footballapp.services.impl;
-
 import com.football.dev.footballapp.dto.*;
+
 import com.football.dev.footballapp.models.*;
 import com.football.dev.footballapp.models.ES.LeagueES;
 import com.football.dev.footballapp.models.ES.UserEntityES;
@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
+
 
 @Service
 public class AuthServiceImpl implements AuthService {

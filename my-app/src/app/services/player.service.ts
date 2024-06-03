@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
-import {map, Observable} from "rxjs";
+import {Observable} from "rxjs";
 import {PlayerDto} from "../common/player-dto";
 import {PageResponseDto} from "../common/page-response-dto";
-import {SeasonDto} from "../common/season-dto";
-
 @Injectable({
   providedIn: 'root'
 })
@@ -26,7 +24,7 @@ export class PlayerService {
   }
   public retrievePlayers(pageNumber: number, pageSize: number): Observable<PageResponseDto<PlayerDto>>{
     let headers = this.getHeaders();
-    return this.http.get<PageResponseDto<PlayerDto>>(`${this.playerUrl}/?pageNumber=${pageNumber}&pageSize=${pageSize}`,{headers});
+    return this.http.get<PageResponseDto<PlayerDto>>(`${this.playerUrl}/?page=${pageNumber}&size=${pageSize}`,{headers});
   }
   public retrievePlayer(id: number): Observable<PlayerDto>{
     let headers = this.getHeaders();
@@ -45,7 +43,11 @@ export class PlayerService {
         return this.http.post(`${this.playerUrl}/edit/${playerDto.dbId}`, formData, { headers });
     }
 
-    public deletePlayer(id: number): Observable<any>{
+  public sendDeletePlayerPermission(id: number): Observable<any>{
+    let headers = this.getHeaders();
+    return this.http.post(`${this.playerUrl}/delete/permission/${id}`,{headers})
+  }
+  public acceptDeletePlayerPermission(id: number): Observable<any>{
     let headers = this.getHeaders();
     return this.http.delete(`${this.playerUrl}/delete/${id}`,{headers})
   }
@@ -72,6 +74,15 @@ export class PlayerService {
   public getPlayersSortedByWeightDesc(pageNumber: number, pageSize: number): Observable<PageResponseDto<PlayerDto>> {
     let headers = this.getHeaders();
     return this.http.get<PageResponseDto<PlayerDto>>(`${this.playerUrl}/sortedByWeightDesc?pageNumber=${pageNumber}&pageSize=${pageSize}`, { headers });
+
+  public getDeletedPlayerIds(): Observable<any>{
+    let headers = this.getHeaders();
+    return this.http.get(`${this.playerUrl}/deleted`,{headers});
+  }
+  public getPlayerIdsWhoAskedPermissionFromCurrentUser(): Observable<any>{
+    let headers = this.getHeaders();
+    return this.http.get(`${this.playerUrl}/askedpermission/currentuser`,{headers});
+
   }
 }
 

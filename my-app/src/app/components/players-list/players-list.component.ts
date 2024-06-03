@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { PlayerService } from '../../services/player.service';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {PlayerService} from "../../services/player.service";
+import {PlayerDto} from "../../common/player-dto";
+import {Router} from "@angular/router";
+import {WebSocketService} from "../../services/web-socket.service";
+import {PlayerIdDto} from "../../common/player-id-dto";
+import {AuthService} from "../../services/auth.service";
 import { ContractService } from '../../services/contract.service'; // Import ContractService
-import { PlayerDto } from '../../common/player-dto';
-import { Router } from '@angular/router';
 import { ContractDto } from '../../common/contract-dto';
 
 @Component({
@@ -10,27 +13,81 @@ import { ContractDto } from '../../common/contract-dto';
   templateUrl: './players-list.component.html',
   styleUrls: ['./players-list.component.css']
 })
-export class PlayersListComponent implements OnInit {
-  playersList: PlayerDto[] = [];
+
+export class PlayersListComponent implements OnInit, OnDestroy{
+  playersList: PlayerDto[]=[];
   pageNumber: number = 1;
-  pageSize: number = 5;
+  pageSize: number = 10;
   totalElements: number = 0;
   sortedByHeightAsc: boolean = false;
   sortedByWeightAsc: boolean = false;
-
-  constructor(private playerService: PlayerService, private contractService: ContractService, private router: Router) {}
-
-  ngOnInit(): void {
-    this.getPlayers();
+  private connectionId1: string = "playeraskedpermission";
+  private connectionId2: string = "deletedplayer";
+  playersWhoAskedPermission: PlayerIdDto[]=[];
+  playerWhoAskedPermission: PlayerIdDto|null=null;
+  constructor(private playerService: PlayerService,private router: Router,
+              private webSocketService: WebSocketService, private contractService: ContractService,
+              private authService: AuthService) {
+  }
+  ngOnDestroy(): void {
+    this.webSocketService.disconnect(this.connectionId1);
+    this.webSocketService.disconnect(this.connectionId2);
   }
 
-  public getPlayers(): void {
-    this.playerService.retrievePlayers(this.pageNumber - 1, this.pageSize).subscribe((response) => {
+  ngOnInit(): void {
+    this.webSocketService.connect(("/topic/askedpermission/"+this.authService.getUserIdFromToken()),this.connectionId1);
+    this.webSocketService.connect(("/topic/playerDeleted/"+this.authService.getUserIdFromToken()),this.connectionId2);
+    this.getPlayers();
+    this.subscribeToDeletedPlayersFromBroker();
+
+  }
+  private subscribeToRetrievedAskedPermissionPlayersFromApi(){
+    this.playerService.getPlayerIdsWhoAskedPermissionFromCurrentUser().subscribe((playerIds: PlayerIdDto[])=>{
+      this.playersWhoAskedPermission=playerIds;
+      this.updatePlayersListWithNotifications();
+    })
+  }
+  private subscribeToSentNotificationsFromBroker(): void {
+    this.webSocketService.getMessages(this.connectionId1).subscribe((data: any[]) => {
+      if(data.length > 0){
+        if (typeof data === 'string') {
+          this.playerWhoAskedPermission = JSON.parse(data);
+          this.playersWhoAskedPermission.push(this.playerWhoAskedPermission!);
+          console.log("Parsed notification: ", this.playerWhoAskedPermission);
+          this.updatePlayersListWithNotifications();
+        }
+      }
+    });
+  }
+  private subscribeToDeletedPlayersFromBroker(){
+      this.webSocketService.getMessages(this.connectionId2).subscribe((data: any)=>{
+          const deletedPlayerId: number = JSON.parse(data);
+          this.playersList = this.playersList.filter(player => player.id != deletedPlayerId);
+          this.totalElements--;
+          if(this.totalElements <= 0){
+            this.getPlayers();
+          }
+          console.log("player deleted: " + deletedPlayerId);
+      })
+  }
+  private updatePlayersListWithNotifications(): void {
+    this.playersList = this.playersList.map((playerDto: PlayerDto) => {
+      playerDto.permissionSent = this.playersWhoAskedPermission
+          .some((playerIdDto: PlayerIdDto) => playerIdDto.id === playerDto.id
+          );
+      return playerDto;
+    });
+  }
+
+
+   public getPlayers(){
+    this.playerService.retrievePlayers(this.pageNumber-1,this.pageSize).subscribe((response)=>{
       this.playersList = response.content;
       this.totalElements = response.totalElements;
-      this.updatePlayerList(this.playersList);
-      this.fetchContractsForPlayers(this.playersList); // Fetch contracts after players are loaded
-    });
+      this.updatePlayerList(this.playersList) // this.playersList, sepse kemi inicializu 2 rreshta me larte.
+      this.subscribeToRetrievedAskedPermissionPlayersFromApi();
+      //  this.fetchContractsForPlayers(this.playersList); Fetch contracts after players are loaded
+    })
   }
 
   OnPageChange(pageNumber: number): void {
@@ -42,10 +99,11 @@ export class PlayersListComponent implements OnInit {
     this.router.navigate(['/players/edit/', id]);
   }
 
-  deletePlayer(id: number): void {
-    this.playerService.deletePlayer(id).subscribe(() => {
-      this.playersList = this.playersList.filter(player => player.dbId !== id);
-    });
+  deletePlayer(id: number){
+    this.playerService.sendDeletePlayerPermission(id)
+        .subscribe(()=> {
+          this.subscribeToSentNotificationsFromBroker();
+        })
   }
 
   updatePlayerList(playersList: PlayerDto[]): void {

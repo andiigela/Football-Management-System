@@ -2,13 +2,7 @@
   <form (ngSubmit)="createPlayer()" [formGroup]="playerForm">
     <div class="form-group">
       <br>
-      <input type="file" name="file" (change)="onFileSelected($event)" formControlName="file"/>
-      <div *ngIf="(playerForm.get('file')?.invalid) && (playerForm.get('file')?.touched) && (playerForm.get('file')?.errors?.['required'])" class="text-danger">
-        a file is required
-      </div>
-      <div *ngIf="(playerForm.get('file')?.errors?.['invalidImageType'])" class="text-danger">
-        Only image files (jpg, jpeg, png, gif) are allowed.
-      </div>
+      <input type="file" name="file" id="file" (change)="onFileSelected($event)" formControlName="file"/>
     </div>
     <div class="form-group">
       <label for="name">Name</label>

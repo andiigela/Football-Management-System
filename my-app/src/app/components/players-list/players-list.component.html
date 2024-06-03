@@ -42,7 +42,8 @@
       <td>{{ val.position }}</td>
       <td>
         <button class="btn btn-warning mr-2" (click)="editPlayer(val.dbId)">Edit</button>
-        <button class="btn btn-danger" (click)="deletePlayer(val.dbId)">Delete</button>
+        <button class="btn btn-danger" *ngIf="!val.permissionSent" (click)="deletePlayer(val.id)">Ask Delete Permission</button>
+        <button class="btn btn-danger" *ngIf="val.permissionSent" disabled (click)="deletePlayer(val.id)">Waiting for Permission</button>
       </td>
       <td>
         <button class="btn btn-primary" (click)="redirectToCreatePlayerContract(val.dbId)" *ngIf="val.contracts?.length == 0">Create Contract</button>

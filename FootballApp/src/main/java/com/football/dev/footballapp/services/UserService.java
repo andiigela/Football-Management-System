@@ -21,4 +21,5 @@ public interface UserService {
     UserEntity getUserProfile(Long userId);
     Page<UserEntityDto> getUsersByRoleAndIsDeleted(String role, boolean isDeleted, int pageNumber, int pageSize);
     List<UserEntityES> findUsersByEmailES(String email);
+    UserEntity getUserByEmail(String email);
 }

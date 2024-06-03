@@ -1,11 +1,9 @@
 package com.football.dev.footballapp.services.impl;
-
 import com.football.dev.footballapp.dto.UserEntityDto;
 import com.football.dev.footballapp.mapper.UserEntityToDTOMapper;
 import com.football.dev.footballapp.models.ES.LeagueES;
 import com.football.dev.footballapp.models.ES.UserEntityES;
 import com.football.dev.footballapp.models.UserEntity;
-
 import com.football.dev.footballapp.models.enums.Gender;
 import com.football.dev.footballapp.repository.esrepository.UserRepositoryES;
 import com.football.dev.footballapp.repository.jparepository.UserRepository;
@@ -13,6 +11,7 @@ import com.football.dev.footballapp.services.FileUploadService;
 import com.football.dev.footballapp.services.UserService;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -23,10 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 
 @Service
@@ -138,8 +134,14 @@ public class UserServiceImpl implements UserService {
         return userDtos;
     }
 
+
     @Override
     public List<UserEntityES> findUsersByEmailES(String email) {
         return userRepositoryES.findByEmailStartingWithAndIsDeletedFalse(email);
+
+    @Override
+    public UserEntity getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(()->new EntityNotFoundException("User not found with that email"));
+
     }
 }

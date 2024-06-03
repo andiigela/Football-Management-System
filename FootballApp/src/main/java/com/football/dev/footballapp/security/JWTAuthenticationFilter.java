@@ -27,15 +27,13 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         if (request.getRequestURI().equals("/api/auth/register") || request.getRequestURI().equals("/api/auth/login")
-            || request.getRequestURI().equals("/api/auth/refreshToken")
-        ) {
+            || request.getRequestURI().equals("/api/auth/refreshToken")) {
             // Skip authentication for registration or login requests
             filterChain.doFilter(request, response);
         } else {
             String token = getJWTFromRequest(request);
             if (StringUtils.hasText(token) && tokenGenerator.validateToken(token)) {
                 String username = tokenGenerator.getUsernameFromJWT(token);
-
                 UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null,
                         userDetails.getAuthorities());
