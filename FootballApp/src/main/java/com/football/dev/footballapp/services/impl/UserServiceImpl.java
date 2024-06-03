@@ -113,9 +113,7 @@ public class UserServiceImpl implements UserService {
         userToUpdate.setAddress(updatedUserDto.address());
         userToUpdate.setCity(updatedUserDto.city());
         userToUpdate.setPostal_code(updatedUserDto.postal_code());
-        if(userToUpdate.getGender() != null) {
-            userToUpdate.setGender(Gender.valueOf(updatedUserDto.gender()));
-        }
+        userToUpdate.setGender(Gender.valueOf(updatedUserDto.gender()));
         userRepository.save(userToUpdate);
     }
 
