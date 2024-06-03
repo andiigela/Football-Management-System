@@ -4,7 +4,7 @@
   <div class="container pt-5 pb-5">
     <div class="main-body">
       <div *ngIf="showMissingInfoMessage" class="alert alert-danger" role="alert">
-        Please provide your personal information.
+        Please provide all of your personal information.
       </div>
       <div class="row gutters-sm">
         <div class="col-md-4 mb-3">
@@ -137,89 +137,119 @@
                     <h4 class="text-center">User Information</h4>
                     <hr/>
                     <div class="col-sm-3">
-                      <h6 class="mb-0">Full Name</h6>
+                      <h6 class="mb-0">First Name</h6>
                     </div>
                     <div class="col-sm-9">
                       <input type="text" class="form-control" formControlName="firstName" />
-                      <input type="text" class="form-control" formControlName="lastName" />
+                      <div *ngIf="profileForm.get('firstName')?.invalid && profileForm.get('firstName')?.touched" class="text-danger">
+                        First Name is required.
+                      </div>
                     </div>
                   </div>
-                  <hr />
+                  <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Last Name</h6>
+                    </div>
+                    <div class="col-sm-9">
+                      <input type="text" class="form-control" formControlName="lastName" />
+                      <div *ngIf="profileForm.get('lastName')?.invalid && profileForm.get('lastName')?.touched" class="text-danger">
+                        Last Name is required.
+                      </div>
+                    </div>
+                  </div>
                   <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
                     <div class="col-sm-3">
                       <h6 class="mb-0">Email</h6>
                     </div>
                     <div class="col-sm-9">
                       <input type="email" class="form-control" formControlName="email" readonly/>
+                      <div *ngIf="profileForm.get('email')?.invalid && profileForm.get('email')?.touched" class="text-danger">
+                        Please enter a valid email.
+                      </div>
                     </div>
                   </div>
-                  <hr />
                   <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
                     <div class="col-sm-3">
                       <h6 class="mb-0">Phone</h6>
                     </div>
                     <div class="col-sm-9">
                       <input type="text" class="form-control" formControlName="phone" />
+                      <div *ngIf="profileForm.get('phone')?.invalid && profileForm.get('phone')?.touched" class="text-danger">
+                        Phone number is required.
+                      </div>
                     </div>
                   </div>
-                  <hr />
                   <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
                     <div class="col-sm-3">
                       <h6 class="mb-0">Country</h6>
                     </div>
                     <div class="col-sm-9">
                       <input type="text" class="form-control" formControlName="country" />
+                      <div *ngIf="profileForm.get('country')?.invalid && profileForm.get('country')?.touched" class="text-danger">
+                        Country is required.
+                      </div>
                     </div>
                   </div>
-                  <hr />
                   <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
                     <div class="col-sm-3">
                       <h6 class="mb-0">Birth Date</h6>
                     </div>
                     <div class="col-sm-9">
                       <input type="date" class="form-control" formControlName="birthDate"/>
+                      <div *ngIf="profileForm.get('birthDate')?.invalid && profileForm.get('birthDate')?.touched" class="text-danger">
+                        Birth date is required.
+                      </div>
                     </div>
                   </div>
-                  <hr />
                   <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
                     <div class="col-sm-3">
                       <h6 class="mb-0">Address</h6>
                     </div>
                     <div class="col-sm-9">
                       <input type="text" class="form-control" formControlName="address" />
+                      <div *ngIf="profileForm.get('address')?.invalid && profileForm.get('address')?.touched" class="text-danger">
+                        Address is required.
+                      </div>
                     </div>
+
                   </div>
-                  <hr />
                   <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
                     <div class="col-sm-3">
                       <h6 class="mb-0">City</h6>
                     </div>
                     <div class="col-sm-9">
                       <input type="text" class="form-control" formControlName="city" />
+                      <div *ngIf="profileForm.get('city')?.invalid && profileForm.get('city')?.touched" class="text-danger">
+                        City is required.
+                      </div>
                     </div>
                   </div>
-                  <hr />
                   <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
                     <div class="col-sm-3">
                       <h6 class="mb-0">Postal Code</h6>
                     </div>
                     <div class="col-sm-9">
                       <input type="text" class="form-control" formControlName="postal_code" />
+                      <div *ngIf="profileForm.get('postal_code')?.invalid && profileForm.get('postal_code')?.touched" class="text-danger">
+                        Postal code is required.
+                      </div>
                     </div>
                   </div>
-                  <hr />
                   <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
                     <div class="col-sm-3">
                       <h6 class="mb-0">Gender</h6>
                     </div>
                     <div class="col-sm-9">
                       <select class="form-control" formControlName="gender">
-                        <option *ngFor="let option of genderOptions" [value]="option.value" [selected]="option.value === userProfile.gender">{{ option.label }}</option>
+                        <option *ngFor="let option of genderOptions" [value]="option.value">{{ option.label }}</option>
                       </select>
+                      <div *ngIf="profileForm.get('gender')?.invalid && profileForm.get('gender')?.touched" class="text-danger">
+                        Gender is required.
+                      </div>
                     </div>
                   </div>
-                  <hr />
-                  <div class="row justify-content-end">
+
+                  <div class="row justify-content-end" style="padding-top: 15px;">
                     <div class="col-sm-20 text-secondary text-right">
                       <button type="submit" class="btn btn-primary">Save</button>
                       <button type="button" class="btn btn-outline-secondary" (click)="toggleEditMode()">Cancel</button>

@@ -26,5 +26,6 @@ export class LoginstatusComponent implements OnInit {
     logOut(): void {
     this.authService.logout();
         this.cdr.detectChanges();
+        this.isAuthenticated = true;
     }
 }
