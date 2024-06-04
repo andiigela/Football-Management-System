@@ -20,14 +20,14 @@ export class CreatePlayerComponent implements OnInit {
   file: File|null = null;
   constructor(private formBuilder: FormBuilder,private playerService: PlayerService,private router: Router) {
     this.playerForm = this.formBuilder.group({
-      name: ['',[Validators.required,Validators.pattern('^[a-zA-Z]+$')]],
-      height: ['',[Validators.required]],
-      weight: ['',[Validators.required]],
-      shirtNumber: ['',[Validators.required]],
+      name: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]+$')], ImageFileValidator.invalidImageType],
+      height: ['', [Validators.required]],
+      weight: ['', [Validators.required]],
+      shirtNumber: ['', [Validators.required]],
       preferred_foot: ['LEFT'],
       position: ['GOALKEEPER'],
-      file: [null]
-    })
+      file: [null, ImageFileValidator.invalidImageType] // Apply ImageFileValidator to the file control
+    });
   }
   ngOnInit(): void {
   }
@@ -55,4 +55,5 @@ export class CreatePlayerComponent implements OnInit {
     const file: File = event.target.files[0];
     this.file = file;
   }
+
 }
