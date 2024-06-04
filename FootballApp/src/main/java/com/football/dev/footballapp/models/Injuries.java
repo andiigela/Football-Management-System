@@ -1,34 +1,24 @@
 package com.football.dev.footballapp.models;
 
-import com.football.dev.footballapp.models.enums.InjuryStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
-
+@Entity
+@Table(name = "injuries")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@Entity
-@Table(name = "injuries")
-public class Injuries extends BaseEntity{
-    @ManyToOne
-    private Player player;
-    private String injuryType;
-    private String injuryDate;
-    private Date expectedRecoveryTime;
-    @Enumerated(EnumType.STRING)
-    private InjuryStatus injuryStatus;
+public class Injuries extends BaseEntity {
+
+
+
     @ManyToOne
     @JoinColumn(name = "player_scouted_id")
     private PlayerScouted playerScouted;
 
-    public Injuries(String injuryType, InjuryStatus injuryStatus) {
-        this.injuryType = injuryType;
-        this.injuryStatus = injuryStatus;
-    }
+    private String description;
 }

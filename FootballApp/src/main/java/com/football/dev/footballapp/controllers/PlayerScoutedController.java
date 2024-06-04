@@ -1,47 +1,63 @@
 package com.football.dev.footballapp.controllers;
 
-import com.football.dev.footballapp.dto.PlayerScoutedDto;
 import com.football.dev.footballapp.models.PlayerScouted;
 import com.football.dev.footballapp.services.PlayerScoutedService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/player-scouted")
+@Controller
+@RequestMapping("/playerscouted")
 public class PlayerScoutedController {
 
-    private final PlayerScoutedService playerScoutedService;
+    @Autowired
+    private PlayerScoutedService playerScoutedService;
 
-    public PlayerScoutedController(PlayerScoutedService playerScoutedService) {
-        this.playerScoutedService = playerScoutedService;
+    @GetMapping
+    public String listPlayersScouted(Model model) {
+        List<PlayerScouted> playersScouted = playerScoutedService.findAll();
+        model.addAttribute("playersScouted", playersScouted);
+        return "playerscouted/list";
     }
 
-    @GetMapping("/reports")
-    public ResponseEntity<List<PlayerScouted>> getAllPlayerScoutedReports() {
-        List<PlayerScouted> playerScoutedReports = playerScoutedService.getAllPlayerScoutedReports();
-        return ResponseEntity.ok(playerScoutedReports);
+    @GetMapping("/{id}")
+    public String getPlayerScouted(@PathVariable Long id, Model model) {
+        PlayerScouted playerScouted = playerScoutedService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid player ID:" + id));
+        model.addAttribute("playerScouted", playerScouted);
+        return "playerscouted/detail";
     }
 
-    @PutMapping("/edit/{id}")
-    public ResponseEntity<String> editPlayerDetails(@PathVariable("id") Long id, @RequestBody PlayerScoutedDto playerScoutedDto) {
-        try {
-            playerScoutedService.editPlayerDetails(playerScoutedDto, id);
-            return ResponseEntity.ok("Player details updated successfully.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update player details: " + e.getMessage());
-        }
+    @GetMapping("/add")
+    public String showAddForm(Model model) {
+        model.addAttribute("playerScouted", new PlayerScouted());
+        return "playerscouted/add";
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deletePlayerScoutedReport(@PathVariable("id") Long id) {
-        try {
-            playerScoutedService.deletePlayerScoutedReport(id);
-            return ResponseEntity.ok("Player scouted report deleted successfully.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete player scouted report: " + e.getMessage());
-        }
+    @PostMapping("/add")
+    public String addPlayerScouted(@ModelAttribute PlayerScouted playerScouted) {
+        playerScoutedService.save(playerScouted);
+        return "redirect:/playerscouted";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        PlayerScouted playerScouted = playerScoutedService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid player ID:" + id));
+        model.addAttribute("playerScouted", playerScouted);
+        return "playerscouted/edit";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String editPlayerScouted(@PathVariable Long id, @ModelAttribute PlayerScouted playerScouted) {
+        playerScoutedService.save(playerScouted);
+        return "redirect:/playerscouted";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deletePlayerScouted(@PathVariable Long id) {
+        playerScoutedService.deleteById(id);
+        return "redirect:/playerscouted";
     }
 }
