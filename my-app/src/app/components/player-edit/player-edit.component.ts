@@ -21,7 +21,7 @@ export class PlayerEditComponent implements OnInit{
   constructor(private playerService: PlayerService,private route: ActivatedRoute,private formBuilder: FormBuilder,
               private router: Router) {
     this.editForm = this.formBuilder.group({
-      name: ['',[Validators.required,Validators.pattern('^[a-zA-Z]+$')]],
+      name: ['',[Validators.required,Validators.pattern('^[a-z A-Z]+$')]],
       height: ['',[Validators.required]],
       weight: ['',[Validators.required]],
       shirtNumber: ['',[Validators.required]],

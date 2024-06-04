@@ -20,14 +20,14 @@ export class CreatePlayerComponent implements OnInit {
   file: File|null = null;
   constructor(private formBuilder: FormBuilder,private playerService: PlayerService,private router: Router) {
     this.playerForm = this.formBuilder.group({
-      name: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]+$')], ImageFileValidator.invalidImageType],
-      height: ['', [Validators.required]],
-      weight: ['', [Validators.required]],
-      shirtNumber: ['', [Validators.required]],
+      name: ['',[Validators.required,Validators.pattern('^[a-z A-Z]+$')]],
+      height: ['',[Validators.required]],
+      weight: ['',[Validators.required]],
+      shirtNumber: ['',[Validators.required]],
       preferred_foot: ['LEFT'],
       position: ['GOALKEEPER'],
-      file: [null, ImageFileValidator.invalidImageType] // Apply ImageFileValidator to the file control
-    });
+      file: [null]
+    })
   }
   ngOnInit(): void {
   }
@@ -42,11 +42,11 @@ export class CreatePlayerComponent implements OnInit {
         formData.preferred_foot,
         formData.position
       );
-      if(this.file?.name != ""){
+
         this.playerService.createPlayer(playerDto,this.file!).subscribe(()=>{
           this.router.navigateByUrl("/dashboard")
         },(err)=>{console.log(err)});
-      }
+
     } else {
       this.playerForm.markAllAsTouched();
     }
@@ -55,5 +55,4 @@ export class CreatePlayerComponent implements OnInit {
     const file: File = event.target.files[0];
     this.file = file;
   }
-
 }
