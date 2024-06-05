@@ -42,10 +42,13 @@ import {DatePipe} from "@angular/common";
 import {NotificationStatusComponent} from "./components/notification-status/notification-status.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {NotificationsListComponent} from "./components/notifications-list/notifications-list.component";
+import {HomepageComponent} from "./components/homepage/homepage.component";
+import {NavbarComponent} from "./components/dashboard/navbar/navbar.component";
 
 
 
 const routes : Routes = [
+  { path: '', component: HomepageComponent },
   {path: 'login',component:LoginComponent,canActivate: [AuthGuard]},
   {path: 'register', component:RegisterComponent,canActivate: [AuthGuard]},
   {path: 'profile/:id',component:ProfileComponent,canActivate: [AuthGuard2]},
@@ -104,17 +107,20 @@ const routes : Routes = [
     ContractEditComponent,
     InjuryEditComponent,
     NotificationStatusComponent,
-    NotificationsListComponent
+    NotificationsListComponent,
+    HomepageComponent,
+    NavbarComponent
   ],
-  imports: [
-    RouterModule.forRoot(routes),
-    BrowserModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    FormsModule,
-    NgbPaginationModule,
-      FaIconComponent,
-  ],
+    imports: [
+        RouterModule.forRoot(routes),
+        BrowserModule,
+        HttpClientModule,
+        ReactiveFormsModule,
+        FormsModule,
+        NgbPaginationModule,
+        FaIconComponent,
+
+    ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
