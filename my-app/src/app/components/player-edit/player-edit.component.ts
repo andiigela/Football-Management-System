@@ -13,7 +13,7 @@ import {ImageFileValidator} from "../../validators/image-file-validator";
   styleUrls: ['./player-edit.component.css']
 })
 export class PlayerEditComponent implements OnInit{
-  playerEdit: PlayerDto = new PlayerDto("",0,0,0,"","");
+  playerEdit: PlayerDto = new PlayerDto("",0,0,0,"","",0);
   editForm: FormGroup;
   footOptions = Object.values(Foot);
   positionOptions = Object.values(FootballPosition);
@@ -40,7 +40,7 @@ export class PlayerEditComponent implements OnInit{
     if(this.editForm.valid){
       const formValue = this.editForm.value
       let playerEditInfo = new PlayerDto(formValue.name, formValue.height, formValue.weight,
-        formValue.shirtNumber, formValue.preferred_foot, "");
+        formValue.shirtNumber, formValue.preferred_foot, "",formValue.clubId);
       playerEditInfo.id = this.playerEdit.id;
       this.playerService.updatePlayer(playerEditInfo,this.file)
         .subscribe(()=>{
@@ -53,7 +53,7 @@ export class PlayerEditComponent implements OnInit{
   }
   getPlayer(playerId: number){
     this.playerService.retrievePlayer(playerId).subscribe((player)=>{
-      this.playerEdit = new PlayerDto(player.name,player.height,player.weight,player.shirtNumber,player.preferred_foot,"");
+      this.playerEdit = new PlayerDto(player.name,player.height,player.weight,player.shirtNumber,player.preferred_foot,"",0);
       this.playerEdit.id=player.id
       this.getEditPlayerImageUrl(player.imagePath);
       this.editForm.patchValue({

@@ -1,8 +1,6 @@
 package com.football.dev.footballapp.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,17 +15,18 @@ import org.hibernate.annotations.Where;
 @Setter
 @Where(clause = "is_deleted=false")
 public class Standing extends BaseEntity{
-  private Integer numberOfStanding;
-  private String picture;
-  private String name;
-  private Integer matchPlayed;
-  private Integer wonGames;
-  private Integer drawGames;
-  private Integer loseGames;
-  private Integer goalsScored;
-  private Integer goalsAccepted;
-  private Integer points;
   @ManyToOne
+  @JoinColumn(name = "club_id")
+  private Club club;
+  public Integer matchesPlayed=0;
+  public Integer wonMatches=0;
+  public Integer drawMatches=0;
+  public Integer lostMatches=0;
+  public Integer goalScored=0;
+  public Integer goalConceded=0;
+  public Integer points=0;
+  @ManyToOne
+  @JoinColumn(name = "season_id")
   private Season season;
 
 }

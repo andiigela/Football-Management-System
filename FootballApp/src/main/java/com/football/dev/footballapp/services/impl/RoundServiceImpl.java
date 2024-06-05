@@ -6,8 +6,8 @@ import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.Match;
 import com.football.dev.footballapp.models.Round;
 import com.football.dev.footballapp.models.Season;
+import com.football.dev.footballapp.models.enums.MatchStatus;
 import com.football.dev.footballapp.repository.jparepository.RoundRepository;
-import com.football.dev.footballapp.repository.jparepository.SeasonRepository;
 import com.football.dev.footballapp.repository.jparepository.ClubRepository;
 import com.football.dev.footballapp.repository.jparepository.MatchRepository;
 import com.football.dev.footballapp.services.RoundService;
@@ -26,40 +26,24 @@ public class RoundServiceImpl implements RoundService {
     private final RoundDtoMapper roundDtoMapper;
     private final ClubRepository clubRepository;
     private final MatchRepository matchRepository;
-    private final SeasonRepository seasonRepository;
 
-    public RoundServiceImpl(RoundRepository roundRepository,
-                            RoundDtoMapper roundDtoMapper,
-                            ClubRepository clubRepository,
-                            MatchRepository matchRepository,
-                            SeasonRepository seasonRepository) {
-        this.roundRepository = roundRepository;
-        this.roundDtoMapper = roundDtoMapper;
-        this.clubRepository = clubRepository;
-        this.matchRepository = matchRepository;
-        this.seasonRepository = seasonRepository;
-    }
-    @Override
+  public RoundServiceImpl(RoundRepository roundRepository, RoundDtoMapper roundDtoMapper, ClubRepository clubRepository, MatchRepository matchRepository) {
+    this.roundRepository = roundRepository;
+    this.roundDtoMapper = roundDtoMapper;
+    this.clubRepository = clubRepository;
+    this.matchRepository = matchRepository;
+  }
+
+  @Override
     public void saveRound(RoundDto roundDto, Long seasonId) {
-        if (roundDto == null) throw new IllegalArgumentException("roundDto cannot be null");
-        Season seasonDb = seasonRepository.findById(seasonId).orElseThrow(() -> new EntityNotFoundException("Season not found with id: " + seasonId));
-        Round round = new Round(roundDto.getStart_date(), roundDto.getEnd_date(), seasonDb);
-        List<Match> generatedMatches = generateRandomMatches(round);
-        round.setMatches(generatedMatches);
-        Round savedRound = roundRepository.save(round);
 
-        for (Match match : generatedMatches) {
-            match.setRound(savedRound);
-            matchRepository.save(match);
-        }
     }
 
     @Override
     public Page<RoundDto> retrieveRounds(Long seasonId, int pageNumber, int pageSize) {
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
         Page<Round> roundPage = roundRepository.findRoundsBySeasonIdOrderByInsertDateTimeDesc(seasonId, pageRequest);
-        Page<RoundDto> roundDtos = roundPage.map(roundDtoMapper);
-        return roundDtos;
+        return roundPage.map(roundDtoMapper);
     }
     @Override
     public RoundDto getRound(Long roundId,Long seasonId) {
@@ -82,6 +66,87 @@ public class RoundServiceImpl implements RoundService {
             roundRepository.save(roundDb);
         });
     }
+
+  public List<Round> generateRoundsAndSave(List<Club> clubs, int gamesPerRound, LocalDateTime startDate, Season season) {
+    List<Round> rounds = new ArrayList<>();
+    Random random = new Random();
+    int totalClubs = clubs.size();
+    int totalMatches = (totalClubs * (totalClubs - 1));
+
+    int numberOfRounds = totalMatches / gamesPerRound;
+
+    // Create a rotation schedule to ensure each team plays once in each round
+    List<List<Club>> rotationSchedule = new ArrayList<>();
+    for (int i = 0; i < numberOfRounds; i++) {
+      List<Club> roundSchedule = new ArrayList<>();
+      for (int j = 0; j < totalClubs; j++) {
+        roundSchedule.add(clubs.get((i + j) % totalClubs)); // Rotate the clubs for each round
+      }
+      rotationSchedule.add(roundSchedule);
+    }
+
+    // Generate matches for each round
+    for (int i = 0; i < numberOfRounds; i++) {
+      LocalDateTime roundStartDate = startDate.plusDays(i * 7L); // Assuming rounds are scheduled weekly
+      LocalDateTime roundEndDate = roundStartDate.plusDays(6); // Assuming each round lasts for a week
+
+      Round round = new Round();
+      round.setName("Round " + (i + 1)); // Set round name
+      round.setStart_date(roundStartDate);
+      round.setEnd_date(roundEndDate);
+      round.setSeason(season);
+
+
+      List<Match> matches = new ArrayList<>();
+
+      // Generate matches for this round
+      for (int j = 0; j < gamesPerRound; j++) {
+        Club homeClub = rotationSchedule.get(i).get(j);
+        Club awayClub;
+
+        // Ensure awayClub is not the same as homeClub
+        do {
+          int randomAwayClubIndex = random.nextInt(totalClubs);
+          awayClub = rotationSchedule.get(i).get(randomAwayClubIndex);
+        } while (awayClub.equals(homeClub));
+
+        // Generate match date
+        int randomDays = random.nextInt(3);
+        LocalDateTime matchDate = roundStartDate.plusDays(randomDays);
+
+        // Create match
+        Match match = new Match();
+        match.setHomeTeamId(homeClub);
+        match.setAwayTeamId(awayClub);
+        match.setMatchDate(matchDate);
+        match.setRound(round);
+        match.setAwayTeamScore(0);
+        match.setHomeTeamScore(0);
+        match.setMatchStatus(MatchStatus.SCHEDULED);// Set the round for the match
+        matches.add(match);
+      }
+
+      roundRepository.save(round);
+      // Save all matches for this round
+      matchRepository.saveAll(matches);
+
+      // Add matches to the round and save again
+      round.setMatches(matches);
+
+
+      rounds.add(round);
+    }
+
+    return rounds;
+  }
+
+
+  @Override
+  public void saveRounds(List<Round> rounds) {
+    roundRepository.saveAll(rounds);
+  }
+
+
 //    @Override
 //    public Optional<RoundDto> getRoundById(Long id) {
 //        return roundRepository.findById(id).map(roundDtoMapper);

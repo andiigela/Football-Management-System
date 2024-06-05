@@ -10,11 +10,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SeasonService {
-    void saveSeason(SeasonDto seasonDto, Long leagueId);
-    Page<SeasonDto> retrieveSeasons(Long leagueId, int pageNumber, int pageSize);
-    SeasonDto getSeason(Long leagueId,Long seasonId);
-    void updateSeason(SeasonDto seasonDto, Long seasonId, Long leagueId);
-    void deleteSeason(Long seasonId, Long leagueId);
+    Long  saveSeason(SeasonDto seasonDto, Long leagueId);
+     Page<SeasonDto> retrieveSeasons(Long leagueId, int pageNumber, int pageSize);
+     SeasonDto getSeason(Long leagueId,Long seasonId);
+     void updateSeason(SeasonDto seasonDto, Long seasonId, Long leagueId);
+     void deleteSeason(Long seasonId, Long leagueId);
+      void generateRoundsAndMatches(Long id );
 //    void saveSeason(SeasonDto seasonDto);
 //    void updateSeason(Long id, SeasonDto seasonDto);
 //    Optional<SeasonDto> getSeasonById(Long id);

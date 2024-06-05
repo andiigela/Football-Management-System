@@ -18,14 +18,6 @@ import java.util.List;
 @Setter
 //@Where(clause = "is_deleted=false")
 public class Player extends BaseEntity {
-    public Player(String name, Double height, Double weight, Integer shirtNumber,String preferredFoot,String position){
-        this.name = name;
-        this.height=height;
-        this.weight=weight;
-        this.shirtNumber=shirtNumber;
-        this.preferred_foot=getFootFromString(preferredFoot);
-        this.position.add(getPositionFromString(position));
-    }
     @ManyToOne
     private Club club;
     @ElementCollection(targetClass = FootballPosition.class)
@@ -35,10 +27,25 @@ public class Player extends BaseEntity {
     private Integer shirtNumber;
     private Double height;
     private Double weight;
-    public String name;
+    private String name;
     private String imagePath;
     @Enumerated(value = EnumType.STRING)
     private Foot preferred_foot;
+    @OneToMany(mappedBy = "player",fetch = FetchType.LAZY)
+    private List<Contract> contracts = new ArrayList<>();
+    private Long matchesPlayed;
+    private Long goals;
+    private Long assist;
+    private Long yellowCards;
+    private Long redCards;
+    public Player(String name, Double height, Double weight, Integer shirtNumber,String preferredFoot,String position){
+        this.name = name;
+        this.height=height;
+        this.weight=weight;
+        this.shirtNumber=shirtNumber;
+        this.preferred_foot=getFootFromString(preferredFoot);
+        this.position.add(getPositionFromString(position));
+    }
     public static Foot getFootFromString(String footString) {
         try {
             return Foot.valueOf(footString.toUpperCase());
@@ -55,6 +62,4 @@ public class Player extends BaseEntity {
             return null; // Or throw an exception, depending on your error handling strategy
         }
     }
-    @OneToMany(mappedBy = "player",fetch = FetchType.EAGER)
-    private List<Contract> contracts = new ArrayList<>();
 }

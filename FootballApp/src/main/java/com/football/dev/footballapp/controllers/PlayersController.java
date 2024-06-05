@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.football.dev.footballapp.dto.PageResponseDto;
 import com.football.dev.footballapp.dto.PlayerDto;
 import com.football.dev.footballapp.dto.PlayerIdDto;
+import com.football.dev.footballapp.dto.PlayerTransferDTO;
 import com.football.dev.footballapp.models.Player;
 import com.football.dev.footballapp.services.FileUploadService;
 import com.football.dev.footballapp.services.PlayerService;
@@ -64,9 +65,10 @@ public class PlayersController {
     }
 
    @GetMapping("")
-  public List<Player> getPlayers() {
+  public List<PlayerTransferDTO> getPlayers() {
     return playerService.getAllPlayers();
   }
+
     @GetMapping("/{id}")
     public ResponseEntity<Player> getPlayer(@PathVariable("id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(playerService.getPlayer(id));
@@ -99,5 +101,9 @@ public class PlayersController {
     @GetMapping("/askedpermission/currentuser") // Current user player ids that sent notifications
     public ResponseEntity<List<PlayerIdDto>> getPlayerIdsOfCurrentUserAskedPermission(){
         return ResponseEntity.status(HttpStatus.OK).body(playerService.getPlayerIdsWhoAskedPermissionFromCurrentUser());
+    }
+    @GetMapping("/club/{club_id}")
+    public ResponseEntity<List<PlayerDto>> getPlayersByTeam(@PathVariable Long club_id){
+      return ResponseEntity.status(HttpStatus.OK).body(playerService.getPlayersOfATeam(club_id));
     }
 }

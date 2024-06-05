@@ -90,4 +90,17 @@ export class RoundsComponent implements OnInit {
       console.error('Round ID is undefined');
     }
   }
+
+  hasMatchStarted(matchDate: Date): boolean {
+    const now = new Date();
+    const matchStartDate = new Date(matchDate);
+    const matchEndDate = new Date(matchDate);
+    matchEndDate.setMinutes(matchEndDate.getMinutes() + 90); // Add 90 minutes to match start time
+
+    return now >= matchStartDate && now <= matchEndDate;
+  }
+
+  goToMatch(roundId: number|undefined , matchId: number) {
+    this.router.navigate([`league/${this.leagueId}/seasons/${this.seasonId}/rounds/${roundId}/match/${matchId}`])
+  }
 }

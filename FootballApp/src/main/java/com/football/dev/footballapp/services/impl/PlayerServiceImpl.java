@@ -2,7 +2,9 @@ package com.football.dev.footballapp.services.impl;
 import com.football.dev.footballapp.dto.ClubDto;
 import com.football.dev.footballapp.dto.PlayerDto;
 import com.football.dev.footballapp.dto.PlayerIdDto;
+import com.football.dev.footballapp.dto.PlayerTransferDTO;
 import com.football.dev.footballapp.exceptions.UserNotFoundException;
+import com.football.dev.footballapp.mapper.PlayerTransferDTOmapper;
 import com.football.dev.footballapp.models.Club;
 import com.football.dev.footballapp.models.Notification;
 import com.football.dev.footballapp.models.Player;
@@ -38,27 +40,22 @@ public class PlayerServiceImpl implements PlayerService {
     private final NotificationService notificationService;
     private final NotificationRepository notificationRepository;
     private final AuthenticationHelperService authenticationHelperService;
+    private final PlayerTransferDTOmapper playerTransferDTOmapper;
 
+  public PlayerServiceImpl(PlayerRepository playerRepository, ClubRepository clubRepository, FileUploadService fileUploadService, Function<PlayerDto, Player> playerDtoToPlayer, Function<Player, PlayerDto> playerToPlayerDto, SimpMessagingTemplate simpMessagingTemplate, NotificationService notificationService, NotificationRepository notificationRepository, AuthenticationHelperService authenticationHelperService, PlayerTransferDTOmapper playerTransferDTOmapper) {
+    this.playerRepository = playerRepository;
+    this.clubRepository = clubRepository;
+    this.fileUploadService = fileUploadService;
+    this.playerDtoToPlayer = playerDtoToPlayer;
+    this.playerToPlayerDto = playerToPlayerDto;
+    this.simpMessagingTemplate = simpMessagingTemplate;
+    this.notificationService = notificationService;
+    this.notificationRepository = notificationRepository;
+    this.authenticationHelperService = authenticationHelperService;
+    this.playerTransferDTOmapper = playerTransferDTOmapper;
+  }
 
-    public PlayerServiceImpl(PlayerRepository playerRepository,Function<PlayerDto, Player> playerDtoToPlayer,
-                             ClubRepository clubRepository,FileUploadService fileUploadService,
-                             Function<Player, PlayerDto> playerToPlayerDto,
-                             SimpMessagingTemplate simpMessagingTemplate,
-                             NotificationService notificationService,
-                             NotificationRepository notificationRepository,
-                             AuthenticationHelperService authenticationHelperService
-                             ){
-        this.playerRepository=playerRepository;
-        this.playerDtoToPlayer=playerDtoToPlayer;
-        this.clubRepository=clubRepository;
-        this.fileUploadService=fileUploadService;
-        this.playerToPlayerDto=playerToPlayerDto;
-        this.simpMessagingTemplate=simpMessagingTemplate;
-        this.notificationService=notificationService;
-        this.notificationRepository=notificationRepository;
-        this.authenticationHelperService=authenticationHelperService;
-    }
-    @Override
+  @Override
     public void savePlayer(PlayerDto playerDto, MultipartFile file){
         Player player = playerDtoToPlayer.apply(playerDto);
         String fileUpload = fileUploadService.uploadFile(playerDto.getName(),file);
@@ -81,9 +78,12 @@ public class PlayerServiceImpl implements PlayerService {
         return playerDtos;
     }
 
+    public List<PlayerDto> getPlayersOfATeam(Long club_id){
+     return  playerRepository.findPlayersByClubIdAndIsDeletedFalseOrderByInsertDateTimeAsc(club_id).stream().map(playerToPlayerDto).collect(Collectors.toList());
+    }
   @Override
-  public List<Player> getAllPlayers() {
-    return playerRepository.findAll();
+  public List<PlayerTransferDTO>getAllPlayers() {
+    return playerRepository.findAll().stream().map(playerTransferDTOmapper).collect(Collectors.toList());
   }
 
   @Override

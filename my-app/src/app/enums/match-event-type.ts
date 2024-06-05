@@ -1,0 +1,3 @@
+export enum MatchEventType{
+  GOAL ='GOAL',CARTON = 'CARTON',POSTPONED = 'POSTPONED',SUB= 'SUB',REMOVED= 'REMOVED'
+}

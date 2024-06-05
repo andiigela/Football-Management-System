@@ -11,6 +11,7 @@ import java.util.Optional;
 
 public interface PlayerRepository extends JpaRepository<Player,Long> {
     Page<Player> findPlayersByClubAndIsDeletedFalseOrderByInsertDateTimeAsc(Club club, Pageable pageable);
+     List<Player> findPlayersByClubIdAndIsDeletedFalseOrderByInsertDateTimeAsc(Long id);
 
     Optional<Player> findByIdAndIsDeletedFalse(Long id);
 

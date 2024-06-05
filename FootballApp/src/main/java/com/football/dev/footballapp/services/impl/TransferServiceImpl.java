@@ -2,8 +2,11 @@ package com.football.dev.footballapp.services.impl;
 
 import com.football.dev.footballapp.dto.TransferDTO;
 import com.football.dev.footballapp.mapper.TransferDTOMapper;
+import com.football.dev.footballapp.models.Player;
 import com.football.dev.footballapp.models.Transfer;
+import com.football.dev.footballapp.repository.jparepository.PlayerRepository;
 import com.football.dev.footballapp.repository.jparepository.TransferRepository;
+import com.football.dev.footballapp.services.PlayerService;
 import com.football.dev.footballapp.services.TransferService;
 import org.springframework.stereotype.Service;
 
@@ -15,14 +18,24 @@ public class TransferServiceImpl implements TransferService {
     private final TransferRepository transferRepository;
     private final TransferDTOMapper transferDTOMapper;
 
-    public TransferServiceImpl(TransferRepository transferRepository, TransferDTOMapper transferDTOMapper) {
-        this.transferRepository = transferRepository;
-        this.transferDTOMapper = transferDTOMapper;
-    }
+    private final PlayerService playerService;
 
-    @Override
+    private final PlayerRepository playerRepository;
+
+  public TransferServiceImpl(TransferRepository transferRepository, TransferDTOMapper transferDTOMapper, PlayerService playerService, PlayerRepository playerRepository) {
+    this.transferRepository = transferRepository;
+    this.transferDTOMapper = transferDTOMapper;
+    this.playerService = playerService;
+    this.playerRepository = playerRepository;
+  }
+
+  @Override
     public void makeTransfer(TransferDTO transferDto) {
-        transferRepository.save(new Transfer(transferDto.player(),transferDto.previousClub(),transferDto.newClub(),transferDto.transferDate(), transferDto.transferFee()));
+        Player player = playerService.getPlayer(transferDto.player().getId());
+        transferRepository.save(new Transfer(transferDto.player(),player.getClub(),transferDto.newClub(),transferDto.transferDate(), transferDto.transferFee()));
+        player.setClub(transferDto.newClub());
+        playerRepository.save(player);
+
     }
 
     @Override

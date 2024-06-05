@@ -28,5 +28,14 @@ public class League extends BaseEntity{
     private Integer founded;
     private String description;
     private String picture;
+    public League(String name,Integer founded,String description,String picture){
+      this.name =name;
+      this.founded =founded;
+      this.description =description;
+      this.picture =picture;
+    }
+
+     @OneToMany(mappedBy = "league")
+    public List<Season> seasonList;
 
 }

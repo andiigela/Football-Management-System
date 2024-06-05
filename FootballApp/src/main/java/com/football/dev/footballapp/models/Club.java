@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.Where;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@ToString
 @Where(clause = "is_deleted=false")
 public class Club extends BaseEntity {
 
@@ -34,6 +36,19 @@ public class Club extends BaseEntity {
     private UserEntity user;
   // Add other necessary attributes
 
+    @OneToMany(mappedBy = "club",fetch = FetchType.LAZY)
+    private List<Contract> contracts ;
+    @OneToMany
+    private List<Match> homematches;
+    @OneToMany
+    private List<Match> awayMatches;
+    @OneToMany(mappedBy = "club" , fetch = FetchType.LAZY )
+    private List<Standing> standings;
+
+    private Long goals;
+    private Long assist;
+    private Long yellowCards;
+    private Long redCards;
     public Club(Long id, String name, Integer foundedYear, String city, String website) {
         this.id = id;
         this.name = name;
@@ -41,6 +56,4 @@ public class Club extends BaseEntity {
         this.city = city;
         this.website = website;
     }
-    @OneToMany(mappedBy = "club")
-    private List<Contract> contracts = new ArrayList<>();
 }

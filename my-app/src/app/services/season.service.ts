@@ -20,6 +20,7 @@ export class SeasonService {
   }
 
   createSeason(leagueId: number, seasonDto: SeasonDto): Observable<any> {
+
     const headers = this.getHeaders();
     return this.http.post(`${this.baseUrl}/${leagueId}/create`, seasonDto, { headers: headers });
   }
@@ -43,4 +44,9 @@ export class SeasonService {
     const headers = this.getHeaders();
     return this.http.delete(`${this.baseUrl}/${leagueId}/delete/${seasonId}`, { headers: headers });
   }
+  createRoundsAndMatches(leagueId: number, seasonId: number): Observable<any> {
+  const headers = this.getHeaders();
+  return this.http.get(`${this.baseUrl}/${leagueId}/generate/${seasonId}`,{ headers: headers });
+  }
+
 }

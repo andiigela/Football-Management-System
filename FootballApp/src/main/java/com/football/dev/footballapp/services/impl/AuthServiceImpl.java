@@ -78,6 +78,7 @@ public class AuthServiceImpl implements AuthService {
         Club club = new Club();
         club.setName(registerDto.getClubName());
         club.setUser(user);
+        club.setGoals(0L);
         clubRepository.save(club);
     }
 

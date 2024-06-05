@@ -42,6 +42,9 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {NotificationsListComponent} from "./components/notifications-list/notifications-list.component";
 import {MakeTransferComponent} from "./components/make-transfer/make-transfer.component";
 import {EditTransferComponent} from "./components/edit-transfer/edit-transfer.component";
+import {EditMatchEventComponent} from "./components/edit-match-event/edit-match-event.component";
+import {CreateMatchEventComponent} from "./components/create-match-event/create-match-event.component";
+import {ViewMatchComponent} from "./components/view-match/view-match.component";
 
 
 const routes : Routes = [
@@ -73,7 +76,11 @@ const routes : Routes = [
   {path: 'players/:id/contracts/create',component:CreateContractComponent,canActivate: [AdminClubGuard]},
   {path: 'players/:id/contracts/:contractId/edit',component:ContractEditComponent,canActivate: [AdminClubGuard]},
   {path: 'make-transfer',component:MakeTransferComponent},
-  {path: 'transfer/:id', component:EditTransferComponent}
+  {path: 'transfer/:id', component:EditTransferComponent},
+  {path: 'league/:leagueId/seasons/:seasonId/rounds/:roundId/match/:matchId/edit-match-event/:matchEventId', component:EditMatchEventComponent},
+  {path: 'league/:leagueId/seasons/:seasonId/rounds/:roundId/match/:matchId/create', component:CreateMatchEventComponent},
+  {path: 'league/:leagueId/seasons/:seasonId/rounds/:roundId/match/:matchId', component:ViewMatchComponent},
+
 ]
 @NgModule({
   declarations: [

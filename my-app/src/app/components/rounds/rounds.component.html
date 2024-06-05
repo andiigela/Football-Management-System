@@ -7,7 +7,7 @@
     <table class="table table-striped">
       <thead class="thead-dark">
       <tr>
-        <th colspan="8" class="text-center" style="background-color: #343a40; color: white;">
+        <th colspan="9" class="text-center" style="background-color: #343a40; color: white;">
           Round #{{ round.id }} : {{ round.start_date | date: 'short' }} - {{ round.end_date | date: 'short' }}
         </th>
       </tr>
@@ -20,6 +20,7 @@
         <th scope="col">Away Team Score</th>
         <th scope="col">Result</th>
         <th scope="col" *ngIf="isCurrentSeason">Actions</th>
+        <th scope="col" *ngIf="isCurrentSeason">View-Match</th>
       </tr>
       </thead>
       <tbody>
@@ -30,9 +31,14 @@
         <td>{{ match.matchDate | date: 'short' }}</td>
         <td>{{ match.homeTeamScore }}</td>
         <td>{{ match.awayTeamScore }}</td>
-        <td>{{ match.result }}</td>
+        <td>{{ match.homeTeamScore }} - {{ match.awayTeamScore }}</td>
+
+
         <td *ngIf="isCurrentSeason">
           <button class="btn btn-primary" (click)="redirectToEditMatch(round.id, match.id)">Update</button>
+        </td>
+        <td *ngIf="isCurrentSeason && hasMatchStarted(match.matchDate) " >
+          <button class="btn btn-primary" (click)="goToMatch(round.id, match.id)">Create Events</button>
         </td>
       </tr>
       </tbody>

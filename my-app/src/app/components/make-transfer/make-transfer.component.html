@@ -11,11 +11,6 @@
       </div>
 
       <div class="form-group">
-        <label for="previousClub" class="block text-gray-700 font-medium mb-2">Previous Club:</label>
-        <input type="text" id="previousClub" name="previousClub" [value]="transfer.previousClub.name || ''" readonly class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-light-blue-500">
-      </div>
-
-      <div class="form-group">
         <label for="newClub" class="block text-gray-700 font-medium mb-2">New Club:</label>
         <select id="newClub" name="newClub" [(ngModel)]="transfer.newClub" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-light-blue-500" required>
           <option value="" disabled selected>Select a club</option>

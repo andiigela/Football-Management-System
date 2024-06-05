@@ -13,8 +13,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 @Service
 public class MatchServiceImpl implements MatchService {
@@ -86,6 +90,92 @@ public class MatchServiceImpl implements MatchService {
             matchRepository.save(matchDb);
         });
     }
+
+  public List<Match> generateSchedule(List<Club> clubs, Long headToHead, LocalDateTime startDate, int numberOfRounds) {
+    List<Match> matches = new ArrayList<>();
+    Random random = new Random();
+
+    // Generate matches for each pair of clubs
+    for (int round = 0; round < numberOfRounds; round++) {
+      for (int i = 0; i < clubs.size() - 1; i++) {
+        for (int j = i + 1; j < clubs.size(); j++) {
+          Club homeClub = clubs.get(i);
+          Club awayClub = clubs.get(j);
+
+          // Generate head-to-head matches
+          for (int k = 0; k < headToHead / 2; k++) {
+            Match match = new Match();
+            match.setHomeTeamId(homeClub);
+            match.setAwayTeamId(awayClub);
+
+            // Generate a random number between 0 and 2 representing the number of days to add
+            int randomDays = random.nextInt(3);
+
+            // Add the random number of days to the start date
+            LocalDateTime matchDate = startDate.plusDays(round * 7).plusDays(randomDays);
+            match.setMatchDate(matchDate);
+
+            matches.add(match);
+
+            Match reverseFixture = new Match();
+            reverseFixture.setHomeTeamId(awayClub);
+            reverseFixture.setAwayTeamId(homeClub);
+            reverseFixture.setMatchDate(matchDate); // Use the same match date for reverse fixture
+            matches.add(reverseFixture);
+          }
+        }
+      }
+    }
+
+    return matches;
+  }
+
+  @Override
+  public void saveMatches(List<Match> matches) {
+    matchRepository.saveAll(matches);
+  }
+
+  @Override
+  public void goalScored(Long id , Long aLong) {
+      Match  match = matchRepository.findById(id).get();
+      Club club = clubRepository.findById(aLong).get();
+
+      if (club.equals(match.getHomeTeamId())){
+        match.setHomeTeamScore(match.getHomeTeamScore()+1);
+        club.setGoals(club.getGoals()+1);
+
+
+
+      }else {
+        match.setAwayTeamScore(match.getAwayTeamScore() + 1);
+        club.setGoals(club.getGoals() + 1);
+
+
+      }
+    matchRepository.save(match);
+    clubRepository.save(club);
+
+  }
+
+  @Override
+  public void ownGoalScored(Long id, Long aLong) {
+    Match  match = matchRepository.findById(id).get();
+    Club club = clubRepository.findById(aLong).get();
+
+    if (club.equals(match.getHomeTeamId())){
+      match.setAwayTeamScore(match.getAwayTeamScore()+1);
+      Club club2 = match.getAwayTeamId();
+      club2.setGoals(club2.getGoals()+1);
+    }else {
+      match.setHomeTeamScore(match.getHomeTeamScore()+1);
+      Club club3=match.getHomeTeamId();
+      club3.setGoals(club3.getGoals()+1);
+    }
+    matchRepository.save(match);
+    clubRepository.save(club);
+
+
+  }
 
 
 //    @Override

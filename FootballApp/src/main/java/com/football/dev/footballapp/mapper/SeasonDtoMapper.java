@@ -20,10 +20,12 @@ public class SeasonDtoMapper implements Function<Season, SeasonDto> {
         return new SeasonDto(
                  season.getId(),
                 season.getName(),
-                season.getCurrentSeason());
-//                season.getCurrentSeason(),
-//                season.getIsDeleted(),
-                //season.getLeague());
+          season.getCurrentSeason(),
+          season.getStart_date(),
+          season.getEnd_date(),
+          season.getHeadToHead().intValue(),
+          season.getNumberOfStanding().intValue()
+        );
     }
 }
 

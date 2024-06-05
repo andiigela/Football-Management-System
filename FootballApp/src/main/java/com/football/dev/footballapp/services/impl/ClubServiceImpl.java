@@ -12,20 +12,24 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+
 @Service
 public class ClubServiceImpl implements ClubService {
 
     private final ClubRepository clubRepository;
     private final UserRepository userRepository;
     private final Function<ClubDto, Club> clubDtoToClub;
+    private final Function<Club,ClubDto> clubMapper;
 
-    public ClubServiceImpl(ClubRepository clubRepository, Function<ClubDto, Club> clubDtoToClub, UserRepository userRepository) {
-        this.clubRepository = clubRepository;
-        this.clubDtoToClub = clubDtoToClub;
-        this.userRepository = userRepository;
-    }
+  public ClubServiceImpl(ClubRepository clubRepository, UserRepository userRepository, Function<ClubDto, Club> clubDtoToClub, Function<Club, ClubDto> clubMapper) {
+    this.clubRepository = clubRepository;
+    this.userRepository = userRepository;
+    this.clubDtoToClub = clubDtoToClub;
+    this.clubMapper = clubMapper;
+  }
 
-    /*@Override
+/*@Override
     public void saveClub(ClubDto clubDto) {
         Club club = clubDtoToClub.apply(clubDto);
         if(club == null) return;
@@ -64,8 +68,8 @@ public class ClubServiceImpl implements ClubService {
 
     }
     @Override
-    public List<Club> getAllClubs() {
-        return clubRepository.findAll();
+    public List<ClubDto> getAllClubs() {
+        return clubRepository.findAll().stream().map(clubMapper).collect(Collectors.toList());
     }
     @Override
     public Long getClubIdByUserId(Long userId) {

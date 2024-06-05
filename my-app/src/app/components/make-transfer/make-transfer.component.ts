@@ -25,10 +25,9 @@ export class MakeTransferComponent implements OnInit{
   players: PlayerDto[] = [];
   clubs : ClubDto[]=[];
   selectedPlayer: PlayerDto | null = null;
-  previousClub: string | undefined;
 
 
-  constructor(private playerService: PlayerService , private clubService : ClubService,private transferService:TransferService, private router: Router) { }
+  constructor(private router :Router,private playerService: PlayerService , private clubService : ClubService,private transferService:TransferService) { }
 
   ngOnInit() {
     this.fetchPlayers();
@@ -38,6 +37,7 @@ export class MakeTransferComponent implements OnInit{
   fetchPlayers() {
     this.playerService.getAllPLayers().subscribe(
       (data: any[]) => {
+        console.log(data)
         this.players = data;
       },
       (error) => {
@@ -49,6 +49,7 @@ export class MakeTransferComponent implements OnInit{
     this.clubService.getAllClubs().subscribe(
       (data: any[]) => {
         this.clubs = data;
+
       },
       (error) => {
         console.error('Error fetching players:', error);
@@ -56,6 +57,7 @@ export class MakeTransferComponent implements OnInit{
     );
   }
   onPlayerSelected() {
+    console.log(this.selectedPlayer)
     const playerId = this.selectedPlayer?.id;
     if (playerId !== undefined) {
       const player = this.players.find(p => p.id === playerId);
@@ -75,6 +77,7 @@ export class MakeTransferComponent implements OnInit{
       this.transfer.player = this.selectedPlayer;
       this.transfer.transferDate = new Date();
       this.transferService.createTransfer(this.transfer).subscribe(response => {
+        this.router.navigateByUrl("/dashboard")
       });
     }
   }

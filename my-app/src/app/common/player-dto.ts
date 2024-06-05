@@ -6,7 +6,7 @@ export class PlayerDto {
   public imagePath: string = "";
   public contracts: ContractDto[] | null = null;
   public permissionSent: boolean = false;
-  public club: ClubDto | undefined ;
+  public club: ClubDto | undefined;
 
   constructor(
     public name: string,
@@ -14,7 +14,8 @@ export class PlayerDto {
     public weight: number,
     public shirtNumber: number,
     public preferred_foot: string,
-    public position: string
+    public position: string,
+    public clubId: number
   ) {
   }
 }

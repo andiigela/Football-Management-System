@@ -62,5 +62,10 @@ export class PlayerService {
     let headers = this.getHeaders();
     return this.http.get(`${this.playerUrl}/askedpermission/currentuser`,{headers});
   }
+
+  public getPlayersByClubId(club_id:number):Observable<any>{
+    let headers = this.getHeaders();
+    return this.http.get(`${this.playerUrl}/club/${club_id}`,{headers});
+  }
 }
 
