@@ -147,3 +147,16 @@
 </ol>
 <h3>Overview of system</h3>
 <hr/>
+<h4>Login Page</h4>
+<img width="1073" alt="image" src="https://github.com/andiigela/Football-Management-System/assets/118741260/77a6e8d5-e4e2-46a4-b911-c247a18cfa87">
+<h4>Register Page</h4>
+<img width="1078" alt="image" src="https://github.com/andiigela/Football-Management-System/assets/118741260/742033f4-e6ad-4bd2-bbdd-383095842ef5">
+<h4>Home Page</h4>
+<img width="1072" alt="image" src="https://github.com/andiigela/Football-Management-System/assets/118741260/b5f4fdc5-e6ab-4e71-972d-3aeeafd6c54d">
+<img width="1075" alt="image" src="https://github.com/andiigela/Football-Management-System/assets/118741260/a7943876-75a1-4f14-97d8-d0b26c770381">
+<img width="1075" alt="image" src="https://github.com/andiigela/Football-Management-System/assets/118741260/b39d5c1a-e6a6-4327-b71c-beef946330a5">
+<h4>Dashboard</h4>
+<img width="1085" alt="image" src="https://github.com/andiigela/Football-Management-System/assets/118741260/56460ccd-8320-4072-a0ed-5c0d6aa36756">
+<img width="1083" alt="image" src="https://github.com/andiigela/Football-Management-System/assets/118741260/9d8b72df-0c44-4a98-ac98-6705839e5cac">
+
+
