@@ -2,8 +2,9 @@ package com.football.dev.footballapp.services.impl;
 import com.football.dev.footballapp.dto.MatchDTO;
 import com.football.dev.footballapp.mapper.MatchDTOMapper;
 import com.football.dev.footballapp.models.*;
+import com.football.dev.footballapp.models.ES.MatchES;
+import com.football.dev.footballapp.repository.esrepository.MatchRepositoryES;
 import com.football.dev.footballapp.repository.jparepository.RoundRepository;
-import com.football.dev.footballapp.repository.jparepository.StadiumRepository;
 import com.football.dev.footballapp.repository.jparepository.ClubRepository;
 import com.football.dev.footballapp.repository.jparepository.MatchRepository;
 import com.football.dev.footballapp.services.MatchService;
@@ -19,23 +20,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.Date;
+
 import java.util.stream.Collectors;
+
 @Service
 public class MatchServiceImpl implements MatchService {
     private final MatchRepository matchRepository;
+    private final MatchRepositoryES matchRepositoryES;
     private final ClubRepository clubRepository;
-    private final StadiumRepository stadiumRepository;
     private final RoundRepository roundRepository;
     private final MatchDTOMapper mapper;
 
     public MatchServiceImpl(MatchRepository matchRepository, MatchDTOMapper mapper,
-                            ClubRepository clubRepository, StadiumRepository stadiumRepository,
-                            RoundRepository roundRepository) {
+                            ClubRepository clubRepository,
+                            RoundRepository roundRepository, MatchRepositoryES matchRepositoryES) {
         this.matchRepository = matchRepository;
         this.clubRepository = clubRepository;
-        this.stadiumRepository= stadiumRepository;
         this.mapper = mapper;
         this.roundRepository = roundRepository;
+        this.matchRepositoryES = matchRepositoryES;
     }
     @Override
     public void saveMatch(MatchDTO matchDto, Long roundId) {
@@ -49,6 +53,7 @@ public class MatchServiceImpl implements MatchService {
         Match match = new Match(homeTeam, awayTeam, matchDto.getMatchDate(), matchDto.getResult(), matchDto.getHomeTeamScore(), matchDto.getAwayTeamScore(), roundDb);
 
         matchRepository.save(match);
+
     }
 
     @Override
@@ -91,44 +96,6 @@ public class MatchServiceImpl implements MatchService {
         });
     }
 
-  public List<Match> generateSchedule(List<Club> clubs, Long headToHead, LocalDateTime startDate, int numberOfRounds) {
-    List<Match> matches = new ArrayList<>();
-    Random random = new Random();
-
-    // Generate matches for each pair of clubs
-    for (int round = 0; round < numberOfRounds; round++) {
-      for (int i = 0; i < clubs.size() - 1; i++) {
-        for (int j = i + 1; j < clubs.size(); j++) {
-          Club homeClub = clubs.get(i);
-          Club awayClub = clubs.get(j);
-
-          // Generate head-to-head matches
-          for (int k = 0; k < headToHead / 2; k++) {
-            Match match = new Match();
-            match.setHomeTeamId(homeClub);
-            match.setAwayTeamId(awayClub);
-
-            // Generate a random number between 0 and 2 representing the number of days to add
-            int randomDays = random.nextInt(3);
-
-            // Add the random number of days to the start date
-            LocalDateTime matchDate = startDate.plusDays(round * 7).plusDays(randomDays);
-            match.setMatchDate(matchDate);
-
-            matches.add(match);
-
-            Match reverseFixture = new Match();
-            reverseFixture.setHomeTeamId(awayClub);
-            reverseFixture.setAwayTeamId(homeClub);
-            reverseFixture.setMatchDate(matchDate); // Use the same match date for reverse fixture
-            matches.add(reverseFixture);
-          }
-        }
-      }
-    }
-
-    return matches;
-  }
 
   @Override
   public void saveMatches(List<Match> matches) {
@@ -178,6 +145,11 @@ public class MatchServiceImpl implements MatchService {
   }
 
 
+    @Override
+    public Page<MatchES> retrieveMatchesByDateAndResult(Date date, Integer homeTeamResult, Integer awayTeamResult, int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return matchRepositoryES.findMatchesByMatchDateAndHomeTeamScoreAndAwayTeamScore(date, homeTeamResult, awayTeamResult, pageable);
+    }
 //    @Override
 //    public void insertMatch(MatchDTO matchDTO) {
 //        Club homeTeam = clubRepository.findById(matchDTO.getHomeTeamId().getId())

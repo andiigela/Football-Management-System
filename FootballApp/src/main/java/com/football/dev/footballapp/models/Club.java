@@ -1,11 +1,13 @@
 package com.football.dev.footballapp.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.Where;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.Set;
 @Entity
 @ToString
 @Where(clause = "is_deleted=false")
+@Document(indexName = "club")
 public class Club extends BaseEntity {
 
     private String name;
@@ -38,10 +41,14 @@ public class Club extends BaseEntity {
 
     @OneToMany(mappedBy = "club",fetch = FetchType.LAZY)
     private List<Contract> contracts ;
-    @OneToMany
-    private List<Match> homematches;
-    @OneToMany
-    private List<Match> awayMatches;
+    @OneToMany(mappedBy = "homeTeamId",fetch = FetchType.LAZY)
+    @JsonBackReference
+    List<Match> homeMatches = new ArrayList();
+
+    @OneToMany(mappedBy = "awayTeamId",fetch=FetchType.LAZY)
+    @JsonBackReference
+    List<Match> awayMatches = new ArrayList();
+
     @OneToMany(mappedBy = "club" , fetch = FetchType.LAZY )
     private List<Standing> standings;
 

@@ -1,12 +1,11 @@
-// profile.component.ts
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from "../../services/auth.service";
 import { DatePipe } from "@angular/common";
 import { ClubDto } from '../../common/club-dto';
-import {ClubService} from "../../services/club.service";
+import { ClubService } from "../../services/club.service";
 
 @Component({
   selector: 'app-profile',
@@ -22,11 +21,11 @@ export class ProfileComponent implements OnInit {
   userRole: string = '';
   clubData: ClubDto | null = null;
 
-
   constructor(
     private userService: UserService,
     private router: Router,
     private formBuilder: FormBuilder,
+    private route: ActivatedRoute,
     public authService: AuthService,
     private clubService: ClubService,
     private datePipe: DatePipe
@@ -39,13 +38,11 @@ export class ProfileComponent implements OnInit {
       country: ['', Validators.required],
       birthDate: ['', Validators.required],
       profile_picture: [''],
-      address: [''],
-      city: [''],
-      postal_code: [''],
+      address: ['', Validators.required],
+      city: ['', Validators.required],
+      postal_code: ['', Validators.required],
       gender: ['', Validators.required],
-
     });
-
   }
 
   genderOptions = [
@@ -54,28 +51,29 @@ export class ProfileComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    const userId: number | null = this.authService.getUserIdFromToken();
+    this.route.paramMap.subscribe(params => {
+      const userId = +params.get('id')!;
 
-    if (userId !== null) {
-      // Fetch user profile
-      this.userService.getUserProfile(userId).subscribe(
-        (data) => {
-          this.userProfile = data;
-          this.loadUserProfile();
-        },
-        (error) => {
-          console.log('Error fetching user profile:', error);
-        }
-      );
+      if (userId) {
+        this.userService.getUserProfile(userId).subscribe(
+          (data) => {
+            this.userProfile = data;
+            this.loadUserProfile();
+          },
+          (error) => {
+            console.log('Error fetching user profile:', error);
+          }
+        );
 
-      // Fetch user role
-      const userRole = this.authService.getRoleFromToken();
-      this.userRole = userRole !== null ? userRole : '';
-
-    } else {
-      console.log('User ID is null');
-    }
+        // Fetch user role
+        const userRole = this.authService.getRoleFromToken();
+        this.userRole = userRole !== null ? userRole : '';
+      } else {
+        console.log('User ID is null');
+      }
+    });
   }
+
   loadUserProfile() {
     if (this.userProfile) {
       const formattedBirthDate = this.datePipe.transform(this.userProfile.birthDate, 'yyyy-MM-dd');
@@ -133,7 +131,6 @@ export class ProfileComponent implements OnInit {
               }
             );
 
-
             this.toggleEditMode();
           },
           (error) => {
@@ -145,8 +142,10 @@ export class ProfileComponent implements OnInit {
       }
     } else {
       console.log('Form is invalid. Please fill all required fields.');
+      this.profileForm.markAllAsTouched();
     }
   }
+
   redirectToClub() {
     this.router.navigate(['/club']);
   }

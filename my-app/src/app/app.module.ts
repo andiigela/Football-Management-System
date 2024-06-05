@@ -37,6 +37,8 @@ import {ContractsListComponent} from "./components/contracts-list/contracts-list
 import {ContractEditComponent} from "./components/contract-edit/contract-edit.component";
 import {AdminLeagueGuard} from "./guards/admin-league.guard";
 import {AdminClubGuard} from "./guards/admin-club.guard";
+import {DatePipe} from "@angular/common";
+
 import {NotificationStatusComponent} from "./components/notification-status/notification-status.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {NotificationsListComponent} from "./components/notifications-list/notifications-list.component";
@@ -45,9 +47,13 @@ import {EditTransferComponent} from "./components/edit-transfer/edit-transfer.co
 import {EditMatchEventComponent} from "./components/edit-match-event/edit-match-event.component";
 import {CreateMatchEventComponent} from "./components/create-match-event/create-match-event.component";
 import {ViewMatchComponent} from "./components/view-match/view-match.component";
+import {HomepageComponent} from "./components/homepage/homepage.component";
+import {NavbarComponent} from "./components/dashboard/navbar/navbar.component";
+
 
 
 const routes : Routes = [
+  { path: '', component: HomepageComponent },
   {path: 'login',component:LoginComponent,canActivate: [AuthGuard]},
   {path: 'register', component:RegisterComponent,canActivate: [AuthGuard]},
   {path: 'profile/:id',component:ProfileComponent,canActivate: [AuthGuard2]},
@@ -112,17 +118,20 @@ const routes : Routes = [
     ContractEditComponent,
     InjuryEditComponent,
     NotificationStatusComponent,
-    NotificationsListComponent
+    NotificationsListComponent,
+    HomepageComponent,
+    NavbarComponent
   ],
-  imports: [
-    RouterModule.forRoot(routes),
-    BrowserModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    FormsModule,
-    NgbPaginationModule,
-      FaIconComponent,
-  ],
+    imports: [
+        RouterModule.forRoot(routes),
+        BrowserModule,
+        HttpClientModule,
+        ReactiveFormsModule,
+        FormsModule,
+        NgbPaginationModule,
+        FaIconComponent,
+
+    ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
@@ -132,7 +141,8 @@ const routes : Routes = [
     AuthGuard,
     AuthGuard2,
     AdminLeagueGuard,
-    AdminClubGuard
+    AdminClubGuard,
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })

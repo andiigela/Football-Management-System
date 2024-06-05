@@ -3,6 +3,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.football.dev.footballapp.dto.PageResponseDto;
 import com.football.dev.footballapp.dto.PlayerDto;
+import com.football.dev.footballapp.dto.SeasonDto;
+import com.football.dev.footballapp.models.ES.PlayerES;
 import com.football.dev.footballapp.dto.PlayerIdDto;
 import com.football.dev.footballapp.dto.PlayerTransferDTO;
 import com.football.dev.footballapp.models.Player;
@@ -22,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.DataInput;
 import java.io.IOException;
 import java.util.Collection;
+
 import java.util.List;
 
 @RestController
@@ -52,9 +55,6 @@ public class PlayersController {
     public ResponseEntity<PageResponseDto<PlayerDto>> getPlayers(@RequestParam(defaultValue = "0") int page,
                                                                  @RequestParam(defaultValue = "10") int size) {
         Page<PlayerDto> playersDtoPage = playerService.retrievePlayers(page,size);
-        Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-        boolean isAdmin = authorities.stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN_CLUB"));
-        log.info("is admin league: " + isAdmin);
         PageResponseDto<PlayerDto> responseDto = new PageResponseDto<>(
                 playersDtoPage.getContent(),
                 playersDtoPage.getNumber(),
@@ -70,8 +70,8 @@ public class PlayersController {
   }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Player> getPlayer(@PathVariable("id") Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(playerService.getPlayer(id));
+    public ResponseEntity<PlayerDto> getPlayer(@PathVariable("id") Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(playerService.getPlayerDto(id));
     }
     @PostMapping("/edit/{id}")
     public ResponseEntity<String> editPlayer(@RequestParam(value = "file",required = false) MultipartFile file,@RequestParam("playerDto") String playerDto,
@@ -92,8 +92,38 @@ public class PlayersController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deletePlayer(@PathVariable("id") Long id){
         playerService.deletePlayer(id);
+        log.info("Player has been deleted: " + id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @GetMapping("/sortedByHeight")
+    public ResponseEntity<Page<PlayerES>> getPlayersSortedByHeight(@RequestParam(defaultValue = "0") int pageNumber,
+                                                                   @RequestParam(defaultValue = "10") int pageSize) {
+        Page<PlayerES> players = playerService.getAllPlayersSortedByHeight(pageNumber, pageSize);
+        return ResponseEntity.status(HttpStatus.OK).body(players);
+    }
+
+    @GetMapping("/sortedByWeight")
+    public ResponseEntity<Page<PlayerES>> getPlayersSortedByWeight(@RequestParam(defaultValue = "0") int pageNumber,
+                                                                   @RequestParam(defaultValue = "10") int pageSize) {
+        Page<PlayerES> players = playerService.getAllPlayersSortedByWeight(pageNumber, pageSize);
+        return ResponseEntity.status(HttpStatus.OK).body(players);
+    }
+
+    @GetMapping("/sortedByHeightDesc")
+    public ResponseEntity<Page<PlayerES>> getPlayersSortedByHeightDesc(@RequestParam(defaultValue = "0") int pageNumber,
+                                                                       @RequestParam(defaultValue = "10") int pageSize) {
+        Page<PlayerES> players = playerService.getAllPlayersSortedByHeightDesc(pageNumber, pageSize);
+        return ResponseEntity.status(HttpStatus.OK).body(players);
+    }
+
+    @GetMapping("/sortedByWeightDesc")
+    public ResponseEntity<Page<PlayerES>> getPlayersSortedByWeightDesc(@RequestParam(defaultValue = "0") int pageNumber,
+                                                                       @RequestParam(defaultValue = "10") int pageSize) {
+        Page<PlayerES> players = playerService.getAllPlayersSortedByWeightDesc(pageNumber, pageSize);
+        return ResponseEntity.status(HttpStatus.OK).body(players);
+    }
+
     @GetMapping("/deleted")
     public ResponseEntity<List<PlayerIdDto>> deletedPlayers(){
         return ResponseEntity.status(HttpStatus.OK).body(playerService.deletedPlayers());

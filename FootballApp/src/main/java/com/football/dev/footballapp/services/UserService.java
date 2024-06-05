@@ -2,6 +2,7 @@ package com.football.dev.footballapp.services;
 
 import com.football.dev.footballapp.dto.UserEntityDto;
 import com.football.dev.footballapp.models.Club;
+import com.football.dev.footballapp.models.ES.UserEntityES;
 import com.football.dev.footballapp.models.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,5 +20,6 @@ public interface UserService {
     void updateUser(Long userId, UserEntityDto updatedUser);
     UserEntity getUserProfile(Long userId);
     Page<UserEntityDto> getUsersByRoleAndIsDeleted(String role, boolean isDeleted, int pageNumber, int pageSize);
+    List<UserEntityES> findUsersByEmailES(String email);
     UserEntity getUserByEmail(String email);
 }

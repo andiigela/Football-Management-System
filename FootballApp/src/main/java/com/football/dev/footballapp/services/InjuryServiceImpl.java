@@ -8,13 +8,9 @@ import com.football.dev.footballapp.repository.jparepository.PlayerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class InjuryServiceImpl implements InjuryService{
@@ -34,13 +30,10 @@ public class InjuryServiceImpl implements InjuryService{
     }
     @Override
     public Page<InjuryDto> retrieveInjuries(Long playerId, int pageNumber, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<Injury> injuryPage = injuryRepository.findInjuriesByPlayerId(playerId, pageable);
-        List<InjuryDto> injuryDtos = injuryPage.getContent()
-                .stream()
-                .map(injuryDtoMapper)
-                .collect(Collectors.toList());
-        return PageableExecutionUtils.getPage(injuryDtos, injuryPage.getPageable(), injuryPage::getTotalPages);
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+        Page<Injury> injuryPage = injuryRepository.findInjuriesByPlayerId(playerId, pageRequest);
+        Page<InjuryDto> injuryDtos = injuryPage.map(injuryDtoMapper);
+        return injuryDtos;
     }
     @Override
     public InjuryDto getInjury(Long injuryId,Long playerId) {

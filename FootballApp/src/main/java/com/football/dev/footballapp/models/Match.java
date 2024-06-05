@@ -1,6 +1,7 @@
 package com.football.dev.footballapp.models;
 
 import com.football.dev.footballapp.models.enums.MatchStatus;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,8 +21,10 @@ public class Match extends BaseEntity {
   @OneToMany(mappedBy = "match", cascade = CascadeType.ALL)
   private List<MatchEvent> matchEvents;
     @ManyToOne(fetch = FetchType.EAGER)
+    @JsonBackReference
     private Club homeTeamId;
     @ManyToOne(fetch = FetchType.EAGER)
+    @JsonBackReference
     private Club awayTeamId;
     private LocalDateTime matchDate;
     @OneToOne

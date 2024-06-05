@@ -1,5 +1,26 @@
 <div class="my-4" *ngIf="isCurrentSeason">
-  <button class="btn btn-primary mx-4" (click)="createRound()">Create Round</button>
+</div>
+
+<div class="my-4" style="padding: 30px;">
+  <h3>Filter by Date</h3>
+  <div class="form-row align-items-center">
+    <div class="col-auto">
+      <label for="startDate">Start Date:</label>
+      <input type="datetime-local" class="form-control" id="startDate" [(ngModel)]="startDate">
+    </div>
+    <div class="col-auto">
+      <label for="endDate">End Date:</label>
+      <input type="datetime-local" class="form-control" id="endDate" [(ngModel)]="endDate">
+    </div>
+    <div class="col-auto">
+      <button (click)="filterRoundsByDateRange()" class="iconButton" title="Filter">
+        <i class="fa fa-filter"></i>
+      </button>
+      <button (click)="clearFilters()" class="iconButton" title="Cancel">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+  </div>
 </div>
 
 <div *ngFor="let round of rounds" class="my-4">
@@ -55,4 +76,3 @@
     (pageChange)="onPageChange($event)">
   </ngb-pagination>
 </div>
-

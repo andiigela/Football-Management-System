@@ -1,50 +1,52 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#" style="margin-left: 20px;">Navbar</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+<nav class="navbar navbar-expand-lg" style="background-color: #003366">
+  <a routerLink="/">
+    <img src="assets/ffj-removebg-preview (1).png"  style="width: 100px;margin-left: 30px" alt="Logo">
+  </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+  <div class="collapse navbar-collapse poppins-regular" id="navbarSupportedContent">
     <ng-container *ngIf="isAdmin() | async">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/dashboard/users">Users</a>
+          <a class="nav-link" routerLink="/dashboard/users" style="color: white">Users</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/league">League</a>
+          <a class="nav-link" routerLink="/league" style="color: white">League</a>
         </li>
-<!--        <li class="nav-item">-->
-<!--          <a class="nav-link" routerLink="/match">Match</a>-->
-<!--        </li>-->
+        <!--        <li class="nav-item">-->
+        <!--          <a class="nav-link" routerLink="/match">Match</a>-->
+        <!--        </li>-->
         <li class="nav-item">
-          <a class="nav-link" routerLink="/transfer">Transfer</a>
+          <a class="nav-link" routerLink="/transfer" style="color: white">Transfer</a>
         </li>
-<!--        <li class="nav-item">-->
-<!--          <a class="nav-link" routerLink="/seasons">Seasons</a>-->
-<!--        </li>-->
+        <!--        <li class="nav-item">-->
+        <!--          <a class="nav-link" routerLink="/seasons">Seasons</a>-->
+        <!--        </li>-->
 
       </ul>
     </ng-container>
     <ng-container *ngIf="isClub() | async">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/club">Your Club</a>
+          <a class="nav-link" routerLink="/club" style="color: white">Your Club</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/players">Players</a>
+          <a class="nav-link" routerLink="/players" style="color: white">Players</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/create-player">Create Player</a>
+          <a class="nav-link" routerLink="/create-player" style="color: white">Create Player</a>
         </li>
       </ul>
     </ng-container>
   </div>
   <div class="notification-container">
     <app-notification-status *ngIf="authService.isAuthenticated | async"></app-notification-status>
-<!--    <span *ngIf="hasNotifications" class="notification-badge">!</span>-->
+    <!--    <span *ngIf="hasNotifications" class="notification-badge">!</span>-->
   </div>
   <ng-container *ngIf="authService.isAuthenticated | async" class="navbar-text" style="margin-right: 20px;">
-    <a *ngIf="authService.isAuthenticated | async" class="nav-link profile-link" [routerLink]="['/profile', userId]">
+    <a *ngIf="authService.isAuthenticated | async" class="nav-link profile-link" style="color: white" [routerLink]="['/profile', userId]">
       Your Profile
     </a>
   </ng-container>

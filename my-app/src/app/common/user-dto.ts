@@ -1,5 +1,5 @@
 export class UserDTO {
-  id: number;
+  dbId: number;
   firstName: string;
   lastName: string;
   email: string;
@@ -16,7 +16,7 @@ export class UserDTO {
   isDeleted: boolean;
 
   constructor(
-    id: number,
+    dbId: number,
     firstName: string,
     lastName: string,
     email: string,
@@ -32,7 +32,7 @@ export class UserDTO {
     gender: string,
     isDeleted: boolean
   ) {
-    this.id = id;
+    this.dbId = dbId;
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;

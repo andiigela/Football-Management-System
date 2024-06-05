@@ -18,7 +18,7 @@ export class CreatePlayerComponent implements OnInit {
   file: File|null = null;
   constructor(private formBuilder: FormBuilder,private playerService: PlayerService,private router: Router) {
     this.playerForm = this.formBuilder.group({
-      name: ['',[Validators.required,Validators.pattern('^[a-zA-Z]+$')]],
+      name: ['',[Validators.required,Validators.pattern('^[a-z A-Z]+$')]],
       height: ['',[Validators.required]],
       weight: ['',[Validators.required]],
       shirtNumber: ['',[Validators.required]],
@@ -41,11 +41,11 @@ export class CreatePlayerComponent implements OnInit {
         formData.position,
         formData.clubId
       );
-      if(this.file?.name != ""){
+
         this.playerService.createPlayer(playerDto,this.file!).subscribe(()=>{
           this.router.navigateByUrl("/dashboard")
         },(err)=>{console.log(err)});
-      }
+
     } else {
       this.playerForm.markAllAsTouched();
     }

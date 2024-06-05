@@ -1,6 +1,9 @@
 package com.football.dev.footballapp.services.impl;
 import com.football.dev.footballapp.dto.ClubDto;
+import com.football.dev.footballapp.dto.NotificationDto;
 import com.football.dev.footballapp.dto.PlayerDto;
+import com.football.dev.footballapp.models.ES.PlayerES;
+import com.football.dev.footballapp.repository.esrepository.PlayerRepositoryES;
 import com.football.dev.footballapp.dto.PlayerIdDto;
 import com.football.dev.footballapp.dto.PlayerTransferDTO;
 import com.football.dev.footballapp.exceptions.UserNotFoundException;
@@ -26,12 +29,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
     private final PlayerRepository playerRepository;
+    private final PlayerRepositoryES playerRepositoryES;
     private final ClubRepository clubRepository;
     private final FileUploadService fileUploadService;
     private final Function<PlayerDto, Player> playerDtoToPlayer;
@@ -42,21 +47,25 @@ public class PlayerServiceImpl implements PlayerService {
     private final AuthenticationHelperService authenticationHelperService;
     private final PlayerTransferDTOmapper playerTransferDTOmapper;
 
-  public PlayerServiceImpl(PlayerRepository playerRepository, ClubRepository clubRepository, FileUploadService fileUploadService, Function<PlayerDto, Player> playerDtoToPlayer, Function<Player, PlayerDto> playerToPlayerDto, SimpMessagingTemplate simpMessagingTemplate, NotificationService notificationService, NotificationRepository notificationRepository, AuthenticationHelperService authenticationHelperService, PlayerTransferDTOmapper playerTransferDTOmapper) {
-    this.playerRepository = playerRepository;
-    this.clubRepository = clubRepository;
-    this.fileUploadService = fileUploadService;
-    this.playerDtoToPlayer = playerDtoToPlayer;
-    this.playerToPlayerDto = playerToPlayerDto;
-    this.simpMessagingTemplate = simpMessagingTemplate;
-    this.notificationService = notificationService;
-    this.notificationRepository = notificationRepository;
-    this.authenticationHelperService = authenticationHelperService;
-    this.playerTransferDTOmapper = playerTransferDTOmapper;
-  }
+    public PlayerServiceImpl(PlayerRepository playerRepository, PlayerRepositoryES playerRepositoryES, ClubRepository clubRepository, FileUploadService fileUploadService, Function<PlayerDto, Player> playerDtoToPlayer, Function<Player, PlayerDto> playerToPlayerDto, SimpMessagingTemplate simpMessagingTemplate, NotificationService notificationService, NotificationRepository notificationRepository, AuthenticationHelperService authenticationHelperService, PlayerTransferDTOmapper playerTransferDTOmapper) {
+        this.playerRepository = playerRepository;
+        this.playerRepositoryES = playerRepositoryES;
+        this.clubRepository = clubRepository;
+        this.fileUploadService = fileUploadService;
+        this.playerDtoToPlayer = playerDtoToPlayer;
+        this.playerToPlayerDto = playerToPlayerDto;
+        this.simpMessagingTemplate = simpMessagingTemplate;
+        this.notificationService = notificationService;
+        this.notificationRepository = notificationRepository;
+        this.authenticationHelperService = authenticationHelperService;
+        this.playerTransferDTOmapper = playerTransferDTOmapper;
+    }
 
-  @Override
-    public void savePlayer(PlayerDto playerDto, MultipartFile file){
+
+
+
+        @Override
+        public void savePlayer(PlayerDto playerDto, MultipartFile file){
         Player player = playerDtoToPlayer.apply(playerDto);
         String fileUpload = fileUploadService.uploadFile(playerDto.getName(),file);
         if(fileUpload == null) throw new RuntimeException("Failed to upload file.");
@@ -66,7 +75,20 @@ public class PlayerServiceImpl implements PlayerService {
         if(clubDb == null) throw new EntityNotFoundException("User is not authenticated.");
         player.setClub(clubDb);
         playerRepository.save(player);
+        String esId = UUID.randomUUID().toString();
+        PlayerES playerES = new PlayerES();
+        playerES.setId(esId);  // Set a unique ID for each document
+        playerES.setDbId(player.getId());
+        playerES.setName(player.getName());
+        playerES.setHeight(player.getHeight());
+        playerES.setWeight(player.getWeight());
+        playerES.setShirtNumber(player.getShirtNumber());
+        playerES.setImagePath(player.getImagePath());
+        playerES.setPosition(player.getPosition().toString());
+        playerES.setPreferred_foot(player.getPreferred_foot().toString());
+        playerRepositoryES.save(playerES);
     }
+
 
     @Override
     public Page<PlayerDto> retrievePlayers(int pageNumber, int pageSize) {
@@ -86,18 +108,25 @@ public class PlayerServiceImpl implements PlayerService {
     return playerRepository.findAll().stream().map(playerTransferDTOmapper).collect(Collectors.toList());
   }
 
-  @Override
+    @Override
+    public PlayerDto getPlayerDto(Long id) {
+        if (id == null || id <= 0) throw new IllegalArgumentException("Player id must be a positive non-zero value");
+        Player player = playerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + id));
+        return playerToPlayerDto.apply(player);
+    }
+
+    @Override
     public Player getPlayer(Long id) {
         if (id == null || id <= 0) throw new IllegalArgumentException("Player id must be a positive non-zero value");
         return playerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + id));
     }
     @Override
-    public void updatePlayer(PlayerDto playerDto, Long id, MultipartFile file) {
+    public void updatePlayer(PlayerDto playerDto, Long dbId, MultipartFile file) {
         if (playerDto == null) {
             return;
         }
-        Player playerDb = playerRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + id));
+        Player playerDb = playerRepository.findById(dbId)
+                .orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + dbId));
         if (file != null && !file.isEmpty()) {
             // A new file is provided, handle file upload
             fileUploadService.deleteFile(playerDb.getImagePath()); // Deleting previous file
@@ -116,23 +145,69 @@ public class PlayerServiceImpl implements PlayerService {
             playerDb.setPreferred_foot(Foot.valueOf(playerDto.getPreferred_foot()));
         }
         playerRepository.save(playerDb);
+        PlayerES existingPlayerES = playerRepositoryES.findByDbId(dbId);
+        existingPlayerES.setName(playerDto.getName());
+        existingPlayerES.setHeight(playerDto.getHeight());
+        existingPlayerES.setWeight(playerDto.getWeight());
+        existingPlayerES.setShirtNumber(playerDto.getShirtNumber());
+        existingPlayerES.setPreferred_foot(Foot.valueOf(playerDto.getPreferred_foot()).toString());
+        playerRepositoryES.save(existingPlayerES);
+
+    }
+  @Override
+  public void deletePlayer(Long id) {
+    Player playerDb = this.getPlayer(id);
+    if(playerDb == null) throw new EntityNotFoundException("Player not found with specified id: " + id);
+    playerDb.isDeleted = true;
+    playerRepository.save(playerDb);
+    PlayerES playerES = playerRepositoryES.findByDbId(id);
+    playerES.setDeleted(true);
+    playerRepositoryES.save(playerES);
+    this.simpMessagingTemplate.convertAndSend(("/topic/playerDeleted/"+playerDb.getInsertUserId()),id);
+  }
+    @Override
+    public void deletePlayerDto(Long id) {
+        PlayerDto playerDto = this.getPlayerDto(id);
+        if (playerDto == null) throw new EntityNotFoundException("Player not found with specified id: " + id);
+        Player playerDb = playerDtoToPlayer.apply(playerDto);
+        playerDb.setIsDeleted(true);
+        playerRepository.save(playerDb);
+        PlayerES playerES = playerRepositoryES.findByDbId(id);
+        playerES.setDeleted(true);
+        playerRepositoryES.save(playerES);
+    }
+    @Override
+    public Page<PlayerES> getAllPlayersSortedByHeight(int pageNumber, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+        return playerRepositoryES.findAllByDeletedFalseOrderByHeightAsc(pageRequest);
     }
 
     @Override
-    public void deletePlayer(Long id) {
-        Player playerDb = this.getPlayer(id);
-        if(playerDb == null) throw new EntityNotFoundException("Player not found with specified id: " + id);
-        playerDb.isDeleted = true;
-        playerRepository.save(playerDb);
+    public Page<PlayerES> getAllPlayersSortedByHeightDesc(int pageNumber, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+        return playerRepositoryES.findAllByDeletedFalseOrderByHeightDesc(pageRequest);
     }
+
+    @Override
+    public Page<PlayerES> getAllPlayersSortedByWeight(int pageNumber, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+        return playerRepositoryES.findAllByDeletedFalseOrderByWeightAsc(pageRequest);
+    }
+
+    @Override
+    public Page<PlayerES> getAllPlayersSortedByWeightDesc(int pageNumber, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+        return playerRepositoryES.findAllByDeletedFalseOrderByWeightDesc(pageRequest);
+    }
+
     @Override
     public void sendDeletePlayerPermission(Long id) {
         Player playerDb = this.getPlayer(id);
         if(playerDb == null) throw new EntityNotFoundException("Player not found with specified id: " + id);
         String message = "Club " + playerDb.getClub().getName()
                 + " needs permission to delete player: " + playerDb.getName() + " with id: " + playerDb.getId();
-        notificationService.createPlayerDeletePermissionNotification(new Notification(id,message));
-        simpMessagingTemplate.convertAndSend("/topic/notifications/askedpermission",message);
+        Notification notification = notificationService.createPlayerDeletePermissionNotification(id,message);
+        simpMessagingTemplate.convertAndSend("/topic/notifications/askedpermission",new NotificationDto(notification.getId(),notification.getPlayerId(),notification.getDescription()));
         UserEntity currentLoggedInUser = this.authenticationHelperService.getUserEntityFromAuthentication();
         PlayerIdDto playerWhoAskedPermission = new PlayerIdDto(playerDb.getId());
         this.simpMessagingTemplate.convertAndSend(("/topic/askedpermission/" + currentLoggedInUser.getId()),playerWhoAskedPermission);

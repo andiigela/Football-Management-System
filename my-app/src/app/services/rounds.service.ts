@@ -38,4 +38,8 @@ export class RoundsService {
   deleteRound(seasonId: number, roundId: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${seasonId}/delete/${roundId}`);
   }
+
+ filterRoundsByDateRange(startDate: string, endDate: string, pageNumber: number, pageSize: number): Observable<PageResponseDto<RoundDto>> {
+    return this.http.get<PageResponseDto<RoundDto>>(`${this.baseUrl}/filter?startDate=${startDate}&endDate=${endDate}&pageNumber=${pageNumber}&pageSize=${pageSize}`);
+  }
 }

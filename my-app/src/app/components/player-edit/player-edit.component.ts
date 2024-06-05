@@ -21,7 +21,7 @@ export class PlayerEditComponent implements OnInit{
   constructor(private playerService: PlayerService,private route: ActivatedRoute,private formBuilder: FormBuilder,
               private router: Router) {
     this.editForm = this.formBuilder.group({
-      name: ['',[Validators.required,Validators.pattern('^[a-zA-Z]+$')]],
+      name: ['',[Validators.required,Validators.pattern('^[a-z A-Z]+$')]],
       height: ['',[Validators.required]],
       weight: ['',[Validators.required]],
       shirtNumber: ['',[Validators.required]],
@@ -32,29 +32,50 @@ export class PlayerEditComponent implements OnInit{
   }
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      const playerId = params["id"]
+      const playerId = +params["id"]; // Make sure playerId is correctly converted to number
+      console.log('Player ID from route params:', playerId); // Debugging log
       this.getPlayer(playerId);
-    })
+    });
   }
+
   updatePlayer(){
     if(this.editForm.valid){
-      const formValue = this.editForm.value
-      let playerEditInfo = new PlayerDto(formValue.name, formValue.height, formValue.weight,
-        formValue.shirtNumber, formValue.preferred_foot, "",formValue.clubId);
-      playerEditInfo.id = this.playerEdit.id;
-      this.playerService.updatePlayer(playerEditInfo,this.file)
-        .subscribe(()=>{
-          this.router.navigate(["/players"])
+      const formValue = this.editForm.value;
+      let playerEditInfo = new PlayerDto(
+        formValue.name,
+        formValue.height,
+        formValue.weight,
+        formValue.shirtNumber,
+        formValue.preferred_foot,
+        formValue.position,
+        0
+      );
+      playerEditInfo.dbId = this.playerEdit.dbId;
+      console.log('playerEditInfo before update:', playerEditInfo); // Debugging log
+
+      this.playerService.updatePlayer(playerEditInfo, this.file)
+        .subscribe(() => {
+          this.router.navigate(["/players"]);
         });
     } else {
       this.editForm.markAllAsTouched();
     }
-
   }
-  getPlayer(playerId: number){
-    this.playerService.retrievePlayer(playerId).subscribe((player)=>{
-      this.playerEdit = new PlayerDto(player.name,player.height,player.weight,player.shirtNumber,player.preferred_foot,"",0);
-      this.playerEdit.id=player.id
+
+  getPlayer(playerId: number) {
+    this.playerService.retrievePlayer(playerId).subscribe((player) => {
+      this.playerEdit = new PlayerDto(
+        player.name,
+        player.height,
+        player.weight,
+        player.shirtNumber,
+        player.preferred_foot,
+        "",
+        0
+      );
+      this.playerEdit.dbId = player.dbId; // Ensure this is correctly set
+      console.log('Retrieved player dbId:', player.dbId); // Debugging log
+      console.log('Player retrieved:', player);
       this.getEditPlayerImageUrl(player.imagePath);
       this.editForm.patchValue({
         name: player.name,
@@ -64,8 +85,9 @@ export class PlayerEditComponent implements OnInit{
         preferred_foot: player.preferred_foot,
         position: 'GOALKEEPER'
       });
-    })
+    });
   }
+
   getEditPlayerImageUrl(imagePath: string){
     this.playerService.getImageUrl(imagePath).subscribe((blob: Blob) => {
       const imageUrl = URL.createObjectURL(blob);

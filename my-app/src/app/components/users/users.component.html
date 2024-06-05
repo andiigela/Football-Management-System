@@ -1,5 +1,13 @@
 <div class="container">
   <h2>Users</h2>
+  <div class="col-md-4 offset-md-4">
+    <div class="input-group">
+      <input type="text" class="form-control" placeholder="Search users..." [(ngModel)]="searchQuery">
+      <div class="input-group-append">
+        <button class="btn btn-primary" type="button" (click)="searchUsers()">Search</button>
+      </div>
+    </div>
+  </div>
   <table class="table">
     <thead>
     <tr>
@@ -11,21 +19,20 @@
     </thead>
     <tbody>
     <tr *ngFor="let user of users">
-      <td>{{ user.id }}</td>
+      <td>{{ user.dbId }}</td>
       <td>{{ user.email }}</td>
       <td>{{ user.enabled ? 'Enabled' : 'Disabled' }}</td>
       <td>
-        <button class="btn btn-primary" (click)="updateUserStatus(user.id, !user.enabled)">
+        <button class="btn btn-primary" (click)="updateUserStatus(user.dbId, !user.enabled)">
           {{ user.enabled ? 'Disable' : 'Enable' }}
         </button>
-        <button class="btn btn-danger" (click)="deleteUser(user.id)">Delete</button>
+        <button class="btn btn-danger" (click)="deleteUser(user.dbId)">Delete</button>
       </td>
     </tr>
     </tbody>
   </table>
 </div>
-<div class="d-flex justify-content-center">
-  <!-- Pagination -->
+<div class="d-flex justify-content-center" *ngIf="searchQuery.trim() === ''">
   <ngb-pagination
           [collectionSize]="totalElements"
           [(page)]="pageNumber"
