@@ -24,7 +24,8 @@ public class MatchDTOMapper implements Function<Match, MatchDTO> {
 //                match.getStadium(),
                 match.getResult(),
                 match.getHomeTeamScore(),
-                match.getAwayTeamScore()
+                match.getAwayTeamScore(),
+          match.getMatchStatus()
         );
     }
 }

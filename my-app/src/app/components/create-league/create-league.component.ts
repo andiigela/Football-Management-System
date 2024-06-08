@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { LeagueDto } from "../../common/league-dto";
-import { LeagueService } from "../../services/league.service";
-import { Router } from "@angular/router";
+import {LeagueDto} from "../../common/league-dto";
+import {LeagueService} from "../../services/league.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-create-league',
@@ -9,26 +9,30 @@ import { Router } from "@angular/router";
   styleUrls: ['./create-league.component.css']
 })
 export class CreateLeagueComponent {
-  newLeague: LeagueDto = new LeagueDto(0, '', new Date(), new Date(), ''); // Assuming LeagueDto is defined
-  endDateError: string = '';
+  selectedFile: File|null = null;
+  newLeague: LeagueDto = new LeagueDto(0, '', 0,'', ''); // Assuming LeagueDto is defined
 
   constructor(private leagueService: LeagueService, private router: Router) {}
 
   createLeague(): void {
-    if (this.newLeague.endDate < this.newLeague.startDate) {
-      this.endDateError = 'End date cannot be before start date';
-      return;
-    }
-
-    this.leagueService.createLeague(this.newLeague).subscribe(() => {
+    console.log(this.selectedFile,this.newLeague)
+    this.leagueService.createLeague(this.newLeague,this.selectedFile!).subscribe(() => {
       // Handle success
       alert('League created successfully!');
       // Clear the form fields after successful creation
-      this.newLeague = new LeagueDto(0, '', new Date(), new Date(), '');
+      this.newLeague = new LeagueDto(0, '', 0,'', '');
       this.router.navigate(['/league']);
     }, error => {
       // Handle error
       alert('Failed to create league. Please try again.');
+
     });
   }
+
+
+  onFileChange(event: any) {
+    this.selectedFile=event.target.files[0];
+  }
+
+
 }

@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -18,7 +20,10 @@ public class SeasonDto {
     private Long id;
     private String name;
     private boolean currentSeason;
-    private boolean isDeleted;
+    private LocalDateTime start_date;
+    private LocalDateTime end_date;
+    private Integer headToHead;
+    private Integer numberOfStandings;
 //    private LeagueDTO league;
 
     public SeasonDto(Long id, String name, boolean currentSeason) {

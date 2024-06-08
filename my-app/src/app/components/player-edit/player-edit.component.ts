@@ -13,7 +13,7 @@ import {ImageFileValidator} from "../../validators/image-file-validator";
   styleUrls: ['./player-edit.component.css']
 })
 export class PlayerEditComponent implements OnInit{
-  playerEdit: PlayerDto = new PlayerDto("",0,0,0,"","");
+  playerEdit: PlayerDto = new PlayerDto("",0,0,0,"","",0);
   editForm: FormGroup;
   footOptions = Object.values(Foot);
   positionOptions = Object.values(FootballPosition);
@@ -30,63 +30,65 @@ export class PlayerEditComponent implements OnInit{
       file: [null,[ImageFileValidator.invalidImageType]]
     })
   }
-    ngOnInit(): void {
-        this.route.params.subscribe(params => {
-            const playerId = +params["id"]; // Make sure playerId is correctly converted to number
-            console.log('Player ID from route params:', playerId); // Debugging log
-            this.getPlayer(playerId);
+  ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      const playerId = +params["id"]; // Make sure playerId is correctly converted to number
+      console.log('Player ID from route params:', playerId); // Debugging log
+      this.getPlayer(playerId);
+    });
+  }
+
+  updatePlayer(){
+    if(this.editForm.valid){
+      const formValue = this.editForm.value;
+      let playerEditInfo = new PlayerDto(
+        formValue.name,
+        formValue.height,
+        formValue.weight,
+        formValue.shirtNumber,
+        formValue.preferred_foot,
+        formValue.position,
+        0
+      );
+      playerEditInfo.dbId = this.playerEdit.dbId;
+      console.log('playerEditInfo before update:', playerEditInfo); // Debugging log
+
+      this.playerService.updatePlayer(playerEditInfo, this.file)
+        .subscribe(() => {
+          this.router.navigate(["/players"]);
         });
+    } else {
+      this.editForm.markAllAsTouched();
     }
+  }
 
-    updatePlayer(){
-        if(this.editForm.valid){
-            const formValue = this.editForm.value;
-            let playerEditInfo = new PlayerDto(
-                formValue.name,
-                formValue.height,
-                formValue.weight,
-                formValue.shirtNumber,
-                formValue.preferred_foot,
-                ""
-            );
-            playerEditInfo.dbId = this.playerEdit.dbId;
-            console.log('playerEditInfo before update:', playerEditInfo); // Debugging log
+  getPlayer(playerId: number) {
+    this.playerService.retrievePlayer(playerId).subscribe((player) => {
+      this.playerEdit = new PlayerDto(
+        player.name,
+        player.height,
+        player.weight,
+        player.shirtNumber,
+        player.preferred_foot,
+        "",
+        0
+      );
+      this.playerEdit.dbId = player.dbId; // Ensure this is correctly set
+      console.log('Retrieved player dbId:', player.dbId); // Debugging log
+      console.log('Player retrieved:', player);
+      this.getEditPlayerImageUrl(player.imagePath);
+      this.editForm.patchValue({
+        name: player.name,
+        height: player.height,
+        weight: player.weight,
+        shirtNumber: player.shirtNumber,
+        preferred_foot: player.preferred_foot,
+        position: 'GOALKEEPER'
+      });
+    });
+  }
 
-            this.playerService.updatePlayer(playerEditInfo, this.file)
-                .subscribe(() => {
-                    this.router.navigate(["/players"]);
-                });
-        } else {
-            this.editForm.markAllAsTouched();
-        }
-    }
-
-    getPlayer(playerId: number) {
-        this.playerService.retrievePlayer(playerId).subscribe((player) => {
-            this.playerEdit = new PlayerDto(
-                player.name,
-                player.height,
-                player.weight,
-                player.shirtNumber,
-                player.preferred_foot,
-                ""
-            );
-            this.playerEdit.dbId = player.dbId; // Ensure this is correctly set
-            console.log('Retrieved player dbId:', player.dbId); // Debugging log
-            console.log('Player retrieved:', player);
-            this.getEditPlayerImageUrl(player.imagePath);
-            this.editForm.patchValue({
-                name: player.name,
-                height: player.height,
-                weight: player.weight,
-                shirtNumber: player.shirtNumber,
-                preferred_foot: player.preferred_foot,
-                position: 'GOALKEEPER'
-            });
-        });
-    }
-
-    getEditPlayerImageUrl(imagePath: string){
+  getEditPlayerImageUrl(imagePath: string){
     this.playerService.getImageUrl(imagePath).subscribe((blob: Blob) => {
       const imageUrl = URL.createObjectURL(blob);
       this.playerEdit.imagePath = imageUrl;

@@ -1,27 +1,28 @@
-<div class="container">
-  <h2>Create New League</h2>
-  <form (submit)="createLeague()" #leagueForm="ngForm">
-    <div class="form-group">
-      <label for="newName">Name:</label>
-      <input type="text" id="newName" name="newName" [(ngModel)]="newLeague.name" class="form-control" required>
-      <div *ngIf="leagueForm.submitted && leagueForm.controls['newName'].errors?.['required']" style="color: red;">Name is required</div>
-    </div>
-    <div class="form-group">
-      <label for="newStartDate">Start Date:</label>
-      <input type="date" id="newStartDate" name="newStartDate" [(ngModel)]="newLeague.startDate" class="form-control" required>
-      <div *ngIf="leagueForm.submitted && leagueForm.controls['newStartDate'].errors?.['required']" style="color: red;">Start Date is required</div>
-    </div>
-    <div class="form-group">
-      <label for="newEndDate">End Date:</label>
-      <input type="date" id="newEndDate" name="newEndDate" [(ngModel)]="newLeague.endDate" class="form-control" required>
-      <div *ngIf="leagueForm.submitted && leagueForm.controls['newEndDate'].errors?.['required']" style="color: red;">End Date is required</div>
-      <div *ngIf="endDateError" style="color: red;">{{ endDateError }}</div>
-    </div>
-    <div class="form-group">
-      <label for="newDescription">Description:</label>
-      <textarea id="newDescription" name="newDescription" [(ngModel)]="newLeague.description" class="form-control" required></textarea>
-      <div *ngIf="leagueForm.submitted && leagueForm.controls['newDescription'].errors?.['required']" style="color: red;">Description is required</div>
-    </div>
-    <button type="submit" class="btn btn-primary" [disabled]="leagueForm.invalid">Create</button>
-  </form>
+<div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
+    <h2 class="text-2xl font-bold mb-6 text-green-600">Create New League</h2>
+    <form (submit)="createLeague()" class="space-y-6">
+      <div class="form-group">
+        <label for="newName" class="block text-gray-700 font-medium mb-2">Name:</label>
+        <input type="text" id="newName" name="newName" [(ngModel)]="newLeague.name" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-light-blue-500" required>
+      </div>
+      <div class="form-group">
+        <label for="newStartDate" class="block text-gray-700 font-medium mb-2">Founded</label>
+        <input type="number" id="newStartDate" name="newStartDate" [(ngModel)]="newLeague.founded" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-light-blue-500" required>
+      </div>
+      <div class="form-group">
+        <label for="newDescription" class="block text-gray-700 font-medium mb-2">Description:</label>
+        <textarea id="newDescription" name="newDescription" [(ngModel)]="newLeague.description" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-light-blue-500" required></textarea>
+      </div>
+      <div class="form-group">
+        <div class="container-row">
+          <div class="col-md-6">
+            <input type="file" (change)="onFileChange($event)">
+          </div>
+        </div>
+
+      </div>
+      <button type="submit" class="bg-green-600 text-white rounded-lg px-4 py-2 hover:bg-green-700">Create</button>
+    </form>
+  </div>
 </div>

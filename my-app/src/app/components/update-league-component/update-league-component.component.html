@@ -1,34 +1,29 @@
-<div class="container">
-  <h2>Update League</h2>
-  <form (ngSubmit)="updateLeague()" #leagueForm="ngForm" novalidate>
-    <div class="form-group">
-      <label for="name">Name:</label>
-      <input type="text" id="name" name="name" [(ngModel)]="league.name" class="form-control" required>
-      <div *ngIf="leagueForm.controls['name'].invalid && (leagueForm.controls['name'].dirty || leagueForm.controls['name'].touched)" class="text-danger">
-        Name is required.
+<div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
+    <h2 class="text-2xl font-bold mb-6 text-green-600">Update League</h2>
+    <form (submit)="updateLeague()" class="space-y-6">
+      <div class="form-group">
+        <label for="name" class="block text-gray-700 font-medium mb-2">Name:</label>
+        <input type="text" id="name" name="name" [(ngModel)]="league.name" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-light-blue-500" required>
       </div>
-    </div>
-    <div class="form-group">
-      <label for="startDate">Start Date:</label>
-      <input type="date" id="startDate" name="startDate" [ngModel]="league.startDate | date:'yyyy-MM-dd'" (ngModelChange)="league.startDate=$event" class="form-control" required>
-      <div *ngIf="leagueForm.controls['startDate'].invalid && (leagueForm.controls['startDate'].dirty || leagueForm.controls['startDate'].touched)" class="text-danger">
-        Start Date is required.
+      <div class="form-group">
+        <label for="startDate" class="block text-gray-700 font-medium mb-2">Founded</label>
+        <input type="number" id="startDate" name="startDate" [(ngModel)]="league.founded" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-light-blue-500" required>
       </div>
-    </div>
-    <div class="form-group">
-      <label for="endDate">End Date:</label>
-      <input type="date" id="endDate" name="endDate" [ngModel]="league.endDate | date:'yyyy-MM-dd'" (ngModelChange)="league.endDate=$event" class="form-control" required>
-      <div *ngIf="leagueForm.controls['endDate'].invalid && (leagueForm.controls['endDate'].dirty || leagueForm.controls['endDate'].touched)" class="text-danger">
-        End Date is required.
+      <div class="form-group" >
+        <label for="image" class="block text-gray-700 font-medium mb-2">Current Image:</label>
+        <!-- Display current image -->
+        <div class="d-flex align-items-center">
+          <img [src]="league.picture" alt="Player Photo" class="img-thumbnail rounded-circle mr-3" style="width: 50px; height: 50px; object-fit: cover;">
+        </div>
+        <!-- File input for new image -->
+        <input type="file" id="image" name="image" accept="image/*" (change)="onFileChange($event)"  class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-light-blue-500">
       </div>
-    </div>
-    <div class="form-group">
-      <label for="description">Description:</label>
-      <textarea id="description" name="description" [(ngModel)]="league.description" class="form-control" required></textarea>
-      <div *ngIf="leagueForm.controls['description'].invalid && (leagueForm.controls['description'].dirty || leagueForm.controls['description'].touched)" class="text-danger">
-        Description is required.
+      <div class="form-group">
+        <label for="description" class="block text-gray-700 font-medium mb-2">Description:</label>
+        <textarea id="description" name="description" [(ngModel)]="league.description" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-light-blue-500" required></textarea>
       </div>
-    </div>
-    <button type="submit" [disabled]="leagueForm.invalid" class="btn btn-primary">Update</button>
-  </form>
+      <button type="submit" class="bg-green-600 text-white rounded-lg px-4 py-2 hover:bg-green-700">Update</button>
+    </form>
+  </div>
 </div>

@@ -20,18 +20,21 @@ import java.util.List;
 @Getter
 @Setter
 public class Round extends BaseEntity{
-    private LocalDateTime start_date;
-    private LocalDateTime end_date;
+  public String name;
+
+     private LocalDateTime start_date;
+      private LocalDateTime end_date;
 
     @ManyToOne
     @JoinColumn(name = "season_id")
     private Season season;
 
-    @OneToMany(mappedBy = "round")
-    @JsonIgnore
-    private List<Match> matches= new ArrayList<>();
+   @OneToMany(mappedBy = "round")
+   private List<Match> matches;
 
-    public Round(LocalDateTime start_date, LocalDateTime end_date, Season season){
+
+
+  public Round(LocalDateTime start_date, LocalDateTime end_date, Season season){
         this.start_date = start_date;
         this.end_date = end_date;
         this.season = season;

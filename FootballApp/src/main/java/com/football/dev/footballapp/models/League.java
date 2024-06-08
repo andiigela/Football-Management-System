@@ -27,18 +27,17 @@ import java.util.List;
 
 public class League extends BaseEntity{
     private String name;
-    private Date start_date;
-    private Date end_date;
+    private Integer founded;
     private String description;
-    @OneToMany(mappedBy = "league")
-//    @JsonManagedReference
-    private List<Season> seasons = new ArrayList<>();
-
-    public League(String name, Date start_date, Date end_date, String description){
-
-        this.name = name;
-        this.start_date = start_date;
-        this.end_date = end_date;
-        this.description = description;
+    private String picture;
+    public League(String name,Integer founded,String description,String picture){
+      this.name =name;
+      this.founded =founded;
+      this.description =description;
+      this.picture =picture;
     }
+
+     @OneToMany(mappedBy = "league")
+    public List<Season> seasonList;
+
 }

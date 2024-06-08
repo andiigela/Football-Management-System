@@ -5,8 +5,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {PlayerDto} from "../../common/player-dto";
 import {PlayerService} from "../../services/player.service";
 import {Route, Router} from "@angular/router";
-import {RegisterDto} from "../../common/register-dto";
-import {ImageFileValidator} from "../../validators/image-file-validator";
 
 @Component({
   selector: 'app-create-player',
@@ -40,7 +38,8 @@ export class CreatePlayerComponent implements OnInit {
         formData.weight,
         formData.shirtNumber,
         formData.preferred_foot,
-        formData.position
+        formData.position,
+        formData.clubId
       );
 
         this.playerService.createPlayer(playerDto,this.file!).subscribe(()=>{

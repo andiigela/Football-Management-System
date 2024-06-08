@@ -6,6 +6,7 @@ import com.football.dev.footballapp.dto.PlayerDto;
 import com.football.dev.footballapp.dto.SeasonDto;
 import com.football.dev.footballapp.models.ES.PlayerES;
 import com.football.dev.footballapp.dto.PlayerIdDto;
+import com.football.dev.footballapp.dto.PlayerTransferDTO;
 import com.football.dev.footballapp.models.Player;
 import com.football.dev.footballapp.services.FileUploadService;
 import com.football.dev.footballapp.services.PlayerService;
@@ -41,7 +42,7 @@ public class PlayersController {
 
     @PostMapping("/create")
     public ResponseEntity<PlayerDto> createPlayer(@RequestParam("file") MultipartFile file,
-                                                  @RequestParam("playerDto") String playerDto) {
+                                                  @RequestParam("") String playerDto) {
         try {
             PlayerDto playerDtoMapped = objectMapper.readValue(playerDto,PlayerDto.class);
             playerService.savePlayer(playerDtoMapped,file);
@@ -62,6 +63,12 @@ public class PlayersController {
         );
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
+
+   @GetMapping("")
+  public List<PlayerTransferDTO> getPlayers() {
+    return playerService.getAllPlayers();
+  }
+
     @GetMapping("/{id}")
     public ResponseEntity<PlayerDto> getPlayer(@PathVariable("id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(playerService.getPlayerDto(id));
@@ -125,5 +132,8 @@ public class PlayersController {
     public ResponseEntity<List<PlayerIdDto>> getPlayerIdsOfCurrentUserAskedPermission(){
         return ResponseEntity.status(HttpStatus.OK).body(playerService.getPlayerIdsWhoAskedPermissionFromCurrentUser());
     }
-
+    @GetMapping("/club/{club_id}")
+    public ResponseEntity<List<PlayerDto>> getPlayersByTeam(@PathVariable Long club_id){
+      return ResponseEntity.status(HttpStatus.OK).body(playerService.getPlayersOfATeam(club_id));
+    }
 }

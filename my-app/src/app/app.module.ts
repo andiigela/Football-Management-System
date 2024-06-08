@@ -42,6 +42,11 @@ import {DatePipe} from "@angular/common";
 import {NotificationStatusComponent} from "./components/notification-status/notification-status.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {NotificationsListComponent} from "./components/notifications-list/notifications-list.component";
+import {MakeTransferComponent} from "./components/make-transfer/make-transfer.component";
+import {EditTransferComponent} from "./components/edit-transfer/edit-transfer.component";
+import {EditMatchEventComponent} from "./components/edit-match-event/edit-match-event.component";
+import {CreateMatchEventComponent} from "./components/create-match-event/create-match-event.component";
+import {ViewMatchComponent} from "./components/view-match/view-match.component";
 import {HomepageComponent} from "./components/homepage/homepage.component";
 import {NavbarComponent} from "./components/dashboard/navbar/navbar.component";
 
@@ -65,7 +70,7 @@ const routes : Routes = [
   {path: 'league',component:LeagueComponent,canActivate:[AuthGuard2,AdminLeagueGuard]},
   {path: 'create-league',component:CreateLeagueComponent,canActivate:[AuthGuard2]},
   {path : 'match',component:MatchComponent,canActivate:[AuthGuard2,AdminLeagueGuard]},
-  {path: 'transfer',component:TransferComponent,canActivate:[AuthGuard2,AdminLeagueGuard]},
+  {path: 'transfers',component:TransferComponent,canActivate:[AuthGuard2,AdminLeagueGuard]},
   {path: 'update-league/:id', component:UpdateLeagueComponent ,canActivate:[AdminLeagueGuard]},
   {path: 'league/:leagueId/seasons/:seasonId/rounds', component: RoundsComponent },
   {path: 'league/:leagueId/seasons/:seasonId/create-round', component: CreateRoundComponent },
@@ -76,6 +81,12 @@ const routes : Routes = [
   {path: 'players/:id/contracts',component:ContractsListComponent,canActivate: [AdminClubGuard]},
   {path: 'players/:id/contracts/create',component:CreateContractComponent,canActivate: [AdminClubGuard]},
   {path: 'players/:id/contracts/:contractId/edit',component:ContractEditComponent,canActivate: [AdminClubGuard]},
+  {path: 'make-transfer',component:MakeTransferComponent},
+  {path: 'transfer/:id', component:EditTransferComponent},
+  {path: 'league/:leagueId/seasons/:seasonId/rounds/:roundId/match/:matchId/edit-match-event/:matchEventId', component:EditMatchEventComponent},
+  {path: 'league/:leagueId/seasons/:seasonId/rounds/:roundId/match/:matchId/create', component:CreateMatchEventComponent},
+  {path: 'league/:leagueId/seasons/:seasonId/rounds/:roundId/match/:matchId', component:ViewMatchComponent},
+
 ]
 @NgModule({
   declarations: [

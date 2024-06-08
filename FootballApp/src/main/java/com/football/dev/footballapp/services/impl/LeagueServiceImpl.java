@@ -3,74 +3,68 @@ package com.football.dev.footballapp.services.impl;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
-import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.football.dev.footballapp.dto.LeagueDTO;
-import com.football.dev.footballapp.dto.SeasonDto;
 import com.football.dev.footballapp.exceptions.ResourceNotFoundException;
 import com.football.dev.footballapp.mapper.LeagueDTOMapper;
+import com.football.dev.footballapp.mapper.SeasonDtoMapper;
 import com.football.dev.footballapp.models.ES.LeagueES;
 import com.football.dev.footballapp.models.League;
-import com.football.dev.footballapp.models.Season;
 import com.football.dev.footballapp.repository.esrepository.LeagueRepositoryES;
 import com.football.dev.footballapp.repository.jparepository.LeagueRepository;
 import com.football.dev.footballapp.repository.jparepository.SeasonRepository;
 import com.football.dev.footballapp.services.LeagueService;
+import jakarta.persistence.EntityNotFoundException;
 import com.football.dev.footballapp.util.ElasticSearchUtil;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 @Service
 public class LeagueServiceImpl implements LeagueService {
     private final LeagueRepository leagueRepository;
     private final SeasonRepository seasonRepository;
+    private final SeasonDtoMapper seasonDtoMapper;
+    private final FileUploadServiceImpl fileUploadService;
+
     private final LeagueRepositoryES leagueRepositoryES;
     private final LeagueDTOMapper leagueDTOMapper;
-    private ElasticsearchClient elasticsearchClient;
-    private static final Logger logger = LoggerFactory.getLogger(LeagueService.class);
-    public LeagueServiceImpl(LeagueRepository leagueRepository,
-                             SeasonRepository seasonRepository,
-                             LeagueRepositoryES leagueRepositoryES,
-                             LeagueDTOMapper leagueDTOMapper,
-                             ElasticsearchClient elasticsearchClient) {
+    private final ElasticsearchClient elasticsearchClient;
+
+    public LeagueServiceImpl(LeagueRepository leagueRepository, SeasonRepository seasonRepository, SeasonDtoMapper seasonDtoMapper, FileUploadServiceImpl fileUploadService, LeagueRepositoryES leagueRepositoryES, LeagueDTOMapper leagueDTOMapper, ElasticsearchClient elasticsearchClient) {
         this.leagueRepository = leagueRepository;
         this.seasonRepository = seasonRepository;
+        this.seasonDtoMapper = seasonDtoMapper;
+        this.fileUploadService = fileUploadService;
         this.leagueRepositoryES = leagueRepositoryES;
         this.leagueDTOMapper = leagueDTOMapper;
         this.elasticsearchClient = elasticsearchClient;
     }
+  private static final Logger logger = LoggerFactory.getLogger(LeagueService.class);
 
     @Override
     public void insertLeague(LeagueDTO leagueDTO) {
-        // Create and save the League entity to PostgreSQL
-        League league = new League(leagueDTO.getName(),
-                leagueDTO.getStartDate(), leagueDTO.getEndDate(),
-                leagueDTO.getDescription());
-        League savedLeague = leagueRepository.save(league);
+
+        League league = leagueRepository.save(new League(leagueDTO.getName(),leagueDTO.getFounded(),leagueDTO.getDescription(),leagueDTO.getPicture()));
 
         // Generate a unique ID for the Elasticsearch document
         String esId = UUID.randomUUID().toString();
 
         LeagueES leagueES = new LeagueES();
         leagueES.setId(esId);  // Set a unique ID for each document
-        leagueES.setDbId(savedLeague.getId());
-        leagueES.setName(savedLeague.getName());
-        leagueES.setStartDate(savedLeague.getStart_date());
-        leagueES.setEndDate(savedLeague.getEnd_date());
-        leagueES.setDescription(savedLeague.getDescription());
+        leagueES.setDbId(league.getId());
+        leagueES.setName(league.getName());
+        leagueES.setDescription(league.getDescription());
         leagueES.setDeleted(false);
         leagueRepositoryES.save(leagueES);
     }
@@ -122,18 +116,17 @@ public class LeagueServiceImpl implements LeagueService {
 
     @Override
     public void updateLeague(Long id, LeagueDTO leagueDTO) {
-        leagueRepository.findById(id).ifPresent(dbLeague -> {
+
+        leagueRepository.findById(id).ifPresent(dbLeague->{
             dbLeague.setName(leagueDTO.getName());
-            dbLeague.setStart_date(leagueDTO.getStartDate());
-            dbLeague.setEnd_date(leagueDTO.getEndDate());
+            dbLeague.setFounded(leagueDTO.getFounded());
             dbLeague.setDescription(leagueDTO.getDescription());
-            leagueRepository.save(dbLeague);
+            dbLeague.setPicture(dbLeague.getPicture());
+
 
             LeagueES existingLeagueES = leagueRepositoryES.findByDbId(id);
             if (existingLeagueES != null) {
                 existingLeagueES.setName(leagueDTO.getName());
-                existingLeagueES.setStartDate(leagueDTO.getStartDate());
-                existingLeagueES.setEndDate(leagueDTO.getEndDate());
                 existingLeagueES.setDescription(leagueDTO.getDescription());
                 leagueRepositoryES.save(existingLeagueES);
             } else {
@@ -141,8 +134,6 @@ public class LeagueServiceImpl implements LeagueService {
                 newLeagueES.setId(leagueDTO.getIdEs());
                 newLeagueES.setDbId(dbLeague.getId());
                 newLeagueES.setName(leagueDTO.getName());
-                newLeagueES.setStartDate(leagueDTO.getStartDate());
-                newLeagueES.setEndDate(leagueDTO.getEndDate());
                 newLeagueES.setDescription(leagueDTO.getDescription());
                 newLeagueES.setDeleted(false);
                 leagueRepositoryES.save(newLeagueES);
@@ -151,29 +142,58 @@ public class LeagueServiceImpl implements LeagueService {
     }
 
 
-    @Override
-    public void createSeasonForLeague(Long leagueId, SeasonDto seasonDto) throws ResourceNotFoundException {
-        League league = leagueRepository.findById(leagueId)
-                .orElseThrow(() -> new ResourceNotFoundException("League not found with id: " + leagueId));
-        Season season = new Season();
-        season.setName(seasonDto.getName());
-        season.setLeague(league);
-        seasonRepository.save(season);
-        league.getSeasons().add(season);
-        leagueRepository.save(league);
-    }
+//    @Override
+//    public void createSeasonForLeague(Long leagueId, SeasonDto seasonDto) throws ResourceNotFoundException {
+//        League league = leagueRepository.findById(leagueId)
+//                .orElseThrow(() -> new ResourceNotFoundException("League not found with id: " + leagueId));
+//        Season season = new Season();
+//        season.setName(seasonDto.getName());
+//        season.setLeague(league);
+//        seasonRepository.save(season);
+//        league.getSeasons().add(season);
+//        leagueRepository.save(league);
+//    }
 
-    @Override
-    public List<SeasonDto> getSeasonsForLeague(Long leagueId) throws ResourceNotFoundException {
-        League league = leagueRepository.findById(leagueId)
-                .orElseThrow(() -> new ResourceNotFoundException("League not found with id: " + leagueId));
-        List<Season> seasons = league.getSeasons();
-        return seasons.stream()
-                .map(season -> new SeasonDto(season.getName()))
-                .collect(Collectors.toList());
-    }
+//    @Override
+//    public List<SeasonDto> getSeasonsForLeague(Long leagueId) throws ResourceNotFoundException {
+//        League league = leagueRepository.findById(leagueId)
+//                .orElseThrow(() -> new ResourceNotFoundException("League not found with id: " + leagueId));
+//
+//      return null;
+//    }
 
-//ES
+  @Override
+  public void insertLeague(MultipartFile file, LeagueDTO leagueDTO1) {
+    League league = new League(leagueDTO1.getName(),leagueDTO1.getFounded(),leagueDTO1.getDescription(),leagueDTO1.getPicture());
+    String picturePath = fileUploadService.uploadFile(leagueDTO1.getName(), file);
+    if(picturePath == null) throw new RuntimeException("Failed to upload file.");
+    league.setPicture(picturePath);
+    leagueRepository.save(league);
+  }
+
+  @Override
+  public void updateLeague(LeagueDTO leagueDtoMapper, Long id, MultipartFile file) {
+    if(leagueDtoMapper == null){
+      return;
+    }
+    League league = leagueRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("League not found with id: " + id));
+
+    if (file != null && !file.isEmpty()){
+      fileUploadService.deleteFile(league.getPicture());
+      String fileUpload = fileUploadService.uploadFile(leagueDtoMapper.getName(), file);
+      if (fileUpload==null){
+        throw new RuntimeException("Failed to upload file.");
+      }
+      league.setPicture(fileUpload);
+
+    }
+    league.setFounded(leagueDtoMapper.getFounded());
+    league.setDescription(leagueDtoMapper.getDescription());
+    league.setName(leagueDtoMapper.getName());
+
+    leagueRepository.save(league);
+  }
+
     @Override
     public SearchResponse<Map> matchAllServices() throws IOException {
         Supplier<Query> supplier  = ElasticSearchUtil.supplier();

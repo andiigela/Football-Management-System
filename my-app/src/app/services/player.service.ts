@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {PlayerDto} from "../common/player-dto";
 import {PageResponseDto} from "../common/page-response-dto";
+
 @Injectable({
   providedIn: 'root'
 })
@@ -10,10 +11,9 @@ export class PlayerService {
   playerUrl: string = "http://localhost:8080/api/players"
   constructor(private http: HttpClient) { }
   private getHeaders(): HttpHeaders {
-    const headers = new HttpHeaders({
+    return new HttpHeaders({
       'Authorization': `Bearer ${localStorage.getItem("accessToken")}`
-    })
-    return headers;
+    });
   }
   public createPlayer(playerDto: PlayerDto,file: File): Observable<any>{
     let headers = this.getHeaders();
@@ -25,6 +25,9 @@ export class PlayerService {
   public retrievePlayers(pageNumber: number, pageSize: number): Observable<PageResponseDto<PlayerDto>>{
     let headers = this.getHeaders();
     return this.http.get<PageResponseDto<PlayerDto>>(`${this.playerUrl}/?page=${pageNumber}&size=${pageSize}`,{headers});
+  }
+  public getAllPLayers():Observable<PlayerDto[]>{
+    return this.http.get<PlayerDto[]>(`${this.playerUrl}`);
   }
   public retrievePlayer(id: number): Observable<PlayerDto>{
     let headers = this.getHeaders();
@@ -83,6 +86,11 @@ export class PlayerService {
     let headers = this.getHeaders();
     return this.http.get(`${this.playerUrl}/askedpermission/currentuser`,{headers});
 
+  }
+
+  public getPlayersByClubId(club_id:number):Observable<any>{
+    let headers = this.getHeaders();
+    return this.http.get(`${this.playerUrl}/club/${club_id}`,{headers});
   }
 }
 

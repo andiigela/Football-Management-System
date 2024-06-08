@@ -10,8 +10,8 @@ import { Router } from "@angular/router";
 })
 export class LeagueComponent implements OnInit {
 
-  leagues: LeagueDto[] = [];
-  newLeague: LeagueDto = new LeagueDto(0, '', new Date(), new Date(), '');
+  leagues :LeagueDto[]= [];
+  newLeague: LeagueDto = new LeagueDto(0, '', 0,'', '');
   pageNumber: number = 1;
   pageSize: number = 3;
   totalElements: number = 0;
@@ -22,18 +22,19 @@ export class LeagueComponent implements OnInit {
   ngOnInit(): void {
     this.findAllLeagues();
   }
+  findAllLeagues(){
+    this.leagueService.returnAllLeagues(this.pageNumber-1, this.pageSize)
+      .subscribe(
+        response => {
+          this.leagues = response.content;
+          this.totalElements = response.totalElements;
+          this.updatePlayerList(this.leagues); // Call updatePlayerList to set image paths
+        },
+        error => {
+          console.error('Error fetching leagues:', error);
+        }
+      );
 
-  findAllLeagues(): void {
-    this.leagueService.returnAllLeagues(this.pageNumber - 1, this.pageSize)
-        .subscribe(
-            response => {
-              this.leagues = response.content;
-              this.totalElements = response.totalElements;
-            },
-            error => {
-              console.error('Error fetching leagues:', error);
-            }
-        );
   }
 
   onPageChange(pageNumber: number): void {
@@ -65,14 +66,29 @@ export class LeagueComponent implements OnInit {
 
   deleteLeague(id: number): void {
     this.leagueService.deleteLeague(id).subscribe(() => {
-      this.leagues = this.leagues.filter(league => league.dbId !== id);
+      this.leagues = this.leagues.filter(league => league.id !== id);
     });
+  }
+  updatePlayerList(leagueList: LeagueDto[]){
+    leagueList.forEach(leagueDto => this.getLeagueImageUrl(leagueDto)) // set ImagePath to player.imagePath for each player
+  }
+  getLeagueImageUrl(leagueDto: LeagueDto):void {
+    if (leagueDto.picture) {
+      this.leagueService.getImageUrl(leagueDto.picture).subscribe((blob: Blob) => {
+          const imageUrl = URL.createObjectURL(blob);
+          leagueDto.picture = imageUrl;
+        },
+        error => {
+          console.error(`Error fetching image for league: ${leagueDto.name}`, error);
+          leagueDto.picture = ''; // Set default image path
+        }
+      );
+    }
   }
 
   updateLeague(league: LeagueDto): void {
-    this.router.navigate(['/update-league', league.dbId], { state: { league: league } });
+    this.router.navigate(['/update-league', league.id], {state: {league: league}});
   }
-
   redirectToCreateLeague(): void {
     this.router.navigate(['/create-league']);
   }

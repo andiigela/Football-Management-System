@@ -10,7 +10,7 @@ public interface ClubService {
     void updateClub(ClubDto clubDto, Long id);
     void deleteClub(Long id);
     Club getClubById(Long id);
-    List<Club> getAllClubs();
+    List<ClubDto> getAllClubs();
     Long getClubIdByUserId(Long userId);
     Club getClubByUserId(Long userId);
 

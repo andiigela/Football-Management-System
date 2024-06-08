@@ -1,0 +1,63 @@
+<div class="inset-0 flex items-center justify-center bg-black bg-opacity-100">
+  <div class="rounded-lg shadow-lg p-16 bg-blue-500 mt-8 mb-8 overflow-y-auto">
+    <h2 class="text-2xl font-bold mb-6 text-green-600">Create New Event</h2>
+    <form  (ngSubmit)="createMatchEvent()" [formGroup]="matchEventForm"  class="space-y-6 bg-red-300">
+
+      <div class="form-group">
+        <label class="block text-gray-700 font-medium mb-2">Type:</label>
+        <select class="form-control" id="preferred_foot" formControlName="type" (change)="onMatchEventTypeChange($event)">
+          <option *ngFor="let matchEvent of matchEventType" [value]="matchEvent">{{ matchEvent }}</option>
+        </select>
+        <label>Club ID:</label>
+        <select class="form-control" id="CartoonClubId1" formControlName="club_id" (change)="onTeamSelected()">
+          <option value="{{ match.homeTeam.id }}">{{ match.homeTeam.name }}</option>
+          <option value="{{ match.awayTeam.id }}">{{ match.awayTeam.name }}</option>
+        </select>
+
+        <label>Player ID:</label>
+        <select id="playerId" formControlName="playerId">
+          <option value="">Select Player</option>
+          <option *ngFor="let player of permArray" [value]="player.id">{{player.name}}</option>
+        </select>
+
+        <div class="form-group" *ngIf="selectedEventType === 'GOAL'">
+          <!-- Render fields related to goals here -->
+          <label>Is Own Goal:</label>
+          <input type="checkbox" formControlName="isOwnGoal" (change)="onGoalCheckboxChange($event)">
+          <label>Is Penalty:</label>
+          <input type="checkbox" formControlName="isPenalty" (change)="onGoalCheckboxChange($event)">
+          <label>Assist ID:</label>
+          <select id="assist_id" formControlName="assistId">
+            <option value="">Select Player</option>
+            <option *ngFor="let player of permArray" [value]="player.id">{{player.name}}</option>
+          </select>
+        </div>
+
+        <div class="form-group" *ngIf="selectedEventType === 'CARTON'">
+          <!-- Render fields related to carton here -->
+          <label>Is Red Card:</label>
+          <input type="checkbox" formControlName="isRedCard" (change)="cartonCheck($event)">
+          <label>Is Yellow Card:</label>
+          <input type="checkbox" formControlName="isYellowCard" (change)="cartonCheck($event)">
+        </div>
+
+        <div class="form-group" *ngIf="selectedEventType === 'SUB'">
+          <!-- Render fields related to sub here -->
+          <label>Sub:</label>
+          <select id="sub_id" formControlName="sub">
+            <option value="">Select Player</option>
+            <option *ngFor="let player of permArray" [value]="player.id">{{player.name}}</option>
+          </select>
+        </div>
+
+        <div class="form-group" *ngIf="selectedEventType === 'POSTPONED'">
+          <!-- Render fields related to postponed here -->
+          <label>Description:</label>
+          <input type="text" id="des" formControlName="description">
+        </div>
+      </div>
+
+      <button type="submit" class="bg-green-600 text-white rounded-lg px-4 py-2 hover:bg-green-700">Create</button>
+    </form>
+  </div>
+</div>

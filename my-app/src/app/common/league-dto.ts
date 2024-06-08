@@ -1,10 +1,10 @@
 export class LeagueDto {
-  constructor(public dbId: number,public  name: string,public startDate: Date,public endDate: Date,public  description: string) {
-    this.dbId = dbId;
+  constructor(public id: number,public  name: string, public founded:number,public  description: string, public picture :string ) {
+    this.id = id;
     this.name = name;
-    this.startDate = startDate;
-    this.endDate = endDate;
+    this.founded=founded;
     this.description = description;
+    this.picture=picture;
   }
 
 }

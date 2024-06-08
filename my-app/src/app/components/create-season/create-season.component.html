@@ -4,8 +4,34 @@
     <div class="form-group">
       <label for="seasonName">Season Name:</label>
       <input type="text" class="form-control" id="seasonName" name="seasonName" [(ngModel)]="season.name" required>
-      <div *ngIf="errorMessage" class="text-danger">{{ errorMessage }}</div>
     </div>
+
+
+    <div class="form-group">
+      <label for="endDate">End Date:</label>
+      <input type="datetime-local" class="form-control" id="endDate" name="endDate" [(ngModel)]="season.end_date" required>
+    </div>
+
+    <div class="form-group">
+      <label for="headToHead">Head to Head:</label>
+      <input type="number" class="form-control" id="headToHead" name="headToHead" [(ngModel)]="season.headToHead" required>
+    </div>
+
+    <div class="form-group">
+      <label for="numberOfStanding">Number of Standings:</label>
+      <input type="number" class="form-control" id="numberOfStanding" name="numberOfStanding" [(ngModel)]="season.numberOfStandings" (input)="onNumberOfStandingsChange($event)" min="0" required>
+    </div>
+
+    <div class="form-group" *ngIf="season.numberOfStandings > 0">
+      <label>Select Clubs for Standings:</label>
+      <div *ngFor="let index of countArray(season.numberOfStandings)">
+        <select class="form-control" [(ngModel)]="selectedClubs[index]" name="standing{{index}}" (ngModelChange)="onClubChange(index, $event)">
+          <option *ngFor="let club of getAvailableClubs(index)" [ngValue]="club">{{ club.name }}</option>
+        </select>
+      </div>
+    </div>
+
     <button type="submit" class="btn btn-primary">Create</button>
+    <div *ngIf="errorMessage" class="text-danger">{{ errorMessage }}</div>
   </form>
 </div>

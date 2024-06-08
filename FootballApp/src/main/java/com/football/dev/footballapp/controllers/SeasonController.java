@@ -22,10 +22,10 @@ public class SeasonController {
     }
 
     @PostMapping("/{leagueId}/create")
-    public ResponseEntity<String> createSeason(@PathVariable("leagueId") Long leagueId,
+    public ResponseEntity<Long> createSeason(@PathVariable("leagueId") Long leagueId,
                                                @RequestBody SeasonDto seasonDto) {
-        seasonService.saveSeason(seasonDto,leagueId);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        Long id = seasonService.saveSeason(seasonDto,leagueId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(id);
     }
     @GetMapping("/{leagueId}/")
     public ResponseEntity<Page<SeasonDto>> getSeasons(@PathVariable("leagueId") Long leagueId,
@@ -34,7 +34,6 @@ public class SeasonController {
         Page<SeasonDto> seasonDtoPage = seasonService.retrieveSeasons(leagueId,pageNumber,pageSize);
         return ResponseEntity.status(HttpStatus.OK).body(seasonDtoPage);
     }
-
 
     @GetMapping("/{leagueId}/{seasonId}")
     public ResponseEntity<SeasonDto> getSeason(@PathVariable("seasonId") Long seasonId,
@@ -55,6 +54,16 @@ public class SeasonController {
         seasonService.deleteSeason(seasonId,leagueId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+    @GetMapping ("/{leagueId}/generate/{seasonId}")
+    public ResponseEntity<String> generateRoundsAndMatches(@PathVariable("leagueId") Long leagueId,
+                                                           @PathVariable("seasonId") Long seasonId) {
+    seasonService.generateRoundsAndMatches(seasonId);
+    return ResponseEntity.status(HttpStatus.OK).body("Rounds and Matches generated for season with ID: " + seasonId);
+    }
+
+
+
+
 
 //    @GetMapping
 //    public ResponseEntity<List<SeasonDto>> listAllSeasons() {

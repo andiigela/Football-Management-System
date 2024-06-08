@@ -67,4 +67,19 @@ export class SeasonComponent implements OnInit {
   redirectToCreateSeason(): void {
         this.router.navigate(['/league', this.leagueId, 'create-season']);
     }
+
+  generateRoundsAndMatches(seasonId: number) {
+    this.seasonService.createRoundsAndMatches(this.leagueId,seasonId).subscribe(
+      () => {
+        console.log('Rounds and matches created  successfully');
+        // Update seasons array to remove the deleted season
+        this.seasons = this.seasons.filter(season => season.id !== seasonId);
+
+      },
+      error => {
+        console.log('Error deleting season:', error);
+      }
+    );
+
+  }
 }

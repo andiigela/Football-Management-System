@@ -39,8 +39,8 @@ public class ClubController {
         }
     }
 
-    @GetMapping("/")
-    public List<Club> getAllClubs() {
+    @GetMapping("")
+    public List<ClubDto> getAllClubs() {
         return clubService.getAllClubs();
     }
 

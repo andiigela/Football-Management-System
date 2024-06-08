@@ -2,11 +2,9 @@ package com.football.dev.footballapp.services.impl;
 import com.football.dev.footballapp.dto.MatchDTO;
 import com.football.dev.footballapp.mapper.MatchDTOMapper;
 import com.football.dev.footballapp.models.*;
-import com.football.dev.footballapp.models.ES.LeagueES;
 import com.football.dev.footballapp.models.ES.MatchES;
 import com.football.dev.footballapp.repository.esrepository.MatchRepositoryES;
 import com.football.dev.footballapp.repository.jparepository.RoundRepository;
-import com.football.dev.footballapp.repository.jparepository.StadiumRepository;
 import com.football.dev.footballapp.repository.jparepository.ClubRepository;
 import com.football.dev.footballapp.repository.jparepository.MatchRepository;
 import com.football.dev.footballapp.services.MatchService;
@@ -16,12 +14,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
-import java.util.Date;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+import java.util.Random;
+import java.util.Date;
+
 import java.util.stream.Collectors;
 
 @Service
@@ -95,6 +95,55 @@ public class MatchServiceImpl implements MatchService {
             matchRepository.save(matchDb);
         });
     }
+
+
+  @Override
+  public void saveMatches(List<Match> matches) {
+    matchRepository.saveAll(matches);
+  }
+
+  @Override
+  public void goalScored(Long id , Long aLong) {
+      Match  match = matchRepository.findById(id).get();
+      Club club = clubRepository.findById(aLong).get();
+
+      if (club.equals(match.getHomeTeamId())){
+        match.setHomeTeamScore(match.getHomeTeamScore()+1);
+        club.setGoals(club.getGoals()+1);
+
+
+
+      }else {
+        match.setAwayTeamScore(match.getAwayTeamScore() + 1);
+        club.setGoals(club.getGoals() + 1);
+
+
+      }
+    matchRepository.save(match);
+    clubRepository.save(club);
+
+  }
+
+  @Override
+  public void ownGoalScored(Long id, Long aLong) {
+    Match  match = matchRepository.findById(id).get();
+    Club club = clubRepository.findById(aLong).get();
+
+    if (club.equals(match.getHomeTeamId())){
+      match.setAwayTeamScore(match.getAwayTeamScore()+1);
+      Club club2 = match.getAwayTeamId();
+      club2.setGoals(club2.getGoals()+1);
+    }else {
+      match.setHomeTeamScore(match.getHomeTeamScore()+1);
+      Club club3=match.getHomeTeamId();
+      club3.setGoals(club3.getGoals()+1);
+    }
+    matchRepository.save(match);
+    clubRepository.save(club);
+
+
+  }
+
 
     @Override
     public Page<MatchES> retrieveMatchesByDateAndResult(Date date, Integer homeTeamResult, Integer awayTeamResult, int pageNumber, int pageSize) {

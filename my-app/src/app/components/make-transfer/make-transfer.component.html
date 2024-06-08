@@ -1,0 +1,28 @@
+<div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
+    <h2 class="text-2xl font-bold mb-6 text-green-600">Transfer Player</h2>
+    <form (ngSubmit)="transferPlayer()" class="space-y-6">
+      <div class="form-group">
+        <label for="player" class="block text-gray-700 font-medium mb-2">Player:</label>
+        <select id="player" name="player" [(ngModel)]="selectedPlayer" (change)="onPlayerSelected()" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-light-blue-500" required>
+          <option value="" disabled selected>Select a player</option>
+          <option *ngFor="let player of players" [ngValue]="player">{{ player.name }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="newClub" class="block text-gray-700 font-medium mb-2">New Club:</label>
+        <select id="newClub" name="newClub" [(ngModel)]="transfer.newClub" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-light-blue-500" required>
+          <option value="" disabled selected>Select a club</option>
+          <option *ngFor="let club of clubs" [ngValue]="club">{{ club.name }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="transferFee" class="block text-gray-700 font-medium mb-2">Transfer Fee:</label>
+        <input type="number" id="transferFee" name="transferFee" [(ngModel)]="transfer.transferFee" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-light-blue-500" required>
+      </div>
+      <button type="submit" class="bg-green-600 text-white rounded-lg px-4 py-2 hover:bg-green-700">Transfer</button>
+    </form>
+  </div>
+</div>

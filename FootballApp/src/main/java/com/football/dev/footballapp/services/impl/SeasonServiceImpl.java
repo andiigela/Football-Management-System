@@ -4,34 +4,59 @@ import com.football.dev.footballapp.mapper.SeasonDtoMapper;
 import com.football.dev.footballapp.models.*;
 import com.football.dev.footballapp.repository.jparepository.SeasonRepository;
 import com.football.dev.footballapp.repository.jparepository.LeagueRepository;
+import com.football.dev.footballapp.services.MatchService;
+import com.football.dev.footballapp.services.RoundService;
 import com.football.dev.footballapp.services.SeasonService;
+import com.football.dev.footballapp.services.StandingService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
-public class SeasonServiceImpl implements SeasonService {
+public class  SeasonServiceImpl implements SeasonService {
     private final SeasonRepository seasonRepository;
     private final LeagueRepository leagueRepository;
     private final SeasonDtoMapper seasonDtoMapper;
+    private final RoundService roundService;
+    private final MatchService matchService;
+    private final StandingService standingService;
 
-    public SeasonServiceImpl(SeasonRepository seasonRepository,
-                             SeasonDtoMapper seasonDtoMapper,
-                             LeagueRepository leagueRepository) {
-        this.seasonRepository = seasonRepository;
-        this.seasonDtoMapper = seasonDtoMapper;
-        this.leagueRepository = leagueRepository;
-    }
+  public SeasonServiceImpl(SeasonRepository seasonRepository, LeagueRepository leagueRepository, SeasonDtoMapper seasonDtoMapper, RoundService roundService, MatchService matchService, StandingService standingService) {
+    this.seasonRepository = seasonRepository;
+    this.leagueRepository = leagueRepository;
+    this.seasonDtoMapper = seasonDtoMapper;
+    this.roundService = roundService;
+    this.matchService = matchService;
+    this.standingService = standingService;
+  }
 
-    @Override
-    public void saveSeason(SeasonDto seasonDto,Long leagueId) {
+  @Override
+    public Long  saveSeason(SeasonDto seasonDto,Long leagueId) {
         if(seasonDto == null) throw new IllegalArgumentException("seasonDto cannot be null");
         League leagueDb = leagueRepository.findById(leagueId).orElseThrow(() -> new EntityNotFoundException("League not found with id: " + leagueId));
-        Season season = new Season(seasonDto.getName(), leagueDb);
-        seasonRepository.save(season);
+        Season season = new Season(seasonDto.getName(),seasonDto.getStart_date(),seasonDto.getEnd_date(),seasonDto.getHeadToHead().longValue(),seasonDto.getNumberOfStandings().longValue(), leagueDb);
+        season =seasonRepository.save(season);
+
+
+        return season.id;
+    }
+    @Override
+    public void generateRoundsAndMatches(Long id){
+      Season season = seasonRepository.findById(id).get();
+      SeasonDto seasonDto = seasonDtoMapper.apply(season);
+      int gamesPerRound=seasonDto.getNumberOfStandings()/2;
+      List<Club> clubs=standingService.getAllClubsWhereSeasonId(seasonDto.getId());
+      List<Round> rounds = roundService.generateRoundsAndSave(clubs,gamesPerRound,seasonDto.getStart_date(),season) ;
+
+
+
+
+      roundService.saveRounds(rounds);
+
     }
     @Override
     public Page<SeasonDto> retrieveSeasons(Long leagueId, int pageNumber, int pageSize) {
@@ -45,12 +70,12 @@ public class SeasonServiceImpl implements SeasonService {
 //                .collect(Collectors.toList());
         return seasonDtos;
     }
-    @Override
-    public SeasonDto getSeason(Long seasonId, Long leagueId) {
-        Optional<Season> season = seasonRepository.findByIdAndLeagueId(seasonId,leagueId);
-        if(season.isPresent()) return seasonDtoMapper.apply(season.get());
-        throw new EntityNotFoundException("season not found with ids: leagueId: " + leagueId + " seasonId: " + seasonId);
-    }
+  @Override
+  public SeasonDto getSeason(Long seasonId, Long leagueId) {
+    Optional<Season> season = seasonRepository.findByIdAndLeagueId(seasonId,leagueId);
+    if(season.isPresent()) return seasonDtoMapper.apply(season.get());
+    throw new EntityNotFoundException("season not found with ids: leagueId: " + leagueId + " seasonId: " + seasonId);
+  }
     @Override
     public void updateSeason(SeasonDto seasonDto, Long seasonId, Long leagueId) {
         seasonRepository.findByIdAndLeagueId(seasonId,leagueId).ifPresent(seasonDb -> {
